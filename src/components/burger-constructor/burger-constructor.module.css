@@ -1,0 +1,56 @@
+.burger-constructor {
+    width: calc((100% - 40px) / 2);
+    box-sizing: border-box;
+}
+
+.unlocked-ingredients {
+    width: 100%;
+    max-height: calc(100vh - 524px);
+    overflow-y: overlay;
+}
+
+.unlocked-ingredients::-webkit-scrollbar {
+    width: 8px;
+}
+
+.unlocked-ingredients::-webkit-scrollbar-thumb {
+    border-radius: 0;
+    border: none;
+}
+
+.ingredient {
+    max-width: calc(100% - 16px);
+    position: relative;
+}
+
+.ingredient:last-of-type {
+    margin-bottom: 0;
+}
+
+.drag-icon-wrapper {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: grab;
+}
+
+.info {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+}
+
+.amount {
+    display: flex;
+    align-items: center;
+}
+
+.amount > svg {
+    width: 33px;
+    height: 33px;
+}
+
+.amount-text {
+    margin: 0 10px 0 0;
+}
