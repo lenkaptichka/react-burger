@@ -6,7 +6,6 @@ import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
 import { useState } from 'react';
 import { fakeOrderNumber } from '../../utils/data';
-import ModalOverlay from '../modal-overlay/modal-overlay';
 
 export default function BurgerConstructor(props) {
   const [modalIsOpen, setModalsOpen] = useState(false);
@@ -14,16 +13,7 @@ export default function BurgerConstructor(props) {
 
   const closeModal = () => {
     setModalsOpen(false);
-  }
-
-  const modal = modalIsOpen ?
-  (<ModalOverlay closeModal={closeModal}>
-    <Modal closeModal={closeModal}>
-      <OrderDetails orderNumber={orderNumber} />
-    </Modal>
-  </ModalOverlay>
-  ) :
-  null;
+  };
 
   const calculateTotalAmount = () => {
     return props.selectedIngredients.reduce((currentSum, ingredient) => {
@@ -32,7 +22,7 @@ export default function BurgerConstructor(props) {
       }
       return currentSum + ingredient.price
     }, 0);
-  }
+  };
 
   return (
     <section className={`${styles['burger-constructor']} pt-25 pl-4`}>
@@ -89,7 +79,12 @@ export default function BurgerConstructor(props) {
           onClick={() => setModalsOpen(true)}
         >Оформить заказ</Button>
       </div>
-      {modal}
+      {modalIsOpen ?
+        <Modal closeModal={closeModal}>
+          <OrderDetails orderNumber={orderNumber} />
+        </Modal> :
+        null
+      }
     </section>
   )
 };

@@ -5,7 +5,6 @@ import styles from './burger-ingredients.module.css';
 import { ingredientType } from '../../utils/types';
 import IngredientDetails from '../ingredient-details/ingredient-details';
 import Modal from '../modal/modal';
-import ModalOverlay from '../modal-overlay/modal-overlay';
 
 export default function BurgerIngredients(props) {
   const [activeTab, setActiveTab] = useState('bun');
@@ -50,15 +49,6 @@ export default function BurgerIngredients(props) {
   const closeModal = () => {
     setModalsOpen(false);
   };
-
-  const modal = 
-    modalIsOpen ?
-    <ModalOverlay  closeModal={closeModal}>
-      <Modal title={'Детали ингредиента'} closeModal={closeModal}>
-        <IngredientDetails ingredient={modalContent}/>
-      </Modal>
-    </ModalOverlay> :
-    null;
 
   const renderIngredientCard = (ingredient) => {
     return (
@@ -126,7 +116,12 @@ export default function BurgerIngredients(props) {
           </ul>
         </div>
       </div>
-      {modal}
+      {modalIsOpen ?
+        <Modal title={'Детали ингредиента'} closeModal={closeModal}>
+          <IngredientDetails ingredient={modalContent}/>
+        </Modal> :
+        null
+      }
     </section>
   )
 }

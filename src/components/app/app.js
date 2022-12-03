@@ -6,7 +6,6 @@ import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
 import { INGREDIENT_API_URL } from '../../constants/constants';
 
-
 function App() {
   const [ingredients, setIngredients] = useState({isLoading: false, error: null, data: []});
 
