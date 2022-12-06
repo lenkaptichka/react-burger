@@ -2,9 +2,19 @@ import styles from './burger-constructor.module.css';
 import { ConstructorElement, DragIcon, Button, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import PropTypes from 'prop-types';
 import { ingredientType } from '../../utils/types';
+import Modal from '../modal/modal';
+import OrderDetails from '../order-details/order-details';
+import { useState } from 'react';
+import { fakeOrderNumber } from '../../utils/data';
 
+export default function BurgerConstructor(props) {
+  const [modalIsOpen, setModalsOpen] = useState(false);
+  const [orderNumber, setOrderNumber] = useState(fakeOrderNumber);
 
-function BurgerConstructor(props) {
+  const closeModal = () => {
+    setModalsOpen(false);
+  };
+
   const calculateTotalAmount = () => {
     return props.selectedIngredients.reduce((currentSum, ingredient) => {
       if (ingredient.type === 'bun') {
@@ -12,7 +22,7 @@ function BurgerConstructor(props) {
       }
       return currentSum + ingredient.price
     }, 0);
-  }
+  };
 
   return (
     <section className={`${styles['burger-constructor']} pt-25 pl-4`}>
@@ -62,14 +72,24 @@ function BurgerConstructor(props) {
           <h3 className={`${styles['amount-text']} text text_type_digits-medium`}>{calculateTotalAmount()}</h3>
           <CurrencyIcon type='primary' />
         </div>
-        <Button htmlType='button' type='primary' size='large'>Оформить заказ</Button>
+        <Button
+          htmlType='button'
+          type='primary'
+          size='large'
+          onClick={() => setModalsOpen(true)}
+        >Оформить заказ</Button>
       </div>
+      {modalIsOpen ?
+        <Modal closeModal={closeModal}>
+          <OrderDetails orderNumber={orderNumber} />
+        </Modal> :
+        null
+      }
     </section>
   )
-}
+};
 
 BurgerConstructor.propTypes = {
   selectedIngredients: PropTypes.arrayOf(ingredientType)
-}
+};
 
-export default BurgerConstructor
