@@ -1,15 +1,19 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useContext } from 'react';
 import { CurrencyIcon, Counter, Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import PropTypes from 'prop-types';
 import styles from './burger-ingredients.module.css';
 import { ingredientType } from '../../utils/types';
 import IngredientDetails from '../ingredient-details/ingredient-details';
 import Modal from '../modal/modal';
+import { SelectedIngredientsContext } from '../../services/app-context';
+import { bunsCount } from '../../constants/constants';
 
 export default function BurgerIngredients(props) {
   const [activeTab, setActiveTab] = useState('bun');
   const [modalIsOpen, setModalsOpen] = useState(false);
   const [modalContent, setModalContent] = useState(null);
+
+  const { selectedIngredients, setSelectedIngredients } = useContext(SelectedIngredientsContext);
 
   const bunsSection = useRef(null);
   const saucesSection = useRef(null);
@@ -29,10 +33,24 @@ export default function BurgerIngredients(props) {
     }
   }, [activeTab]);
 
+  // Вычисление количества каждого ингредиента
   const countIngredients = (ingredientId) => {
-    return props.selectedIngredients
-      .filter(item => item['_id'] === ingredientId).length;
+    if (selectedIngredients.bun.find(item => item === ingredientId)) {
+      return bunsCount;
+    } else {
+      return selectedIngredients.otherIngredients.filter(item => item === ingredientId).length;
+    }
   };
+
+  // Добавление выбранного ингредиента
+  const addSelectedIngredient = (ingredient) => {
+    if (ingredient.type === 'bun') {
+      setSelectedIngredients({...selectedIngredients, bun: [ingredient._id]})
+    } else {
+      setSelectedIngredients({...selectedIngredients,
+        otherIngredients: [...selectedIngredients.otherIngredients, ingredient._id]});
+    }
+  }
 
   const filterIngredientsByType = () => {
     const buns = props.ingredients.filter(ingredient => ingredient.type === 'bun');
@@ -55,7 +73,10 @@ export default function BurgerIngredients(props) {
       <li
         className={`${styles['ingredient-card']}`}
         key={ingredient['_id']}
-        onClick={() => openModal(ingredient)}
+        onClick={() => {
+          openModal(ingredient);
+          addSelectedIngredient(ingredient);
+        }}
       >
         <img
           src={ingredient.image}
@@ -70,7 +91,7 @@ export default function BurgerIngredients(props) {
         {countIngredients(ingredient['_id']) > 0 ?
           <Counter count={countIngredients(ingredient['_id'])} size='default' /> :
           null
-        }        
+        }
       </li>
     )
   };
@@ -127,6 +148,5 @@ export default function BurgerIngredients(props) {
 }
 
 BurgerIngredients.propTypes = {
-  selectedIngredients: PropTypes.arrayOf(ingredientType),
   ingredients: PropTypes.arrayOf(ingredientType).isRequired
 };

@@ -1,28 +1,29 @@
 import {useState, useEffect} from 'react';
-import { selectedIngredients } from '../../utils/data';
 import styles from './app.module.css';
 import AppHeader from '../app-header/app-header';
 import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
 import { INGREDIENT_API_URL } from '../../constants/constants';
+import { IngredientsContext, SelectedIngredientsContext } from '../../services/app-context';
 
 function App() {
-  const [ingredients, setIngredients] = useState({isLoading: false, error: null, data: []});
-
+  const [ingredients, setIngredients] = useState({isLoading: false, error: null, allIngredients: []});
+  const [selectedIngredients, setSelectedIngredients] = useState({bun: [], otherIngredients: []});
+  
   useEffect(() => {
     getIngredients();
   }, []);
 
   const getIngredients = () => {
     setIngredients({ ...ingredients, error: null, isLoading: true });
-    fetch(INGREDIENT_API_URL)
+    fetch(`${INGREDIENT_API_URL}/api/ingredients`)
       .then(res => {
         if (res.ok) {
           return res.json();
         }
         return Promise.reject(res.status);
       })
-      .then(data => setIngredients({ ...ingredients, data: data.data, isLoading: false }))
+      .then(data => setIngredients({ ...ingredients, allIngredients: data.data, isLoading: false }))
       .catch(error =>  setIngredients({ ...ingredients, error: error, isLoading: false }));
   };
 
@@ -30,8 +31,12 @@ function App() {
     <div className={`${styles.main} body`}>
       <AppHeader />
       <main className={styles.mainsection}>
-        <BurgerIngredients ingredients={ingredients.data} selectedIngredients={selectedIngredients} />
-        <BurgerConstructor selectedIngredients={selectedIngredients} />
+        <IngredientsContext.Provider value={ingredients.allIngredients}>
+          <SelectedIngredientsContext.Provider value={{selectedIngredients, setSelectedIngredients}}>
+            <BurgerIngredients ingredients={ingredients.allIngredients}/>
+            <BurgerConstructor />
+          </SelectedIngredientsContext.Provider>
+        </IngredientsContext.Provider>
       </main>
     </div>
   )
