@@ -2,10 +2,10 @@ import styles from './burger-constructor.module.css';
 import { ConstructorElement, DragIcon, Button, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
-import { useState, useContext } from 'react';
+import { useState, useContext, useMemo } from 'react';
 import { SelectedIngredientsContext, IngredientsContext } from '../../services/app-context';
 import { bunsCount, INGREDIENT_API_URL } from '../../constants/constants';
-
+import checkResponse from '../../utils/check-response';
 
 export default function BurgerConstructor() {
   const [modalIsOpen, setModalsOpen] = useState(false);
@@ -29,19 +29,13 @@ export default function BurgerConstructor() {
         ingredients: [...selectedIngredients.bun, ...selectedIngredients.otherIngredients, ...selectedIngredients.bun]
       })
     })
-      .then(res => {
-        if (res.ok) {
-          return res.json();
-        }
-        return Promise.reject(res.status);
-      })
+      .then(checkResponse)
       .then(data => {
         console.log(data);
         setOrder({ ...order, orderNumber: data.order.number, isLoading: false });
       })
       .catch(error => setOrder({ ...order, error: error, isLoading: false }));
   }
-
 
   // Пока нет drag'n'drop удаление реализовано через индекс
   const deleteIngredient = (ingredientIndex) => {
@@ -50,29 +44,34 @@ export default function BurgerConstructor() {
       otherIngredients: selectedIngredients.otherIngredients
         .filter((item, index) => index !== ingredientIndex)
     })
-  }
+  };
 
-  const calculateTotalAmount = () => {
-    const bunPrice = selectedIngredients.bun[0] ?
+  const getBunPrice = useMemo(() => () => {
+    return selectedIngredients.bun[0] ?
       allIngredients.find(item => item._id === selectedIngredients.bun[0]).price * bunsCount :
-      0;
+      0
+  }, [selectedIngredients.bun]);
 
-    const otherIngredientsPrice = selectedIngredients.otherIngredients
+  const getOtherIngredientsPrice =  useMemo(() => () => {
+    return selectedIngredients.otherIngredients
       .reduce((currentSum, ingredient) => {
         const ingredientPrice = allIngredients.find(item => item._id === ingredient).price;
         return currentSum + ingredientPrice;
       }, 0);
-    return bunPrice + otherIngredientsPrice;
+  }, [selectedIngredients.otherIngredients])
+
+  const calculateTotalAmount = () => {
+    return getBunPrice() + getOtherIngredientsPrice();
   };
 
-  const getBun = () => {
+  const getBun = useMemo(() => () => {
     return allIngredients.filter(item => item._id === selectedIngredients.bun[0]);
-  }
+  }, [selectedIngredients]);
 
-  const getOtherIngredients = () => {
+  const getOtherIngredients = useMemo(() => () => {
     return selectedIngredients.otherIngredients
       .map(item => allIngredients.find(el => el._id === item));
-  }
+  }, [selectedIngredients])
 
   return (
     <section className={`${styles['burger-constructor']} pt-25 pl-4`}>

@@ -5,6 +5,7 @@ import BurgerIngredients from '../burger-ingredients/burger-ingredients';
 import BurgerConstructor from '../burger-constructor/burger-constructor';
 import { INGREDIENT_API_URL } from '../../constants/constants';
 import { IngredientsContext, SelectedIngredientsContext } from '../../services/app-context';
+import checkResponse from '../../utils/check-response';
 
 function App() {
   const [ingredients, setIngredients] = useState({isLoading: false, error: null, allIngredients: []});
@@ -17,12 +18,7 @@ function App() {
   const getIngredients = () => {
     setIngredients({ ...ingredients, error: null, isLoading: true });
     fetch(`${INGREDIENT_API_URL}/api/ingredients`)
-      .then(res => {
-        if (res.ok) {
-          return res.json();
-        }
-        return Promise.reject(res.status);
-      })
+      .then(checkResponse)
       .then(data => setIngredients({ ...ingredients, allIngredients: data.data, isLoading: false }))
       .catch(error =>  setIngredients({ ...ingredients, error: error, isLoading: false }));
   };
@@ -33,7 +29,7 @@ function App() {
       <main className={styles.mainsection}>
         <IngredientsContext.Provider value={ingredients.allIngredients}>
           <SelectedIngredientsContext.Provider value={{selectedIngredients, setSelectedIngredients}}>
-            <BurgerIngredients ingredients={ingredients.allIngredients}/>
+            <BurgerIngredients />
             <BurgerConstructor />
           </SelectedIngredientsContext.Provider>
         </IngredientsContext.Provider>

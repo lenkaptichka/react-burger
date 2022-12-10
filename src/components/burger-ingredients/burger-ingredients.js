@@ -1,19 +1,18 @@
-import { useEffect, useRef, useState, useContext } from 'react';
+import { useEffect, useRef, useState, useContext, useMemo } from 'react';
 import { CurrencyIcon, Counter, Tab } from '@ya.praktikum/react-developer-burger-ui-components';
-import PropTypes from 'prop-types';
 import styles from './burger-ingredients.module.css';
-import { ingredientType } from '../../utils/types';
 import IngredientDetails from '../ingredient-details/ingredient-details';
 import Modal from '../modal/modal';
-import { SelectedIngredientsContext } from '../../services/app-context';
+import { SelectedIngredientsContext, IngredientsContext } from '../../services/app-context';
 import { bunsCount } from '../../constants/constants';
 
-export default function BurgerIngredients(props) {
+export default function BurgerIngredients() {
   const [activeTab, setActiveTab] = useState('bun');
   const [modalIsOpen, setModalsOpen] = useState(false);
   const [modalContent, setModalContent] = useState(null);
 
   const { selectedIngredients, setSelectedIngredients } = useContext(SelectedIngredientsContext);
+  const allIngredients = useContext(IngredientsContext);
 
   const bunsSection = useRef(null);
   const saucesSection = useRef(null);
@@ -52,12 +51,17 @@ export default function BurgerIngredients(props) {
     }
   }
 
-  const filterIngredientsByType = () => {
-    const buns = props.ingredients.filter(ingredient => ingredient.type === 'bun');
-    const sauces = props.ingredients.filter(ingredient => ingredient.type === 'sauce');
-    const mains = props.ingredients.filter(ingredient => ingredient.type === 'main');
-    return {buns, sauces, mains}
-  };
+  const buns = useMemo(
+    () => allIngredients.filter(ingredient => ingredient.type === 'bun'),
+    [allIngredients]);
+
+  const sauces = useMemo(
+    () => allIngredients.filter(ingredient => ingredient.type === 'sauce'),
+    [allIngredients]);
+    
+  const mains = useMemo(
+    () => allIngredients.filter(ingredient => ingredient.type === 'main'),
+    [allIngredients]);
 
   const openModal = (ingredient) => {
     setModalsOpen(true);
@@ -121,19 +125,19 @@ export default function BurgerIngredients(props) {
         <div className={`${styles['ingredient-type']}`}>
           <h3 className={`${styles['type-name']} text text_type_main-medium `} ref={bunsSection}>Булки</h3>
           <ul className={`${styles['ingredient-cards']} mt-6 mb-1 ml-4 mr-4`}>
-            {filterIngredientsByType().buns.map(ingredient => renderIngredientCard(ingredient))}
+            {buns.map(ingredient => renderIngredientCard(ingredient))}
           </ul>
         </div>
         <div className={`${styles['ingredient-type']}`}>
           <h3 className={`${styles['type-name']} text text_type_main-medium `} ref={saucesSection}>Соусы</h3>
           <ul className={`${styles['ingredient-cards']} mt-6 mb-1 ml-4 mr-4`}>
-            {filterIngredientsByType().sauces.map(ingredient => renderIngredientCard(ingredient))}
+            {sauces.map(ingredient => renderIngredientCard(ingredient))}
           </ul>
         </div>
         <div className={`${styles['ingredient-type']}`}>
           <h3 className={`${styles['type-name']} text text_type_main-medium `} ref={mainsSection}>Начинки</h3>
           <ul className={`${styles['ingredient-cards']} mt-6 mb-1 ml-4 mr-4`}>
-            {filterIngredientsByType().mains.map(ingredient => renderIngredientCard(ingredient))}
+            {mains.map(ingredient => renderIngredientCard(ingredient))}
           </ul>
         </div>
       </div>
@@ -146,7 +150,3 @@ export default function BurgerIngredients(props) {
     </section>
   )
 }
-
-BurgerIngredients.propTypes = {
-  ingredients: PropTypes.arrayOf(ingredientType).isRequired
-};
