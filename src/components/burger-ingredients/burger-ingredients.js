@@ -1,18 +1,21 @@
-import { useEffect, useRef, useState, useContext, useMemo } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import { CurrencyIcon, Counter, Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './burger-ingredients.module.css';
 import IngredientDetails from '../ingredient-details/ingredient-details';
 import Modal from '../modal/modal';
-import { SelectedIngredientsContext, IngredientsContext } from '../../services/app-context';
 import { bunsCount } from '../../constants/constants';
+import { useSelector, useDispatch } from 'react-redux';
+import { addIngredient } from '../../services/actions/burger-constructor';
+import { addIngredientDetails, deleteIngredientDetails } from '../../services/actions/ingredient-details';
 
 export default function BurgerIngredients() {
   const [activeTab, setActiveTab] = useState('bun');
   const [modalIsOpen, setModalsOpen] = useState(false);
-  const [modalContent, setModalContent] = useState(null);
 
-  const { selectedIngredients, setSelectedIngredients } = useContext(SelectedIngredientsContext);
-  const allIngredients = useContext(IngredientsContext);
+  const { allIngredients } = useSelector(state => state.ingredients);
+  const selectedIngredients = useSelector(state => state.selectedIngredients);
+
+  const dispatch = useDispatch();
 
   const bunsSection = useRef(null);
   const saucesSection = useRef(null);
@@ -41,16 +44,6 @@ export default function BurgerIngredients() {
     }
   };
 
-  // Добавление выбранного ингредиента
-  const addSelectedIngredient = (ingredient) => {
-    if (ingredient.type === 'bun') {
-      setSelectedIngredients({...selectedIngredients, bun: [ingredient._id]})
-    } else {
-      setSelectedIngredients({...selectedIngredients,
-        otherIngredients: [...selectedIngredients.otherIngredients, ingredient._id]});
-    }
-  }
-
   const buns = useMemo(
     () => allIngredients.filter(ingredient => ingredient.type === 'bun'),
     [allIngredients]);
@@ -65,21 +58,23 @@ export default function BurgerIngredients() {
 
   const openModal = (ingredient) => {
     setModalsOpen(true);
-    setModalContent(ingredient);
+    dispatch(addIngredientDetails(ingredient));
   };
 
   const closeModal = () => {
     setModalsOpen(false);
+    dispatch(deleteIngredientDetails());
   };
 
   const renderIngredientCard = (ingredient) => {
     return (
       <li
         className={`${styles['ingredient-card']}`}
-        key={ingredient['_id']}
+        key={ingredient._id}
         onClick={() => {
           openModal(ingredient);
-          addSelectedIngredient(ingredient);
+          // Добавление выбранного ингредиента
+          dispatch(addIngredient(ingredient));
         }}
       >
         <img
@@ -143,7 +138,7 @@ export default function BurgerIngredients() {
       </div>
       {modalIsOpen ?
         <Modal title={'Детали ингредиента'} closeModal={closeModal}>
-          <IngredientDetails ingredient={modalContent}/>
+          <IngredientDetails />
         </Modal> :
         null
       }

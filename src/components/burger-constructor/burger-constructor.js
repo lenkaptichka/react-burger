@@ -2,49 +2,27 @@ import styles from './burger-constructor.module.css';
 import { ConstructorElement, DragIcon, Button, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
-import { useState, useContext, useMemo } from 'react';
-import { SelectedIngredientsContext, IngredientsContext } from '../../services/app-context';
-import { bunsCount, INGREDIENT_API_URL } from '../../constants/constants';
-import checkResponse from '../../utils/check-response';
+import { useState, useMemo } from 'react';
+import { bunsCount } from '../../constants/constants';
+import { deleteIngredient } from '../../services/actions/burger-constructor';
+import { useSelector, useDispatch } from 'react-redux';
+import { sendOrder } from '../../services/actions/order';
 
 export default function BurgerConstructor() {
   const [modalIsOpen, setModalsOpen] = useState(false);
-  const [order, setOrder] = useState({ isLoading: false, error: null, orderNumber: null });
 
-  const { selectedIngredients, setSelectedIngredients } = useContext(SelectedIngredientsContext);
-  const allIngredients = useContext(IngredientsContext);
+  const { allIngredients } = useSelector(state => state.ingredients);
+  const selectedIngredients = useSelector(state => state.selectedIngredients);
+  const dispatch = useDispatch();
 
   const closeModal = () => {
     setModalsOpen(false);
   };
 
-  const sendOrder = () => {
-    setOrder({ ...order, isLoading: true, error: null });
-    fetch(`${INGREDIENT_API_URL}/api/orders`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        ingredients: [...selectedIngredients.bun, ...selectedIngredients.otherIngredients, ...selectedIngredients.bun]
-      })
-    })
-      .then(checkResponse)
-      .then(data => {
-        console.log(data);
-        setOrder({ ...order, orderNumber: data.order.number, isLoading: false });
-      })
-      .catch(error => setOrder({ ...order, error: error, isLoading: false }));
+  const sendOrderHandler = () => {
+    const { bun, otherIngredients} = selectedIngredients;
+    dispatch(sendOrder([...bun, ...otherIngredients, ...bun]));
   }
-
-  // Пока нет drag'n'drop удаление реализовано через индекс
-  const deleteIngredient = (ingredientIndex) => {
-    setSelectedIngredients({
-      ...selectedIngredients,
-      otherIngredients: selectedIngredients.otherIngredients
-        .filter((item, index) => index !== ingredientIndex)
-    })
-  };
 
   const getBunPrice = useMemo(() => () => {
     return selectedIngredients.bun[0] ?
@@ -63,6 +41,7 @@ export default function BurgerConstructor() {
   const calculateTotalAmount = () => {
     return getBunPrice() + getOtherIngredientsPrice();
   };
+
 
   const getBun = useMemo(() => () => {
     return allIngredients.filter(item => item._id === selectedIngredients.bun[0]);
@@ -88,7 +67,7 @@ export default function BurgerConstructor() {
           </div>
         ))}
         <div className={`${styles['unlocked-ingredients']} custom-scroll`}>
-          {getOtherIngredients().map((item, index) => (
+          {getOtherIngredients()?.map((item, index) => (
             <div className={`${styles.ingredient} pl-8 mb-4`} key={`${item._id}_${index}`}>
               {!false &&
                 <div className={styles['drag-icon-wrapper']}>
@@ -100,9 +79,8 @@ export default function BurgerConstructor() {
                 price={item.price}
                 isLocked={false}
                 thumbnail={item.image}
-                handleClose={() => {
-                  deleteIngredient(index);
-                }}
+                // Пока нет drag'n'drop удаление реализовано через индекс
+                handleClose={() => dispatch(deleteIngredient(index))}
               />
             </div>
           ))}
@@ -130,13 +108,13 @@ export default function BurgerConstructor() {
           size='large'
           onClick={() => {
             setModalsOpen(true);
-            sendOrder();
+            sendOrderHandler();
           }}
         >Оформить заказ</Button>
       </div>
-      {modalIsOpen && order.orderNumber && !order.isLoading && !order.error ?
+      {modalIsOpen ?
         <Modal closeModal={closeModal}>
-          <OrderDetails orderNumber={order.orderNumber} />
+          <OrderDetails />
         </Modal> :
         null
       }
