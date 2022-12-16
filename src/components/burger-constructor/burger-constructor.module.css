@@ -4,6 +4,11 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    border-radius: 40px;
+}
+
+.burger-constructor-hovered {
+    box-shadow: inset 0px 0px 16px 8px rgb(51 51 255 / 25%), 0px 0px 8px 8px rgb(51 51 255 / 25%);
 }
 
 .unlocked-ingredients {

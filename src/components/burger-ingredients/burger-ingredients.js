@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState, useMemo } from 'react';
-import { CurrencyIcon, Counter, Tab } from '@ya.praktikum/react-developer-burger-ui-components';
+import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
+import { useInView } from 'react-intersection-observer';
 import styles from './burger-ingredients.module.css';
 import IngredientDetails from '../ingredient-details/ingredient-details';
 import Modal from '../modal/modal';
-import { bunsCount } from '../../constants/constants';
 import { useSelector, useDispatch } from 'react-redux';
-import { addIngredient } from '../../services/actions/burger-constructor';
 import { addIngredientDetails, deleteIngredientDetails } from '../../services/actions/ingredient-details';
 import { Ingredient } from '../ingredient/ingredient';
 
@@ -13,6 +12,10 @@ import { Ingredient } from '../ingredient/ingredient';
 export default function BurgerIngredients() {
   const [activeTab, setActiveTab] = useState('bun');
   const [modalIsOpen, setModalsOpen] = useState(false);
+
+  const {ref: bunsSectionArea, inView: bunsSectionInView} = useInView({threshold: 0});
+  const {ref: saucesSectionArea, inView: saucesSectionView} = useInView({threshold: 0});
+  const {ref: mainsSectionArea, inView: mainsSectionView} = useInView({threshold: 0});
 
   const { allIngredients } = useSelector(state => state.ingredients);
 
@@ -36,6 +39,16 @@ export default function BurgerIngredients() {
     }
   }, [activeTab]);
 
+  useEffect(() => {
+    if (bunsSectionInView) {
+      setActiveTab('bun');
+    } else if (saucesSectionView) {
+      setActiveTab('sauce');
+    } else {
+      setActiveTab('main');
+    }
+  }, [bunsSectionInView, saucesSectionView, mainsSectionView]);
+
   const buns = useMemo(
     () => allIngredients.filter(ingredient => ingredient.type === 'bun'),
     [allIngredients]);
@@ -57,35 +70,6 @@ export default function BurgerIngredients() {
     setModalsOpen(false);
     dispatch(deleteIngredientDetails());
   };
-
-  // const renderIngredientCard = (ingredient) => {
-  //   return (
-  //     <li
-  //       className={`${styles['ingredient-card']}`}
-  //       key={ingredient._id}
-  //       onClick={() => {
-  //         openModal(ingredient);
-  //         // Добавление выбранного ингредиента
-  //         dispatch(addIngredient(ingredient));
-  //       }}
-  //     >
-  //       <img
-  //         src={ingredient.image}
-  //         alt={ingredient.name}
-  //         className={`${styles.image} ml-4 mr-4 mb-4`}
-  //       />
-  //       <div className={styles.price}>
-  //         <h5 className='text text_type_digits-default mr-2'>{ingredient.price}</h5>
-  //         <CurrencyIcon type='primary' />
-  //       </div>
-  //       <h4 className={`${styles.name} text_type_main-default mt-1`}>{ingredient.name}</h4>
-  //       {countIngredients(ingredient['_id']) > 0 ?
-  //         <Counter count={countIngredients(ingredient['_id'])} size='default' /> :
-  //         null
-  //       }
-  //     </li>
-  //   )
-  // };
 
   return (
     <section className={styles['burger-ingredients']}>
@@ -109,19 +93,21 @@ export default function BurgerIngredients() {
       </div>
 
       <div className={`${styles.ingredients} custom-scroll`}>
-        <div className={`${styles['ingredient-type']}`}>
+        <div className={`${styles['ingredient-type']}`} ref={bunsSectionArea}>
           <h3 className={`${styles['type-name']} text text_type_main-medium `} ref={bunsSection}>Булки</h3>
           <ul className={`${styles['ingredient-cards']} mt-6 mb-1 ml-4 mr-4`}>
             {buns.map(ingredient => <Ingredient key={ingredient._id} ingredient={ingredient} openModal={openModal} />)}
           </ul>
         </div>
-        <div className={`${styles['ingredient-type']}`}>
+
+        <div className={`${styles['ingredient-type']}`} ref={saucesSectionArea}>
           <h3 className={`${styles['type-name']} text text_type_main-medium `} ref={saucesSection}>Соусы</h3>
           <ul className={`${styles['ingredient-cards']} mt-6 mb-1 ml-4 mr-4`}>
             {sauces.map(ingredient => <Ingredient key={ingredient._id} ingredient={ingredient} openModal={openModal} />)}
           </ul>
         </div>
-        <div className={`${styles['ingredient-type']}`}>
+        
+        <div className={`${styles['ingredient-type']}`} ref={mainsSectionArea}>
           <h3 className={`${styles['type-name']} text text_type_main-medium `} ref={mainsSection}>Начинки</h3>
           <ul className={`${styles['ingredient-cards']} mt-6 mb-1 ml-4 mr-4`}>
             {mains.map(ingredient => <Ingredient key={ingredient._id} ingredient={ingredient} openModal={openModal} />)}

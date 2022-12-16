@@ -1,0 +1,16 @@
+.ingredient {
+    max-width: calc(100% - 16px);
+    position: relative;
+}
+
+.ingredient:last-of-type {
+    margin-bottom: 0;
+}
+
+.drag-icon-wrapper {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: grab;
+}

@@ -7,6 +7,9 @@ import { bunsCount } from '../../constants/constants';
 import { deleteIngredient } from '../../services/actions/burger-constructor';
 import { useSelector, useDispatch } from 'react-redux';
 import { sendOrder } from '../../services/actions/order';
+import { useDrop } from "react-dnd";
+import { addIngredient } from '../../services/actions/burger-constructor';
+import ConstructorCard from '../constructor-card/constructor-card';
 
 export default function BurgerConstructor() {
   const [modalIsOpen, setModalsOpen] = useState(false);
@@ -15,13 +18,24 @@ export default function BurgerConstructor() {
   const selectedIngredients = useSelector(state => state.selectedIngredients);
   const dispatch = useDispatch();
 
+  const [{isHover}, dropTarget] = useDrop({
+    accept: 'ingredient',
+    drop(ingredient) {
+      dispatch(addIngredient(ingredient));
+    },
+    collect: monitor => ({
+      isHover: monitor.isOver(),
+    })
+  });
+
   const closeModal = () => {
     setModalsOpen(false);
   };
 
   const sendOrderHandler = () => {
-    const { bun, otherIngredients} = selectedIngredients;
-    dispatch(sendOrder([...bun, ...otherIngredients, ...bun]));
+    const { bun, otherIngredients } = selectedIngredients;
+    const orderIngredients = [...bun, ...otherIngredients.map(item => item._id), ...bun]; 
+    dispatch(sendOrder(orderIngredients));
   }
 
   const getBunPrice = useMemo(() => () => {
@@ -30,10 +44,17 @@ export default function BurgerConstructor() {
       0
   }, [selectedIngredients.bun]);
 
-  const getOtherIngredientsPrice =  useMemo(() => () => {
+  // Добавление ключа по индексу
+  const getIngredientKey = (index) => {
+    // console.log('index', index)
+    // console.log('aaaa', selectedIngredients.otherIngredients[index].key)
+    return selectedIngredients.otherIngredients[index].key
+  }
+
+  const getOtherIngredientsPrice = useMemo(() => () => {
     return selectedIngredients.otherIngredients
       .reduce((currentSum, ingredient) => {
-        const ingredientPrice = allIngredients.find(item => item._id === ingredient).price;
+        const ingredientPrice = allIngredients.find(item => item._id === ingredient._id).price;
         return currentSum + ingredientPrice;
       }, 0);
   }, [selectedIngredients.otherIngredients])
@@ -42,19 +63,18 @@ export default function BurgerConstructor() {
     return getBunPrice() + getOtherIngredientsPrice();
   };
 
-
   const getBun = useMemo(() => () => {
     return allIngredients.filter(item => item._id === selectedIngredients.bun[0]);
   }, [selectedIngredients]);
 
   const getOtherIngredients = useMemo(() => () => {
     return selectedIngredients.otherIngredients
-      .map(item => allIngredients.find(el => el._id === item));
+      .map(item => allIngredients.find(el => el._id === item._id));
   }, [selectedIngredients])
 
   return (
-    <section className={`${styles['burger-constructor']} pt-25 pl-4`}>
-      <div className={`${styles.ingredients}`}>
+    <section className={`${styles['burger-constructor']} ${isHover ? styles['burger-constructor-hovered'] : ''} pt-25 pl-4`} ref={dropTarget} >
+      <div className={`${styles.ingredients} `} >
         {getBun().map(item => (
           <div className={`${styles.ingredient} pl-8 mb-4 mr-4`} key={`${item._id}_top`}>
             <ConstructorElement
@@ -68,21 +88,22 @@ export default function BurgerConstructor() {
         ))}
         <div className={`${styles['unlocked-ingredients']} custom-scroll`}>
           {getOtherIngredients()?.map((item, index) => (
-            <div className={`${styles.ingredient} pl-8 mb-4`} key={`${item._id}_${index}`}>
-              {!false &&
-                <div className={styles['drag-icon-wrapper']}>
-                  <DragIcon type='primary' />
-                </div>
-              }
-              <ConstructorElement
-                text={item.name}
-                price={item.price}
-                isLocked={false}
-                thumbnail={item.image}
-                // Пока нет drag'n'drop удаление реализовано через индекс
-                handleClose={() => dispatch(deleteIngredient(index))}
-              />
-            </div>
+            <ConstructorCard ingredient={item} key={getIngredientKey(index)} ingredientKey={getIngredientKey(index)} />
+            // <div className={`${styles.ingredient} pl-8 mb-4`} key={getIngredientKey(index)}>
+            //   {!false &&
+            //     <div className={styles['drag-icon-wrapper']}>
+            //       <DragIcon type='primary' />
+            //     </div>
+            //   }
+            //   <ConstructorElement
+            //     text={item.name}
+            //     price={item.price}
+            //     isLocked={false}
+            //     thumbnail={item.image}
+            //     // Пока нет drag'n'drop удаление реализовано через индекс
+            //     handleClose={() => dispatch(deleteIngredient(index))}
+            //   />
+            // </div>
           ))}
         </div>
         {getBun().map(item => (
