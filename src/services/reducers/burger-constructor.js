@@ -2,7 +2,7 @@ import { ADD_INGREDIENT, DELETE_INGREDIENT, MOVE_INGREDIENT } from '../actions/b
 
 const initialState = {
   bun: [],
-  otherIngredients: []
+  otherItems: []
 }
 
 export const selectedIngredientsReducer = (state = initialState, action) => {
@@ -13,7 +13,7 @@ export const selectedIngredientsReducer = (state = initialState, action) => {
       } else {
         return {
           ...state,
-          otherIngredients: [...state.otherIngredients,
+          otherItems: [...state.otherItems,
             {
               _id: action.ingredient._id,
               key: crypto.randomUUID()
@@ -25,33 +25,32 @@ export const selectedIngredientsReducer = (state = initialState, action) => {
     case DELETE_INGREDIENT: {
       return {
         ...state,
-        otherIngredients: state.otherIngredients
+        otherItems: state.otherItems
           .filter((item) => item.key !== action.ingredientKey)
       }
     }
     case MOVE_INGREDIENT: {
       const {dragIngredient, dropIngredient} = action;
-      const dragIngredientIndex = state.otherIngredients.findIndex(item => item.key === dragIngredient);
-      const dropIngredientIndex = state.otherIngredients.findIndex(item => item.key === dropIngredient);
-      const newOtherIngredients = [];
+      const dragIndex = state.otherItems.findIndex(item => item.key === dragIngredient);
+      const dropIndex = state.otherItems.findIndex(item => item.key === dropIngredient);
+      const newOtherItems = [];
 
       // Если перенос производится от меньшего индекса к большему (перетаскивание вниз)
-      if (dragIngredientIndex < dropIngredientIndex) {
-        newOtherIngredients.push(...state.otherIngredients.slice(0, dragIngredientIndex),
-        ...state.otherIngredients.slice(dragIngredientIndex + 1, dropIngredientIndex + 1),
-        ...state.otherIngredients.slice(dragIngredientIndex, dragIngredientIndex + 1),
-        ...state.otherIngredients.slice(dropIngredientIndex + 1, state.otherIngredients.length)
+      if (dragIndex < dropIndex) {
+        newOtherItems.push(...state.otherItems.slice(0, dragIndex),
+        ...state.otherItems.slice(dragIndex + 1, dropIndex + 1),
+        ...state.otherItems.slice(dragIndex, dragIndex + 1),
+        ...state.otherItems.slice(dropIndex + 1, state.otherItems.length)
       );
-        return { ...state, otherIngredients: newOtherIngredients }
+        return { ...state, otherItems: newOtherItems }
         // Если перенос производится от большего индекса к меньшему (перетаскивание наверх)
       } else {
-        newOtherIngredients.push(...state.otherIngredients.slice(0, dropIngredientIndex),
-          ...state.otherIngredients.slice(dragIngredientIndex, dragIngredientIndex + 1),
-          ...state.otherIngredients.slice(dropIngredientIndex, dragIngredientIndex),
-          ...state.otherIngredients.slice(dragIngredientIndex + 1, state.otherIngredients.length));
+        newOtherItems.push(...state.otherItems.slice(0, dropIndex),
+          ...state.otherItems.slice(dragIndex, dragIndex + 1),
+          ...state.otherItems.slice(dropIndex, dragIndex),
+          ...state.otherItems.slice(dragIndex + 1, state.otherItems.length));
 
-        return { ...state, otherIngredients: newOtherIngredients }
-
+        return { ...state, otherItems: newOtherItems }
       }
     }
     default:

@@ -6,18 +6,18 @@ import { useDrag, DragPreviewImage } from 'react-dnd';
 import PropTypes from 'prop-types';
 import { ingredientType } from '../../utils/types';
 
-export const Ingredient = ({ ingredient, openModal }) => {
-  const selectedIngredients = useSelector(state => state.selectedIngredients);
+export const Ingredient = ({ ingredient, onClick }) => {
+  const { bun, otherItems } = useSelector(state => state.selectedIngredients);
   const [, dragRef, dragPreviewRef] = useDrag({
     type: 'ingredient',
     item: ingredient
   });
 
   const countIngredients = (ingredientId) => {
-    if (selectedIngredients.bun.find(item => item === ingredientId)) {
+    if (bun.find(item => item === ingredientId)) {
       return bunsCount;
     } else {
-      return selectedIngredients.otherIngredients.filter(item => item._id === ingredientId).length;
+      return otherItems.filter(item => item._id === ingredientId).length;
     }
   };
 
@@ -29,7 +29,7 @@ export const Ingredient = ({ ingredient, openModal }) => {
       <li
         ref={dragRef}
         className={`${styles.ingredient}`}
-        onClick={() => openModal(ingredient)}
+        onClick={() => onClick(ingredient)}
       >        
         <img   
           src={ingredient.image}

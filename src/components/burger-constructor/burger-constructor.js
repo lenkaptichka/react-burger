@@ -14,7 +14,7 @@ export default function BurgerConstructor() {
   const [modalIsOpen, setModalsOpen] = useState(false);
 
   const { allIngredients } = useSelector(state => state.ingredients);
-  const selectedIngredients = useSelector(state => state.selectedIngredients);
+  const { bun, otherItems } = useSelector(state => state.selectedIngredients);
   const dispatch = useDispatch();
 
   const [{isHover}, dropTarget] = useDrop({
@@ -32,46 +32,43 @@ export default function BurgerConstructor() {
   };
 
   const sendOrderHandler = () => {
-    const { bun, otherIngredients } = selectedIngredients;
-    const orderIngredients = [...bun, ...otherIngredients.map(item => item._id), ...bun]; 
+    const orderIngredients = [...bun, ...otherItems.map(item => item._id), ...bun]; 
     dispatch(sendOrder(orderIngredients));
   }
 
-  const getBunPrice = useMemo(() => () => {
-    return selectedIngredients.bun[0] ?
-      allIngredients.find(item => item._id === selectedIngredients.bun[0]).price * bunsCount :
+  const bunPrice = useMemo(() => {
+    return bun[0] ?
+      allIngredients.find(item => item._id === bun[0]).price * bunsCount :
       0
-  }, [selectedIngredients.bun]);
+  }, [bun]);
 
   const getIngredientKey = (index) => {
-    return selectedIngredients.otherIngredients[index].key
+    return otherItems[index].key
   }
 
-  const getOtherIngredientsPrice = useMemo(() => () => {
-    return selectedIngredients.otherIngredients
-      .reduce((currentSum, ingredient) => {
-        const ingredientPrice = allIngredients.find(item => item._id === ingredient._id).price;
-        return currentSum + ingredientPrice;
-      }, 0);
-  }, [selectedIngredients.otherIngredients])
+  const otherItemsPrice = useMemo(() => {
+    return otherItems.reduce((currentSum, ingredient) => {
+      const ingredientPrice = allIngredients.find(item => item._id === ingredient._id).price;
+      return currentSum + ingredientPrice;
+    }, 0);
+  }, [otherItems])
 
   const calculateTotalAmount = () => {
-    return getBunPrice() + getOtherIngredientsPrice();
+    return bunPrice + otherItemsPrice;
   };
 
-  const getBun = useMemo(() => () => {
-    return allIngredients.filter(item => item._id === selectedIngredients.bun[0]);
-  }, [selectedIngredients]);
+  const selectedBun = useMemo(() => {
+    return allIngredients.filter(item => item._id === bun[0]);
+  }, [bun[0]]);
 
-  const getOtherIngredients = useMemo(() => () => {
-    return selectedIngredients.otherIngredients
-      .map(item => allIngredients.find(el => el._id === item._id));
-  }, [selectedIngredients])
+  const selectedOtherItems = useMemo(() => {
+    return otherItems.map(item => allIngredients.find(el => el._id === item._id));
+  }, [otherItems])
 
   return (
     <section className={`${styles['burger-constructor']} ${isHover ? styles['burger-constructor-hovered'] : ''} pt-25 pl-4`} ref={dropTarget} >
       <div className={`${styles.ingredients} `} >
-        {getBun().map(item => (
+        {selectedBun.map(item => (
           <div className={`${styles.ingredient} pl-8 mb-4 mr-4`} key={`${item._id}_top`}>
             <ConstructorElement
               text={`${item.name} (верх)`}
@@ -83,11 +80,11 @@ export default function BurgerConstructor() {
           </div>
         ))}
         <div className={`${styles['unlocked-ingredients']} custom-scroll`}>
-          {getOtherIngredients()?.map((item, index) => (
+          {selectedOtherItems.map((item, index) => (
             <ConstructorCard ingredient={item} key={getIngredientKey(index)} ingredientKey={getIngredientKey(index)} />
           ))}
         </div>
-        {getBun().map(item => (
+        {selectedBun.map(item => (
           <div className={`${styles.ingredient} pl-8 mt-4 mr-4`} key={`${item._id}_bottom`}>
             <ConstructorElement
               text={`${item.name} (низ)`}

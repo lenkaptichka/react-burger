@@ -95,21 +95,21 @@ export default function BurgerIngredients() {
         <div className={`${styles['ingredient-type']}`} ref={bunsSectionArea}>
           <h3 className={`${styles['type-name']} text text_type_main-medium `} ref={bunsSection}>Булки</h3>
           <ul className={`${styles['ingredient-cards']} mt-6 mb-1 ml-4 mr-4`}>
-            {buns.map(ingredient => <Ingredient key={ingredient._id} ingredient={ingredient} openModal={openModal} />)}
+            {buns.map(ingredient => <Ingredient key={ingredient._id} ingredient={ingredient} onClick={openModal} />)}
           </ul>
         </div>
 
         <div className={`${styles['ingredient-type']}`} ref={saucesSectionArea}>
           <h3 className={`${styles['type-name']} text text_type_main-medium `} ref={saucesSection}>Соусы</h3>
           <ul className={`${styles['ingredient-cards']} mt-6 mb-1 ml-4 mr-4`}>
-            {sauces.map(ingredient => <Ingredient key={ingredient._id} ingredient={ingredient} openModal={openModal} />)}
+            {sauces.map(ingredient => <Ingredient key={ingredient._id} ingredient={ingredient} onClick={openModal} />)}
           </ul>
         </div>
         
         <div className={`${styles['ingredient-type']}`} ref={mainsSectionArea}>
           <h3 className={`${styles['type-name']} text text_type_main-medium `} ref={mainsSection}>Начинки</h3>
           <ul className={`${styles['ingredient-cards']} mt-6 mb-1 ml-4 mr-4`}>
-            {mains.map(ingredient => <Ingredient key={ingredient._id} ingredient={ingredient} openModal={openModal} />)}
+            {mains.map(ingredient => <Ingredient key={ingredient._id} ingredient={ingredient} onClick={openModal} />)}
           </ul>
         </div>
       </div>
