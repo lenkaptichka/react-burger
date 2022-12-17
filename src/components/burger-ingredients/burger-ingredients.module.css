@@ -7,10 +7,6 @@
     display: flex;
 }
 
-.image {
-    max-width: 100%;
-}
-
 .ingredients {
     max-height: calc(100vh - 336px);
     overflow-y: overlay;
@@ -36,21 +32,4 @@
     column-gap: 24px;
     row-gap: 32px;
     box-sizing: border-box;
-}
-
-.ingredient-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    box-sizing: border-box;
-}
-
-.price {
-    display: flex;
-    align-items: center;
-}
-
-.name {
-    text-align: center;
 }

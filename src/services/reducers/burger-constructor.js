@@ -35,7 +35,7 @@ export const selectedIngredientsReducer = (state = initialState, action) => {
       const dropIngredientIndex = state.otherIngredients.findIndex(item => item.key === dropIngredient);
       const newOtherIngredients = [];
 
-      // Если перенос производится от м
+      // Если перенос производится от меньшего индекса к большему (перетаскивание вниз)
       if (dragIngredientIndex < dropIngredientIndex) {
         newOtherIngredients.push(...state.otherIngredients.slice(0, dragIngredientIndex),
         ...state.otherIngredients.slice(dragIngredientIndex + 1, dropIngredientIndex + 1),
@@ -43,6 +43,7 @@ export const selectedIngredientsReducer = (state = initialState, action) => {
         ...state.otherIngredients.slice(dropIngredientIndex + 1, state.otherIngredients.length)
       );
         return { ...state, otherIngredients: newOtherIngredients }
+        // Если перенос производится от большего индекса к меньшему (перетаскивание наверх)
       } else {
         newOtherIngredients.push(...state.otherIngredients.slice(0, dropIngredientIndex),
           ...state.otherIngredients.slice(dragIngredientIndex, dragIngredientIndex + 1),

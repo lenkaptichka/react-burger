@@ -1,22 +1,17 @@
 import styles from './ingredient.module.css';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components';
-import { addIngredient } from '../../services/actions/burger-constructor';
 import { bunsCount } from '../../constants/constants';
-import { useDrag, DragPreviewImage } from "react-dnd";
+import { useDrag, DragPreviewImage } from 'react-dnd';
+import PropTypes from 'prop-types';
+import { ingredientType } from '../../utils/types';
 
 export const Ingredient = ({ ingredient, openModal }) => {
   const selectedIngredients = useSelector(state => state.selectedIngredients);
-  const [{isDrag}, dragRef, dragPreviewRef] = useDrag({
+  const [, dragRef, dragPreviewRef] = useDrag({
     type: 'ingredient',
-    item: ingredient,
-    collect: monitor => ({
-      isDrag: monitor.isDragging()
-    })
+    item: ingredient
   });
-  // console.log(preview);
-
-  const dispatch = useDispatch();
 
   const countIngredients = (ingredientId) => {
     if (selectedIngredients.bun.find(item => item === ingredientId)) {
@@ -26,20 +21,17 @@ export const Ingredient = ({ ingredient, openModal }) => {
     }
   };
 
+  const previewImage = ingredient.image_large;
+
   return (
     <>
-      {/* <DragPreviewImage connect={dragPreviewRef} src={ingredient.image_large} /> */}
+      <DragPreviewImage connect={dragPreviewRef} src={previewImage} />
       <li
-        // ref={dragRef}
+        ref={dragRef}
         className={`${styles.ingredient}`}
-        onClick={() => {
-          openModal(ingredient);
-          // Добавление выбранного ингредиента
-          // dispatch(addIngredient(ingredient));
-        }}
+        onClick={() => openModal(ingredient)}
       >        
-        <img
-          ref={dragRef}      
+        <img   
           src={ingredient.image}
           alt={ingredient.name}
           className={`${styles.image} ml-4 mr-4 mb-4`}
@@ -57,3 +49,8 @@ export const Ingredient = ({ ingredient, openModal }) => {
     </>    
   )
 }
+
+Ingredient.propTypes = {
+  ingredient: ingredientType.isRequired,
+  openModal: PropTypes.func.isRequired
+};

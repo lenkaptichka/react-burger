@@ -1,10 +1,9 @@
 import styles from './burger-constructor.module.css';
-import { ConstructorElement, DragIcon, Button, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+import { ConstructorElement, Button, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
 import { useState, useMemo } from 'react';
 import { bunsCount } from '../../constants/constants';
-import { deleteIngredient } from '../../services/actions/burger-constructor';
 import { useSelector, useDispatch } from 'react-redux';
 import { sendOrder } from '../../services/actions/order';
 import { useDrop } from "react-dnd";
@@ -44,10 +43,7 @@ export default function BurgerConstructor() {
       0
   }, [selectedIngredients.bun]);
 
-  // Добавление ключа по индексу
   const getIngredientKey = (index) => {
-    // console.log('index', index)
-    // console.log('aaaa', selectedIngredients.otherIngredients[index].key)
     return selectedIngredients.otherIngredients[index].key
   }
 
@@ -89,21 +85,6 @@ export default function BurgerConstructor() {
         <div className={`${styles['unlocked-ingredients']} custom-scroll`}>
           {getOtherIngredients()?.map((item, index) => (
             <ConstructorCard ingredient={item} key={getIngredientKey(index)} ingredientKey={getIngredientKey(index)} />
-            // <div className={`${styles.ingredient} pl-8 mb-4`} key={getIngredientKey(index)}>
-            //   {!false &&
-            //     <div className={styles['drag-icon-wrapper']}>
-            //       <DragIcon type='primary' />
-            //     </div>
-            //   }
-            //   <ConstructorElement
-            //     text={item.name}
-            //     price={item.price}
-            //     isLocked={false}
-            //     thumbnail={item.image}
-            //     // Пока нет drag'n'drop удаление реализовано через индекс
-            //     handleClose={() => dispatch(deleteIngredient(index))}
-            //   />
-            // </div>
           ))}
         </div>
         {getBun().map(item => (

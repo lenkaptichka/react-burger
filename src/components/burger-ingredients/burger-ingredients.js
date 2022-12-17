@@ -8,7 +8,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { addIngredientDetails, deleteIngredientDetails } from '../../services/actions/ingredient-details';
 import { Ingredient } from '../ingredient/ingredient';
 
-
 export default function BurgerIngredients() {
   const [activeTab, setActiveTab] = useState('bun');
   const [modalIsOpen, setModalsOpen] = useState(false);

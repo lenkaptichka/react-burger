@@ -1,10 +1,11 @@
-import { ConstructorElement, DragIcon, Button, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+import { ConstructorElement, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './constructor-card.module.css'
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { deleteIngredient, moveIngredient } from '../../services/actions/burger-constructor';
 import { useDrag, useDrop } from 'react-dnd';
 import {useEffect} from 'react';
-// import { moveIngredient } from '../../services/actions/burger-constructor';
+import PropTypes from 'prop-types';
+import { ingredientType } from '../../utils/types';
 
 export default function ConstructorCard({ingredient, ingredientKey}) {
   const dispatch = useDispatch();
@@ -38,8 +39,7 @@ export default function ConstructorCard({ingredient, ingredientKey}) {
           <DragIcon type='primary' />
         </div>
         <ConstructorElement
-          text={ingredient.name}
-          
+          text={ingredient.name}     
           price={ingredient.price}
           isLocked={false}
           thumbnail={ingredient.image}
@@ -49,3 +49,8 @@ export default function ConstructorCard({ingredient, ingredientKey}) {
     </div>
   )
 }
+
+ConstructorCard.propTypes = {
+  ingredient: ingredientType.isRequired,
+  ingredientKey: PropTypes.string.isRequired
+};
