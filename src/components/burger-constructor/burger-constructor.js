@@ -1,33 +1,82 @@
 import styles from './burger-constructor.module.css';
 import { ConstructorElement, DragIcon, Button, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import PropTypes from 'prop-types';
-import { ingredientType } from '../../utils/types';
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
-import { useState } from 'react';
-import { fakeOrderNumber } from '../../utils/data';
+import { useState, useContext, useMemo } from 'react';
+import { SelectedIngredientsContext, IngredientsContext } from '../../services/app-context';
+import { bunsCount, INGREDIENT_API_URL } from '../../constants/constants';
+import checkResponse from '../../utils/check-response';
 
-export default function BurgerConstructor(props) {
+export default function BurgerConstructor() {
   const [modalIsOpen, setModalsOpen] = useState(false);
-  const [orderNumber, setOrderNumber] = useState(fakeOrderNumber);
+  const [order, setOrder] = useState({ isLoading: false, error: null, orderNumber: null });
+
+  const { selectedIngredients, setSelectedIngredients } = useContext(SelectedIngredientsContext);
+  const allIngredients = useContext(IngredientsContext);
 
   const closeModal = () => {
     setModalsOpen(false);
   };
 
-  const calculateTotalAmount = () => {
-    return props.selectedIngredients.reduce((currentSum, ingredient) => {
-      if (ingredient.type === 'bun') {
-        return currentSum + ingredient.price * 2;
-      }
-      return currentSum + ingredient.price
-    }, 0);
+  const sendOrder = () => {
+    setOrder({ ...order, isLoading: true, error: null });
+    fetch(`${INGREDIENT_API_URL}/api/orders`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        ingredients: [...selectedIngredients.bun, ...selectedIngredients.otherIngredients, ...selectedIngredients.bun]
+      })
+    })
+      .then(checkResponse)
+      .then(data => {
+        console.log(data);
+        setOrder({ ...order, orderNumber: data.order.number, isLoading: false });
+      })
+      .catch(error => setOrder({ ...order, error: error, isLoading: false }));
+  }
+
+  // Пока нет drag'n'drop удаление реализовано через индекс
+  const deleteIngredient = (ingredientIndex) => {
+    setSelectedIngredients({
+      ...selectedIngredients,
+      otherIngredients: selectedIngredients.otherIngredients
+        .filter((item, index) => index !== ingredientIndex)
+    })
   };
+
+  const getBunPrice = useMemo(() => () => {
+    return selectedIngredients.bun[0] ?
+      allIngredients.find(item => item._id === selectedIngredients.bun[0]).price * bunsCount :
+      0
+  }, [selectedIngredients.bun]);
+
+  const getOtherIngredientsPrice =  useMemo(() => () => {
+    return selectedIngredients.otherIngredients
+      .reduce((currentSum, ingredient) => {
+        const ingredientPrice = allIngredients.find(item => item._id === ingredient).price;
+        return currentSum + ingredientPrice;
+      }, 0);
+  }, [selectedIngredients.otherIngredients])
+
+  const calculateTotalAmount = () => {
+    return getBunPrice() + getOtherIngredientsPrice();
+  };
+
+  const getBun = useMemo(() => () => {
+    return allIngredients.filter(item => item._id === selectedIngredients.bun[0]);
+  }, [selectedIngredients]);
+
+  const getOtherIngredients = useMemo(() => () => {
+    return selectedIngredients.otherIngredients
+      .map(item => allIngredients.find(el => el._id === item));
+  }, [selectedIngredients])
 
   return (
     <section className={`${styles['burger-constructor']} pt-25 pl-4`}>
       <div className={`${styles.ingredients}`}>
-        {props.selectedIngredients.filter(item => item.type === 'bun').map(item => (
+        {getBun().map(item => (
           <div className={`${styles.ingredient} pl-8 mb-4 mr-4`} key={`${item._id}_top`}>
             <ConstructorElement
               text={`${item.name} (верх)`}
@@ -39,7 +88,7 @@ export default function BurgerConstructor(props) {
           </div>
         ))}
         <div className={`${styles['unlocked-ingredients']} custom-scroll`}>
-          {props.selectedIngredients.filter(item => item.type !== 'bun').map((item, index) => (
+          {getOtherIngredients().map((item, index) => (
             <div className={`${styles.ingredient} pl-8 mb-4`} key={`${item._id}_${index}`}>
               {!false &&
                 <div className={styles['drag-icon-wrapper']}>
@@ -51,11 +100,14 @@ export default function BurgerConstructor(props) {
                 price={item.price}
                 isLocked={false}
                 thumbnail={item.image}
+                handleClose={() => {
+                  deleteIngredient(index);
+                }}
               />
             </div>
           ))}
         </div>
-        {props.selectedIngredients.filter(item => item.type === 'bun').map(item => (
+        {getBun().map(item => (
           <div className={`${styles.ingredient} pl-8 mt-4 mr-4`} key={`${item._id}_bottom`}>
             <ConstructorElement
               text={`${item.name} (низ)`}
@@ -76,20 +128,18 @@ export default function BurgerConstructor(props) {
           htmlType='button'
           type='primary'
           size='large'
-          onClick={() => setModalsOpen(true)}
+          onClick={() => {
+            setModalsOpen(true);
+            sendOrder();
+          }}
         >Оформить заказ</Button>
       </div>
-      {modalIsOpen ?
+      {modalIsOpen && order.orderNumber && !order.isLoading && !order.error ?
         <Modal closeModal={closeModal}>
-          <OrderDetails orderNumber={orderNumber} />
+          <OrderDetails orderNumber={order.orderNumber} />
         </Modal> :
         null
       }
     </section>
   )
 };
-
-BurgerConstructor.propTypes = {
-  selectedIngredients: PropTypes.arrayOf(ingredientType)
-};
-
