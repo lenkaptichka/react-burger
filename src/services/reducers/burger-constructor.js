@@ -35,23 +35,18 @@ export const selectedIngredientsReducer = (state = initialState, action) => {
       const dropIndex = state.otherItems.findIndex(item => item.key === dropIngredient);
       const newOtherItems = [];
 
-      // Если перенос производится от меньшего индекса к большему (перетаскивание вниз)
-      if (dragIndex < dropIndex) {
-        newOtherItems.push(...state.otherItems.slice(0, dragIndex),
-        ...state.otherItems.slice(dragIndex + 1, dropIndex + 1),
-        ...state.otherItems.slice(dragIndex, dragIndex + 1),
-        ...state.otherItems.slice(dropIndex + 1, state.otherItems.length)
-      );
-        return { ...state, otherItems: newOtherItems }
-        // Если перенос производится от большего индекса к меньшему (перетаскивание наверх)
-      } else {
-        newOtherItems.push(...state.otherItems.slice(0, dropIndex),
-          ...state.otherItems.slice(dragIndex, dragIndex + 1),
-          ...state.otherItems.slice(dropIndex, dragIndex),
-          ...state.otherItems.slice(dragIndex + 1, state.otherItems.length));
+      const minIndex = Math.min(dragIndex, dropIndex);
+      const maxIndex = Math.max(dragIndex, dropIndex);
 
-        return { ...state, otherItems: newOtherItems }
-      }
+      newOtherItems.push(...state.otherItems.slice(0, minIndex));
+
+      dragIndex < dropIndex ?
+        newOtherItems.push(...state.otherItems.slice(dragIndex + 1, dropIndex + 1), state.otherItems[dragIndex]) :
+        newOtherItems.push(state.otherItems[dragIndex], ...state.otherItems.slice(dropIndex, dragIndex));
+      
+      newOtherItems.push(...state.otherItems.slice(maxIndex + 1, state.otherItems.length));
+
+      return { ...state, otherItems: newOtherItems }      
     }
     default:
       return state

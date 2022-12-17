@@ -52,5 +52,5 @@ export const Ingredient = ({ ingredient, onClick }) => {
 
 Ingredient.propTypes = {
   ingredient: ingredientType.isRequired,
-  openModal: PropTypes.func.isRequired
+  onClick: PropTypes.func.isRequired
 };
