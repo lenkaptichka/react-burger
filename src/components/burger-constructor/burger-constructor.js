@@ -1,82 +1,74 @@
 import styles from './burger-constructor.module.css';
-import { ConstructorElement, DragIcon, Button, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+import { ConstructorElement, Button, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
-import { useState, useContext, useMemo } from 'react';
-import { SelectedIngredientsContext, IngredientsContext } from '../../services/app-context';
-import { bunsCount, INGREDIENT_API_URL } from '../../constants/constants';
-import checkResponse from '../../utils/check-response';
+import { useState, useMemo } from 'react';
+import { bunsCount } from '../../constants/constants';
+import { useSelector, useDispatch } from 'react-redux';
+import { sendOrder } from '../../services/actions/order';
+import { useDrop } from "react-dnd";
+import { addIngredient } from '../../services/actions/burger-constructor';
+import ConstructorCard from '../constructor-card/constructor-card';
 
 export default function BurgerConstructor() {
   const [modalIsOpen, setModalsOpen] = useState(false);
-  const [order, setOrder] = useState({ isLoading: false, error: null, orderNumber: null });
 
-  const { selectedIngredients, setSelectedIngredients } = useContext(SelectedIngredientsContext);
-  const allIngredients = useContext(IngredientsContext);
+  const { allIngredients } = useSelector(state => state.ingredients);
+  const { bun, otherItems } = useSelector(state => state.selectedIngredients);
+  const dispatch = useDispatch();
+
+  const [{isHover}, dropTarget] = useDrop({
+    accept: 'ingredient',
+    drop(ingredient) {
+      dispatch(addIngredient(ingredient));
+    },
+    collect: monitor => ({
+      isHover: monitor.isOver(),
+    })
+  });
 
   const closeModal = () => {
     setModalsOpen(false);
   };
 
-  const sendOrder = () => {
-    setOrder({ ...order, isLoading: true, error: null });
-    fetch(`${INGREDIENT_API_URL}/api/orders`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        ingredients: [...selectedIngredients.bun, ...selectedIngredients.otherIngredients, ...selectedIngredients.bun]
-      })
-    })
-      .then(checkResponse)
-      .then(data => {
-        console.log(data);
-        setOrder({ ...order, orderNumber: data.order.number, isLoading: false });
-      })
-      .catch(error => setOrder({ ...order, error: error, isLoading: false }));
+  const sendOrderHandler = () => {
+    const orderIngredients = [...bun, ...otherItems.map(item => item._id), ...bun]; 
+    dispatch(sendOrder(orderIngredients));
   }
 
-  // Пока нет drag'n'drop удаление реализовано через индекс
-  const deleteIngredient = (ingredientIndex) => {
-    setSelectedIngredients({
-      ...selectedIngredients,
-      otherIngredients: selectedIngredients.otherIngredients
-        .filter((item, index) => index !== ingredientIndex)
-    })
-  };
-
-  const getBunPrice = useMemo(() => () => {
-    return selectedIngredients.bun[0] ?
-      allIngredients.find(item => item._id === selectedIngredients.bun[0]).price * bunsCount :
+  const bunPrice = useMemo(() => {
+    return bun[0] ?
+      allIngredients.find(item => item._id === bun[0]).price * bunsCount :
       0
-  }, [selectedIngredients.bun]);
+  }, [bun]);
 
-  const getOtherIngredientsPrice =  useMemo(() => () => {
-    return selectedIngredients.otherIngredients
-      .reduce((currentSum, ingredient) => {
-        const ingredientPrice = allIngredients.find(item => item._id === ingredient).price;
-        return currentSum + ingredientPrice;
-      }, 0);
-  }, [selectedIngredients.otherIngredients])
+  const getIngredientKey = (index) => {
+    return otherItems[index].key
+  }
+
+  const otherItemsPrice = useMemo(() => {
+    return otherItems.reduce((currentSum, ingredient) => {
+      const ingredientPrice = allIngredients.find(item => item._id === ingredient._id).price;
+      return currentSum + ingredientPrice;
+    }, 0);
+  }, [otherItems])
 
   const calculateTotalAmount = () => {
-    return getBunPrice() + getOtherIngredientsPrice();
+    return bunPrice + otherItemsPrice;
   };
 
-  const getBun = useMemo(() => () => {
-    return allIngredients.filter(item => item._id === selectedIngredients.bun[0]);
-  }, [selectedIngredients]);
+  const selectedBun = useMemo(() => {
+    return allIngredients.filter(item => item._id === bun[0]);
+  }, [bun[0]]);
 
-  const getOtherIngredients = useMemo(() => () => {
-    return selectedIngredients.otherIngredients
-      .map(item => allIngredients.find(el => el._id === item));
-  }, [selectedIngredients])
+  const selectedOtherItems = useMemo(() => {
+    return otherItems.map(item => allIngredients.find(el => el._id === item._id));
+  }, [otherItems])
 
   return (
-    <section className={`${styles['burger-constructor']} pt-25 pl-4`}>
-      <div className={`${styles.ingredients}`}>
-        {getBun().map(item => (
+    <section className={`${styles['burger-constructor']} ${isHover ? styles['burger-constructor-hovered'] : ''} pt-25 pl-4`} ref={dropTarget} >
+      <div className={`${styles.ingredients} `} >
+        {selectedBun.map(item => (
           <div className={`${styles.ingredient} pl-8 mb-4 mr-4`} key={`${item._id}_top`}>
             <ConstructorElement
               text={`${item.name} (верх)`}
@@ -88,26 +80,11 @@ export default function BurgerConstructor() {
           </div>
         ))}
         <div className={`${styles['unlocked-ingredients']} custom-scroll`}>
-          {getOtherIngredients().map((item, index) => (
-            <div className={`${styles.ingredient} pl-8 mb-4`} key={`${item._id}_${index}`}>
-              {!false &&
-                <div className={styles['drag-icon-wrapper']}>
-                  <DragIcon type='primary' />
-                </div>
-              }
-              <ConstructorElement
-                text={item.name}
-                price={item.price}
-                isLocked={false}
-                thumbnail={item.image}
-                handleClose={() => {
-                  deleteIngredient(index);
-                }}
-              />
-            </div>
+          {selectedOtherItems.map((item, index) => (
+            <ConstructorCard ingredient={item} key={getIngredientKey(index)} ingredientKey={getIngredientKey(index)} />
           ))}
         </div>
-        {getBun().map(item => (
+        {selectedBun.map(item => (
           <div className={`${styles.ingredient} pl-8 mt-4 mr-4`} key={`${item._id}_bottom`}>
             <ConstructorElement
               text={`${item.name} (низ)`}
@@ -130,13 +107,13 @@ export default function BurgerConstructor() {
           size='large'
           onClick={() => {
             setModalsOpen(true);
-            sendOrder();
+            sendOrderHandler();
           }}
         >Оформить заказ</Button>
       </div>
-      {modalIsOpen && order.orderNumber && !order.isLoading && !order.error ?
+      {modalIsOpen ?
         <Modal closeModal={closeModal}>
-          <OrderDetails orderNumber={order.orderNumber} />
+          <OrderDetails />
         </Modal> :
         null
       }

@@ -1,18 +1,24 @@
-import { useEffect, useRef, useState, useContext, useMemo } from 'react';
-import { CurrencyIcon, Counter, Tab } from '@ya.praktikum/react-developer-burger-ui-components';
+import { useEffect, useRef, useState, useMemo } from 'react';
+import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
+import { useInView } from 'react-intersection-observer';
 import styles from './burger-ingredients.module.css';
 import IngredientDetails from '../ingredient-details/ingredient-details';
 import Modal from '../modal/modal';
-import { SelectedIngredientsContext, IngredientsContext } from '../../services/app-context';
-import { bunsCount } from '../../constants/constants';
+import { useSelector, useDispatch } from 'react-redux';
+import { addIngredientDetails, deleteIngredientDetails } from '../../services/actions/ingredient-details';
+import { Ingredient } from '../ingredient/ingredient';
 
 export default function BurgerIngredients() {
   const [activeTab, setActiveTab] = useState('bun');
   const [modalIsOpen, setModalsOpen] = useState(false);
-  const [modalContent, setModalContent] = useState(null);
 
-  const { selectedIngredients, setSelectedIngredients } = useContext(SelectedIngredientsContext);
-  const allIngredients = useContext(IngredientsContext);
+  const {ref: bunsSectionArea, inView: bunsSectionInView} = useInView({threshold: 0});
+  const {ref: saucesSectionArea, inView: saucesSectionView} = useInView({threshold: 0});
+  const {ref: mainsSectionArea, inView: mainsSectionView} = useInView({threshold: 0});
+
+  const { allIngredients } = useSelector(state => state.ingredients);
+
+  const dispatch = useDispatch();
 
   const bunsSection = useRef(null);
   const saucesSection = useRef(null);
@@ -32,24 +38,15 @@ export default function BurgerIngredients() {
     }
   }, [activeTab]);
 
-  // Вычисление количества каждого ингредиента
-  const countIngredients = (ingredientId) => {
-    if (selectedIngredients.bun.find(item => item === ingredientId)) {
-      return bunsCount;
+  useEffect(() => {
+    if (bunsSectionInView) {
+      setActiveTab('bun');
+    } else if (saucesSectionView) {
+      setActiveTab('sauce');
     } else {
-      return selectedIngredients.otherIngredients.filter(item => item === ingredientId).length;
+      setActiveTab('main');
     }
-  };
-
-  // Добавление выбранного ингредиента
-  const addSelectedIngredient = (ingredient) => {
-    if (ingredient.type === 'bun') {
-      setSelectedIngredients({...selectedIngredients, bun: [ingredient._id]})
-    } else {
-      setSelectedIngredients({...selectedIngredients,
-        otherIngredients: [...selectedIngredients.otherIngredients, ingredient._id]});
-    }
-  }
+  }, [bunsSectionInView, saucesSectionView, mainsSectionView]);
 
   const buns = useMemo(
     () => allIngredients.filter(ingredient => ingredient.type === 'bun'),
@@ -65,39 +62,12 @@ export default function BurgerIngredients() {
 
   const openModal = (ingredient) => {
     setModalsOpen(true);
-    setModalContent(ingredient);
+    dispatch(addIngredientDetails(ingredient));
   };
 
   const closeModal = () => {
     setModalsOpen(false);
-  };
-
-  const renderIngredientCard = (ingredient) => {
-    return (
-      <li
-        className={`${styles['ingredient-card']}`}
-        key={ingredient['_id']}
-        onClick={() => {
-          openModal(ingredient);
-          addSelectedIngredient(ingredient);
-        }}
-      >
-        <img
-          src={ingredient.image}
-          alt={ingredient.name}
-          className={`${styles.image} ml-4 mr-4 mb-4`}
-        />
-        <div className={styles.price}>
-          <h5 className='text text_type_digits-default mr-2'>{ingredient.price}</h5>
-          <CurrencyIcon type='primary' />
-        </div>
-        <h4 className={`${styles.name} text_type_main-default mt-1`}>{ingredient.name}</h4>
-        {countIngredients(ingredient['_id']) > 0 ?
-          <Counter count={countIngredients(ingredient['_id'])} size='default' /> :
-          null
-        }
-      </li>
-    )
+    dispatch(deleteIngredientDetails());
   };
 
   return (
@@ -122,28 +92,30 @@ export default function BurgerIngredients() {
       </div>
 
       <div className={`${styles.ingredients} custom-scroll`}>
-        <div className={`${styles['ingredient-type']}`}>
+        <div className={`${styles['ingredient-type']}`} ref={bunsSectionArea}>
           <h3 className={`${styles['type-name']} text text_type_main-medium `} ref={bunsSection}>Булки</h3>
           <ul className={`${styles['ingredient-cards']} mt-6 mb-1 ml-4 mr-4`}>
-            {buns.map(ingredient => renderIngredientCard(ingredient))}
+            {buns.map(ingredient => <Ingredient key={ingredient._id} ingredient={ingredient} onClick={openModal} />)}
           </ul>
         </div>
-        <div className={`${styles['ingredient-type']}`}>
+
+        <div className={`${styles['ingredient-type']}`} ref={saucesSectionArea}>
           <h3 className={`${styles['type-name']} text text_type_main-medium `} ref={saucesSection}>Соусы</h3>
           <ul className={`${styles['ingredient-cards']} mt-6 mb-1 ml-4 mr-4`}>
-            {sauces.map(ingredient => renderIngredientCard(ingredient))}
+            {sauces.map(ingredient => <Ingredient key={ingredient._id} ingredient={ingredient} onClick={openModal} />)}
           </ul>
         </div>
-        <div className={`${styles['ingredient-type']}`}>
+        
+        <div className={`${styles['ingredient-type']}`} ref={mainsSectionArea}>
           <h3 className={`${styles['type-name']} text text_type_main-medium `} ref={mainsSection}>Начинки</h3>
           <ul className={`${styles['ingredient-cards']} mt-6 mb-1 ml-4 mr-4`}>
-            {mains.map(ingredient => renderIngredientCard(ingredient))}
+            {mains.map(ingredient => <Ingredient key={ingredient._id} ingredient={ingredient} onClick={openModal} />)}
           </ul>
         </div>
       </div>
       {modalIsOpen ?
         <Modal title={'Детали ингредиента'} closeModal={closeModal}>
-          <IngredientDetails ingredient={modalContent}/>
+          <IngredientDetails />
         </Modal> :
         null
       }
