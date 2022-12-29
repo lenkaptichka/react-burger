@@ -4,8 +4,16 @@ import PropTypes from 'prop-types';
 import { createPortal } from 'react-dom';
 import { useEffect } from 'react';
 import ModalOverlay from '../modal-overlay/modal-overlay';
+import { useParams, useHistory } from 'react-router-dom';
+
+
 
 export default function Modal({title, children, closeModal}) {
+  const { id } = useParams();
+  const history = useHistory();
+  console.log('id', id);
+
+
   useEffect(() => {
     const closeModalByPressingEsc = (event) => {
       if (event.key === 'Escape') {
@@ -16,6 +24,13 @@ export default function Modal({title, children, closeModal}) {
         
     return () => document.removeEventListener('keydown', closeModalByPressingEsc);
   }, []);
+
+  const closeModalNew = () => {
+    console.log('history', history);
+    // event.stopPropagation();
+    console.log('closeModal');
+    history.push("/");
+  }
 
   return createPortal(
     <>
@@ -34,5 +49,5 @@ export default function Modal({title, children, closeModal}) {
 Modal.propTypes = {
   title: PropTypes.string,
   children: PropTypes.element.isRequired,
-  closeModal: PropTypes.func.isRequired,
+  closeModal: PropTypes.func,
 };

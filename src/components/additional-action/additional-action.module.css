@@ -1,0 +1,15 @@
+.additional-action {
+    display: flex;
+}
+
+.additional-action:last-of-type {
+    margin-bottom: 0;
+}
+
+.question {
+    padding: 0;
+}
+
+.button {
+    padding: 0;
+}

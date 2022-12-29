@@ -40,7 +40,7 @@ export default function BurgerConstructor() {
     return bun[0] ?
       allIngredients.find(item => item._id === bun[0]).price * bunsCount :
       0
-  }, [bun]);
+  }, [bun, allIngredients]);
 
   const getIngredientKey = (index) => {
     return otherItems[index].key
@@ -51,7 +51,7 @@ export default function BurgerConstructor() {
       const ingredientPrice = allIngredients.find(item => item._id === ingredient._id).price;
       return currentSum + ingredientPrice;
     }, 0);
-  }, [otherItems])
+  }, [otherItems, allIngredients])
 
   const calculateTotalAmount = () => {
     return bunPrice + otherItemsPrice;
@@ -59,11 +59,11 @@ export default function BurgerConstructor() {
 
   const selectedBun = useMemo(() => {
     return allIngredients.filter(item => item._id === bun[0]);
-  }, [bun[0]]);
+  }, [bun, allIngredients]);
 
   const selectedOtherItems = useMemo(() => {
     return otherItems.map(item => allIngredients.find(el => el._id === item._id));
-  }, [otherItems])
+  }, [otherItems, allIngredients])
 
   return (
     <section className={`${styles['burger-constructor']} ${isHover ? styles['burger-constructor-hovered'] : ''} pt-25 pl-4`} ref={dropTarget} >

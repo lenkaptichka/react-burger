@@ -9,7 +9,7 @@ export const getIngredients = () => {
   return function(dispatch) {
     dispatch({type: GET_INGREDIENTS_REQUEST});
 
-    fetch(`${INGREDIENT_API_URL}/api/ingredients`)
+    fetch(`${INGREDIENT_API_URL}/ingredients`)
       .then(checkResponse)
       .then(data => dispatch({
         type: GET_INGREDIENTS_SUCCESS,

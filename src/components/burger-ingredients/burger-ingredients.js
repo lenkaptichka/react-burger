@@ -7,6 +7,7 @@ import Modal from '../modal/modal';
 import { useSelector, useDispatch } from 'react-redux';
 import { addIngredientDetails, deleteIngredientDetails } from '../../services/actions/ingredient-details';
 import { Ingredient } from '../ingredient/ingredient';
+import { Link, useLocation, useHistory } from "react-router-dom";
 
 export default function BurgerIngredients() {
   const [activeTab, setActiveTab] = useState('bun');
@@ -19,6 +20,7 @@ export default function BurgerIngredients() {
   const { allIngredients } = useSelector(state => state.ingredients);
 
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const bunsSection = useRef(null);
   const saucesSection = useRef(null);
@@ -68,6 +70,7 @@ export default function BurgerIngredients() {
   const closeModal = () => {
     setModalsOpen(false);
     dispatch(deleteIngredientDetails());
+    history.goBack();
   };
 
   return (

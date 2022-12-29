@@ -1,0 +1,14 @@
+.section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 180px auto 0;
+}
+
+.light-digits {
+    text-shadow: 0 0 10px #E33CD5,0 0 20px #E33CD5,0 0 30px #E33CD5ed;;
+}
+
+.order-history {
+    margin-right: auto;
+}

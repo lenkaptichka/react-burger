@@ -9,7 +9,7 @@ export const sendOrder = (ingredients) => {
   return function(dispatch) {
     dispatch({type: GET_ORDER_REQUEST})
 
-    fetch(`${INGREDIENT_API_URL}/api/orders`, {
+    fetch(`${INGREDIENT_API_URL}/orders`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
