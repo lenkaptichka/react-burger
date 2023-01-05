@@ -4,8 +4,9 @@ import AdditionalAction from '../components/additional-action/additional-action'
 import Form from '../components/form/form';
 import { useDispatch, useSelector } from 'react-redux';
 import { sendLoginData, SET_PASSWORD } from '../services/actions/user';
-import { Redirect } from 'react-router-dom';
+import { Redirect, useLocation } from 'react-router-dom';
 import styles from './pages.module.css';
+import { getCookie } from '../utils/cookie';
 
 const Login = () => {
   const [form, setValue] = useState({email: '', password: ''})
@@ -14,6 +15,7 @@ const Login = () => {
   const loginFailed = useSelector(state => state.userInformation.loginFailed);
 
   const dispatch = useDispatch();
+  const location = useLocation();
 
   const emailInputRef = useRef(null);
   const passwordInputRef = useRef(null);
@@ -29,18 +31,15 @@ const Login = () => {
       password: form.password
     });
     dispatch(sendLoginData(form))
-  }
+  };
 
-  if (userIsAuthorized) {
-    console.log({userIsAuthorized});
+  if (userIsAuthorized || getCookie('accessToken')) {
     return (
       <Redirect
-        to={{
-          pathname: '/'
-        }}
+        to={location.state?.from || '/'}
       />
     )
-  }
+  };
 
   const onIconClick = () => {
     setTimeout(() => passwordInputRef.current.focus(), 0)

@@ -6,6 +6,7 @@ export default function AppHeader() {
   const mainPage = useRouteMatch('/');
   const orderFeedPage = useRouteMatch('/order-feed');
   const profilePage = useRouteMatch('/profile');
+  const orderHistoryPage = useRouteMatch('/profile/orders');
 
   console.log({mainPage, orderFeedPage, profilePage})
 
@@ -34,8 +35,9 @@ export default function AppHeader() {
 
           <li className={`${styles['navigation-list-item']} ${styles.profile} pt-4 pb-4 pl-5`}>
             <Link href='#' className={`${styles.tab}`} to={{ pathname: '/profile' }}>
-              <ProfileIcon type={profilePage?.isExact ? 'primary' : 'secondary'} />
-              <p className={`text text_type_main-default ml-2 ${profilePage?.isExact ? 'text_color_primary' : 'text_color_inactive'}`}>
+              <ProfileIcon type={profilePage?.isExact || orderHistoryPage?.isExact ? 'primary' : 'secondary'} />
+              <p className={`text text_type_main-default ml-2 ${profilePage?.isExact || orderHistoryPage?.isExact ?
+                'text_color_primary' : 'text_color_inactive'}`}>
                 Личный кабинет
                 </p>
             </Link>

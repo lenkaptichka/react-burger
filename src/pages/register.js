@@ -1,14 +1,17 @@
-import AdditionalAction from "../components/additional-action/additional-action"
-import Form from "../components/form/form"
+import AdditionalAction from '../components/additional-action/additional-action'
+import Form from '../components/form/form'
 import { Input } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useState, useRef } from 'react';
-import { sendRegisterData } from "../services/actions/user";
-import { useDispatch } from 'react-redux';
+import { sendRegisterData } from '../services/actions/user';
+import { useDispatch, useSelector } from 'react-redux';
 import styles from './pages.module.css';
+import { Redirect } from 'react-router-dom';
+import { getCookie } from '../utils/cookie';
 
 const Register = () => {
   const [form, setValue] = useState({email: '', password: '', name: ''});
   const [passwordIsShown, setPasswordIsShown] = useState(false);
+  const userIsAuthorized = useSelector(state => state.userInformation.userIsAuthorized);
 
   const dispatch = useDispatch();
 
@@ -16,6 +19,10 @@ const Register = () => {
   const emailInputRef = useRef(null);
   const passwordInputRef = useRef(null);
 
+  const sendRegister = (event) => {
+    event.preventDefault();
+    dispatch(sendRegisterData(form));
+  }
 
   const onChange = event => {
     setValue({...form, [event.target.name]: event.target.value})
@@ -24,12 +31,21 @@ const Register = () => {
   const onIconClick = () => {
     setTimeout(() => passwordInputRef.current.focus(), 0);
     setPasswordIsShown(!passwordIsShown);
-  }
+  };
+
+  if (userIsAuthorized || getCookie('accessToken')) {
+    return (
+      <Redirect
+        to={{
+          pathname: '/'
+        }}
+      />
+    )
+  };
 
   return (
     <section className={styles.section}>
-      <Form formTitle={'Регистрация'} formButtonText={'Зарегистрироваться'} formButtonClick={() => dispatch(sendRegisterData(form))}>
-      {/* <Form formTitle={'Регистрация'} formButtonText={'Зарегистрироваться'}  formButtonClick={() => console.log(JSON.stringify(form))}> */}
+      <Form formTitle={'Регистрация'} formButtonText={'Зарегистрироваться'} formButtonClick={sendRegister}>
         <Input
           type={'text'}
           placeholder={'Имя'}

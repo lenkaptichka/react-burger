@@ -2,19 +2,21 @@
 import Form from '../components/form/form';
 import { Input } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useState, useRef } from 'react';
-import AdditionalAction from "../components/additional-action/additional-action";
+import AdditionalAction from '../components/additional-action/additional-action';
 import { useDispatch, useSelector } from 'react-redux';
 import { sendForgotPassword } from '../services/actions/user';
 import { Redirect } from 'react-router-dom';
 import styles from './pages.module.css';
+import { getCookie } from '../utils/cookie';
 
 const ForgotPassword = () => {
   const [form, setValue] = useState({email: ''});
+  const emailInputRef = useRef(null);
+
   const forgotPasswordRequest = useSelector(state => state.userInformation.forgotPasswordRequest);
+  const userIsAuthorized = useSelector(state => state.userInformation.userIsAuthorized);
 
   const dispatch = useDispatch();
-
-  const emailInputRef = useRef(null);
 
   const onChange = event => {
     setValue({...form, [event.target.name]: event.target.value})
@@ -23,10 +25,19 @@ const ForgotPassword = () => {
   const sendEmail = (event) => {
     event.preventDefault();
     dispatch(sendForgotPassword(form));
-  }
+  };
+
+  if (userIsAuthorized || getCookie('accessToken')) {
+    return (
+      <Redirect
+        to={{
+          pathname: '/'
+        }}
+      />
+    )
+  };
 
   if (forgotPasswordRequest) {
-    console.log({forgotPasswordRequest});
     return (
       <Redirect
         to={{
@@ -34,7 +45,7 @@ const ForgotPassword = () => {
         }}
       />
     )
-  }
+  };
 
   return (
     <section className={styles.section}>

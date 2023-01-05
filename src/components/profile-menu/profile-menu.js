@@ -1,20 +1,22 @@
-import { Link, useRouteMatch, NavLink } from 'react-router-dom';
+import { Link, useRouteMatch, useHistory, Redirect } from 'react-router-dom';
 import styles from './profile-menu.module.css';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../services/actions/user';
 
 const ProfileMenu = () => {
   const profilePage = useRouteMatch('/profile');
   const orderHistoryPage = useRouteMatch('/profile/orders');
+  const logoutRequest = useSelector(state => state.userInformation.logoutRequest);
+  const logoutIsSuccess = useSelector(state => state.userInformation.logoutSuccess);
+
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const clickLogout = () => {
     dispatch(logout());
   };
 
   return ( 
-    // <nav className={styles.navigation}>
-    // <div className={styles['profile-menu']}>
     <div className={`${styles.navigation} mr-15 mt-30`}>
       <nav>
         <ul className={styles['navigation-list']}>
@@ -49,8 +51,6 @@ const ProfileMenu = () => {
         изменить свои персональные данные`}
       </p>
     </div>
-
-
   )
 }
 

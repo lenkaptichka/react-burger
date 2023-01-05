@@ -30,6 +30,7 @@ import { getRefreshToken } from '../../services/actions/token';
 import { getUser, USER_IS_AUTHORIZED } from '../../services/actions/user';
 import { ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components';
 import { getCookie } from '../../utils/cookie';
+import ProtectedRoute from '../protected-route/protected-route';
 
 function App() {
   const [timerId, setTimerId] = useState(null);
@@ -87,60 +88,60 @@ function App() {
   //   // console.log('history', history);
   //   // event.stopPropagation();
   //   console.log('closeModal');
-  //   // history.push("/");
+  //   // history.push('/');
   // }
 
   // if (!modalIngredient) {
-  //   return history.push("/");
+  //   return history.push('/');
   // }
 
   return (
     <Router>
       <div className={`${styles.main} body`}>
         <AppHeader />
-        {/* <DndProvider backend={HTML5Backend}> */}
         <main className={styles.mainsection}>
         <Switch>
           <Route path='/' exact={true} >
             <Main />
-            {/* <BurgerIngredients />
-            <BurgerConstructor /> */}
           </Route>
+
           <Route path='/order-feed' exact={true}>
             <OrderFeed />
           </Route>
+
           <Route path='/login' exact={true}>
             <Login />
           </Route>
-          <Route path='/profile' exact={true}>
+
+          <ProtectedRoute path='/profile' exact={true}>
             <Profile />
-          </Route>
+          </ProtectedRoute>
+
+          <ProtectedRoute path='/profile/orders' exact={true}>
+            <OrderHistory />
+          </ProtectedRoute>
+
           <Route path='/register' exact={true}>
             <Register />
           </Route>
+
           <Route path='/forgot-password' exact={true}>
             <ForgotPassword />
           </Route>
+
           <Route path='/reset-password' exact={true}>
             <ResetPassword />
           </Route>
-          <Route path='/profile/orders' exact={true}>
-            <OrderHistory />
-          </Route>
+
           <Route path='/ingredients/:id' exact={true}>
             <IngredientInformation />
           </Route>
+
           <Route>
             <NotFound />
           </Route>
-          {/* <Route path='/ingredients/:id' exact={true}>
-            <Modal title={'Детали ингредиента'} closeModal={closeModal}>
-              <IngredientDetails />
-            </Modal>
-          </Route> */}
           </Switch>
         </main>
-        {/* </DndProvider> */}
       </div>
     </Router>
 

@@ -85,7 +85,8 @@ export const userReducer = (state = initialState, action) => {
         ...state,
         loginRequest: false,
         loginFailed: null,
-        loginSuccess: true
+        loginSuccess: true,
+        logoutSuccess: false
       }
     }
     case GET_LOGIN_FAILED: {

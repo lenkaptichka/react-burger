@@ -1,15 +1,19 @@
-import Form from "../components/form/form"
+import Form from '../components/form/form'
 import { Input } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useState, useRef } from 'react';
-import AdditionalAction from "../components/additional-action/additional-action";
-import FormPageWrapper from "../components/form-page-wrapper/form-page-wrapper";
-import { useDispatch } from 'react-redux';
+import AdditionalAction from '../components/additional-action/additional-action';
+import { useDispatch, useSelector } from 'react-redux';
 import { sendResetPassword } from '../services/actions/user';
 import styles from './pages.module.css';
+import { Redirect } from 'react-router-dom';
+import { getCookie } from '../utils/cookie';
 
 const ResetPassword = () => {
   const [form, setValue] = useState({password: '', token: ''});
   const [passwordIsShown, setPasswordIsShown] = useState(false);
+
+  const userIsAuthorized = useSelector(state => state.userInformation.userIsAuthorized);
+  const forgotPasswordRequest = useSelector(state => state.userInformation.forgotPasswordRequest);
 
   const dispatch = useDispatch();
 
@@ -23,7 +27,27 @@ const ResetPassword = () => {
   const onIconClick = () => {
     setTimeout(() => passwordInputRef.current.focus(), 0);
     setPasswordIsShown(!passwordIsShown);
-  }
+  };
+
+  if (userIsAuthorized || getCookie('accessToken')) {
+    return (
+      <Redirect
+        to={{
+          pathname: '/'
+        }}
+      />
+    )
+  };
+
+  if (!forgotPasswordRequest) {
+    return (
+      <Redirect
+        to={{
+          pathname: '/forgot-password'
+        }}
+      />
+    )
+  };
 
   return (
     <section className={styles.section}>

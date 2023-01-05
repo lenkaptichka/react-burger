@@ -9,13 +9,18 @@ import { sendOrder } from '../../services/actions/order';
 import { useDrop } from "react-dnd";
 import { addIngredient } from '../../services/actions/burger-constructor';
 import ConstructorCard from '../constructor-card/constructor-card';
+import { getCookie } from '../../utils/cookie';
+import { Redirect, useHistory } from 'react-router-dom';
 
 export default function BurgerConstructor() {
   const [modalIsOpen, setModalsOpen] = useState(false);
 
   const { allIngredients } = useSelector(state => state.ingredients);
   const { bun, otherItems } = useSelector(state => state.selectedIngredients);
+  const userIsAuthorized = useSelector(state => state.userInformation.userIsAuthorized);
+
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const [{isHover}, dropTarget] = useDrop({
     accept: 'ingredient',
@@ -26,6 +31,15 @@ export default function BurgerConstructor() {
       isHover: monitor.isOver(),
     })
   });
+
+  const checkToken = () => {
+    if (getCookie('accessToken') && userIsAuthorized) {
+      setModalsOpen(true);
+      sendOrderHandler();
+    } else {
+      history.push('/login');
+    }
+  }
 
   const closeModal = () => {
     setModalsOpen(false);
@@ -105,11 +119,10 @@ export default function BurgerConstructor() {
           htmlType='button'
           type='primary'
           size='large'
-          onClick={() => {
-            setModalsOpen(true);
-            sendOrderHandler();
-          }}
-        >Оформить заказ</Button>
+          onClick={checkToken}
+        >
+          Оформить заказ
+        </Button>
       </div>
       {modalIsOpen ?
         <Modal closeModal={closeModal}>

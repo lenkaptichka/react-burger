@@ -2,6 +2,7 @@ import styles from './form.module.css';
 import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
 
 const Form = ({ formTitle, formButtonText, formButtonClick, children }) => {
+
   return (
     <div className={styles['form-wrapper']}>
       {formTitle ?
@@ -10,10 +11,10 @@ const Form = ({ formTitle, formButtonText, formButtonClick, children }) => {
         </h2> :
         null
       }
-      <form className={styles.form}>
+      <form onSubmit={formButtonClick} className={styles.form}>
         {children}
         {formButtonText ?
-          <Button htmlType='button' type='primary' size='medium' extraClass='mb-20' onClick={formButtonClick}>
+          <Button type='primary' htmlType='submit' size='medium' extraClass='mb-20' >
             {formButtonText}
           </Button> :
           null

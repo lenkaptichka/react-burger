@@ -1,5 +1,6 @@
-import { INGREDIENT_API_URL } from "../../constants/constants";
-import checkResponse from "../../utils/check-response";
+import { INGREDIENT_API_URL } from '../../constants/constants';
+import checkResponse from '../../utils/check-response';
+import { getCookie } from '../../utils/cookie';
 
 export const GET_ORDER_REQUEST = 'GET_ORDER_REQUEST';
 export const GET_ORDER_SUCCESS = 'GET_ORDER_SUCCESS';
@@ -13,6 +14,7 @@ export const sendOrder = (ingredients) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + getCookie('accessToken')
       },
       body: JSON.stringify({
         ingredients

@@ -143,9 +143,9 @@ const ProfileEditing = () => {
       </Form>
       <div className={styles.buttons}>
         <Button
-          htmlType="button"
-          type="secondary"
-          size="medium"
+          htmlType='button'
+          type='secondary'
+          size='medium'
           disabled={!formIsChanged}
           extraClass={`${styles['cancel-button']} mr-7`}
           onClick={resetEditing}
@@ -153,7 +153,7 @@ const ProfileEditing = () => {
           Отмена
         </Button>
         <Button
-          htmlType="button"
+          htmlType='button'
           type='primary'
           size='medium'
           disabled={!formIsChanged}

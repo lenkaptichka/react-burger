@@ -9,11 +9,6 @@ import { useParams, useHistory } from 'react-router-dom';
 
 
 export default function Modal({title, children, closeModal}) {
-  const { id } = useParams();
-  const history = useHistory();
-  console.log('id', id);
-
-
   useEffect(() => {
     const closeModalByPressingEsc = (event) => {
       if (event.key === 'Escape') {
@@ -25,20 +20,13 @@ export default function Modal({title, children, closeModal}) {
     return () => document.removeEventListener('keydown', closeModalByPressingEsc);
   }, []);
 
-  const closeModalNew = () => {
-    console.log('history', history);
-    // event.stopPropagation();
-    console.log('closeModal');
-    history.push("/");
-  }
-
   return createPortal(
     <>
       <ModalOverlay closeModal={closeModal} />
       <div className={`${styles.modal} pt-10 pl-10 pr-10`}>
         <div className={styles.header}>
           {title && <h5 className={`${styles.title} text text_type_main-large`}>{title}</h5>}
-          <CloseIcon type="primary" onClick={closeModal} />
+          <CloseIcon type='primary' onClick={closeModal} />
         </div>
         {children}
       </div>

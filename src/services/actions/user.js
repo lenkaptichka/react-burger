@@ -1,7 +1,7 @@
-import { accessTokenLifetime, INGREDIENT_API_URL, refreshLifetime } from "../../constants/constants";
-import checkResponse from "../../utils/check-response";
-import { setCookie, getCookie, deleteCookie } from "../../utils/cookie";
-import { getRefreshToken } from "./token";
+import { accessTokenLifetime, INGREDIENT_API_URL, refreshLifetime } from '../../constants/constants';
+import checkResponse from '../../utils/check-response';
+import { setCookie, getCookie, deleteCookie } from '../../utils/cookie';
+import { getRefreshToken } from './token';
 
 export const GET_REGISTER_REQUEST = 'GET_REGISTER_REQUEST';
 export const GET_REGISTER_SUCCESS = 'GET_REGISTER_SUCCESS';
@@ -171,7 +171,7 @@ export const logout = () => {
       body: JSON.stringify({token: getCookie('refreshToken')})
     })
       .then(checkResponse)
-      .then(data => {
+      .then(() => {
         dispatch({type: GET_LOGOUT_SUCCESS});
         deleteCookie('accessToken');
         deleteCookie('refreshToken');
@@ -179,9 +179,7 @@ export const logout = () => {
           type: USER_IS_AUTHORIZED,
           isAuthorized: false
         });
-        dispatch({type: CLEAR_USER_DATA})
-
-        console.log(data);
+        dispatch({type: CLEAR_USER_DATA});
       })
       .catch(error => dispatch({
         type: GET_LOGOUT_FAILED,
