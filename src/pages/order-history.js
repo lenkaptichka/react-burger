@@ -1,4 +1,4 @@
-import ProfileMenu from "../components/profile-menu/profile-menu";
+import ProfileMenu from '../components/profile-menu/profile-menu';
 import styles from './pages.module.css';
 
 

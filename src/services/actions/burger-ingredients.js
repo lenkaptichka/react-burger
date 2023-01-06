@@ -1,5 +1,5 @@
-import { INGREDIENT_API_URL } from "../../constants/constants";
-import checkResponse from "../../utils/check-response";
+import { INGREDIENT_API_URL } from '../../constants/constants';
+import checkResponse from '../../utils/check-response';
 
 export const GET_INGREDIENTS_REQUEST = 'GET_INGREDIENTS_REQUEST';
 export const GET_INGREDIENTS_SUCCESS = 'GET_INGREDIENTS_SUCCESS';

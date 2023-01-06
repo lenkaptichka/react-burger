@@ -4,9 +4,6 @@ import PropTypes from 'prop-types';
 import { createPortal } from 'react-dom';
 import { useEffect } from 'react';
 import ModalOverlay from '../modal-overlay/modal-overlay';
-import { useParams, useHistory } from 'react-router-dom';
-
-
 
 export default function Modal({title, children, closeModal}) {
   useEffect(() => {

@@ -1,4 +1,4 @@
-import { Input, Button, ShowIcon, HideIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useState, useRef, useEffect } from 'react';
 import Form from '../form/form';
 import styles from './profile-editing.module.css';
@@ -42,10 +42,6 @@ const ProfileEditing = () => {
     setFormIsChanged(true);
   };
 
-  // useEffect(() => {
-  //   setFormIsChanged(true);
-  // }, [form]);
-
   const onNameIconClick = () => {
     setTimeout(() => nameInputRef.current.focus(), 0);
     setNameInputIsActive(true);
@@ -72,8 +68,7 @@ const ProfileEditing = () => {
       email: userData?.email ? userData.email : ''
     });
     setFormIsChanged(false);
-  }
-
+  };
 
   if (!userIsAuthorized) {
     return (
@@ -83,7 +78,7 @@ const ProfileEditing = () => {
         }}
       />
     )
-  }
+  };
 
   return (
     <div className={`${styles['profile-editing']} mt-30`}>
@@ -121,7 +116,6 @@ const ProfileEditing = () => {
           onBlur={() => setEmailInputIsActive(false)}
         />
         <Input
-          // type={passwordIs ? 'text' : 'password'}
           type={'password'}
           disabled={!passwordInputIsActive}
           placeholder={'Пароль'}
@@ -131,9 +125,6 @@ const ProfileEditing = () => {
           error={false}
           ref={passwordInputRef}
           icon={passwordInputIsActive ? 'CloseIcon' : 'EditIcon'}
-          
-          // icon={passwordIs ? 'HideIcon' : 'ShowIcon'}
-          // onIconClick={onIconClick}
           errorText={'Ошибка'}
           size={'default'}
           onIconClick={onPasswordIconClick}
@@ -162,10 +153,7 @@ const ProfileEditing = () => {
             Сохранить
           </Button>
       </div>
-      
-
     </div>
-
   )
 }
 

@@ -7,24 +7,18 @@ export function setCookie(name, value, props) {
     exp = props.expires = d;
   }
   if (exp && exp.toUTCString) {
-    // console.log('exp && exp.toUTCString', exp, exp.toUTCString);
     props.expires = exp.toUTCString();
   }
   value = encodeURIComponent(value);
   let updatedCookie = name + '=' + value;
-  // console.log('updatedCookie', updatedCookie);
   for (const propName in props) {
     updatedCookie += '; ' + propName;
     const propValue = props[propName];
-    // console.log('propValue', propValue);
     if (propValue !== true) {
       updatedCookie += '=' + propValue;
-      // console.log('updatedCookie  propValue', updatedCookie += '=' + propValue);
     }
   }
   document.cookie = updatedCookie;
-  // console.log('updatedCookie111', updatedCookie);
-
 };
 
 export function getCookie(name) {

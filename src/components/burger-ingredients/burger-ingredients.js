@@ -7,7 +7,7 @@ import Modal from '../modal/modal';
 import { useSelector, useDispatch } from 'react-redux';
 import { addIngredientDetails, deleteIngredientDetails } from '../../services/actions/ingredient-details';
 import { Ingredient } from '../ingredient/ingredient';
-import { Link, useLocation, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 export default function BurgerIngredients() {
   const [activeTab, setActiveTab] = useState('bun');

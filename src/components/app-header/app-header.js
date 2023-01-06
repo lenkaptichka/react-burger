@@ -8,8 +8,6 @@ export default function AppHeader() {
   const profilePage = useRouteMatch('/profile');
   const orderHistoryPage = useRouteMatch('/profile/orders');
 
-  console.log({mainPage, orderFeedPage, profilePage})
-
   return (
     <header className={`${styles.header} pt-4 pb-4`}>
       <nav className={styles.navigation}>

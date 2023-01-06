@@ -7,7 +7,6 @@ import { useSelector } from 'react-redux';
 const ProtectedRoute = ({ children, ...rest }) => {
   const [isUserLoaded, setUserLoaded] = useState(false);
   const userIsAuthorized = useSelector(state => state.userInformation.userIsAuthorized);
-  console.log({userIsAuthorized})
 
   const init = () => {
     getUser();
@@ -20,7 +19,7 @@ const ProtectedRoute = ({ children, ...rest }) => {
 
   if (!isUserLoaded) {
     return null;
-  }
+  };
 
   return (
     <Route
@@ -39,7 +38,6 @@ const ProtectedRoute = ({ children, ...rest }) => {
       }
     />
   );
-
 };
 
 export default ProtectedRoute

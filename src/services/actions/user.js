@@ -1,7 +1,12 @@
 import { accessTokenLifetime, INGREDIENT_API_URL, refreshLifetime } from '../../constants/constants';
 import checkResponse from '../../utils/check-response';
 import { setCookie, getCookie, deleteCookie } from '../../utils/cookie';
-import { getRefreshToken } from './token';
+import {
+  getRefreshToken,
+  GET_REFRESH_TOKEN_SUCCESS,
+  GET_REFRESH_TOKEN_REQUEST,
+  GET_REFRESH_TOKEN_FAILED
+} from './token';
 
 export const GET_REGISTER_REQUEST = 'GET_REGISTER_REQUEST';
 export const GET_REGISTER_SUCCESS = 'GET_REGISTER_SUCCESS';
@@ -50,7 +55,6 @@ export const sendRegisterData = (form) => {
       .then(checkResponse)
       .then(data => {
         dispatch({type: GET_REGISTER_SUCCESS});
-        console.log(JSON.parse(atob(data.accessToken.split('.')[1])))
         setCookie(
           'accessToken',
           data.accessToken.split('Bearer ')[1],
@@ -61,7 +65,6 @@ export const sendRegisterData = (form) => {
           data.refreshToken,
           {expires: refreshLifetime}
         )
-        console.log(data);
       })
       .catch(error => dispatch({
         type: GET_REGISTER_FAILED,
@@ -78,7 +81,6 @@ export const sendLoginData = (form) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        // Authorization: 'Bearer ' + getCookie('accessToken')
       },
       body: JSON.stringify(form)
     })
@@ -104,7 +106,6 @@ export const sendLoginData = (form) => {
           type: SET_USER_DATA,
           user: data.user
         });
-        console.log('sendLoginData', data);
       })
       .catch(error => dispatch({
         type: GET_LOGIN_FAILED,
@@ -125,9 +126,8 @@ export const sendForgotPassword = (form) => {
       body: JSON.stringify(form)
     })
       .then(checkResponse)
-      .then(data => {
+      .then(() => {
         dispatch({type: GET_FORGOT_PASSWORD_SUCCESS});
-        console.log(data);
       })
       .catch(error => dispatch({
         type: GET_FORGOT_PASSWORD_FAILED,
@@ -148,9 +148,8 @@ export const sendResetPassword = (form) => {
       body: JSON.stringify(form)
     })
       .then(checkResponse)
-      .then(data => {
+      .then(() => {
         dispatch({type: GET_RESET_PASSWORD_SUCCESS});
-        console.log(data);
       })
       .catch(error => dispatch({
         type: GET_RESET_PASSWORD_FAILED,
@@ -188,24 +187,38 @@ export const logout = () => {
   }
 }
 
+const getUserRequest = async () => {
+  const res = await fetch(`${INGREDIENT_API_URL}/auth/user`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + getCookie('accessToken')
+    }
+  });
+
+  return checkResponse(res);
+};
+
+export const patchUpdateUser = async (form) => {
+  const res = await fetch(`${INGREDIENT_API_URL}/auth/user`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + getCookie('accessToken')
+    },
+    body: JSON.stringify(form)
+  });
+
+  return checkResponse(res); 
+}
+
 export const getUser = () => {
-  console.log('getUser');
-  // if (!getCookie('accessToken')) {
-  //   console.log('токена нет')
-  // }
-  return function(dispatch) {
+  return async function (dispatch) {
     dispatch({type: GET_USER_REQUEST});
-
-    fetch(`${INGREDIENT_API_URL}/auth/user`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + getCookie('accessToken')
-
-      }
-    })
-      .then(checkResponse)
-      .then(data => {
+    try {
+      const res = await getUserRequest();
+      
+      if (res?.success) {
         dispatch({type: GET_USER_SUCCESS});
         dispatch({
           type: USER_IS_AUTHORIZED,
@@ -213,58 +226,122 @@ export const getUser = () => {
         });
         dispatch({
           type: SET_USER_DATA,
-          user: data.user
+          user: res.user
         })
-        console.log({data})
+      }
+    } catch (error) {
+      try {
+        // Есди проблема с токеном
+        if (error.message === 'jwt expired' || error.message === 'Token is invalid') {
+          dispatch({ type: GET_REFRESH_TOKEN_REQUEST });
+          const tokenResult = await getRefreshToken();
+          
+          if (tokenResult.success) {
+            dispatch({ type: GET_REFRESH_TOKEN_SUCCESS });
+            
+            setCookie(
+              'accessToken',
+              tokenResult.accessToken.split('Bearer ')[1],
+              {expires: accessTokenLifetime}
+            )
+            setCookie(
+              'refreshToken',
+              setCookie.refreshToken,
+              {expires: refreshLifetime}
+            );
 
-      })
-      .catch(error => 
+            // Новый запрос пользователя
+            const res = await getUserRequest();
+            if (res?.success) {
+              dispatch({type: GET_USER_SUCCESS});
+              dispatch({
+                type: USER_IS_AUTHORIZED,
+                isAuthorized: true
+              });
+              dispatch({
+                type: SET_USER_DATA,
+                user: res.user
+              })
+            } else {
+              return Promise.reject(error);
+            }         
+          } else {
+            return Promise.reject(error);
+          }
+        }
+      } catch(error) {
         dispatch({
-        type: GET_USER_FAILED,
-        error
-      }))
+          type: GET_USER_FAILED,
+          error
+        });
+        dispatch({
+          type: GET_REFRESH_TOKEN_FAILED,
+          error
+        })
+      }
+    }
   }
-}
+};
 
 export const updateUser = (form) => {
-  return function(dispatch) {
-    dispatch({type: GET_UPDATE_USER_REQUEST});
-
-    fetch(`${INGREDIENT_API_URL}/auth/user`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + getCookie('accessToken')
-      },
-      body: JSON.stringify(form)
-
-    })
-      .then(checkResponse)
-      .then(data => {
-        dispatch({
-          type: GET_UPDATE_USER_SUCCESS,
-          user: data.user
-        });
+  return async function (dispatch) {
+    dispatch({type: GET_USER_REQUEST});
+    try {
+      const res = await patchUpdateUser(form);
+      
+      if (res?.success) {
+        dispatch({type: GET_UPDATE_USER_SUCCESS});
         dispatch({
           type: SET_USER_DATA,
-          user: data.user
+          user: res.user
         });
-        console.log('updateUser', {data})
-      })
-      .catch(error => 
-        dispatch({
-        type: GET_UPDATE_USER_FAILED,
-        error
-      }))
-  }
-} 
+      }
+    } catch (error) {
+      try {
+        // Есди проблема с токеном
+        if (error.message === 'jwt expired' || error.message === 'Token is invalid') {
+          dispatch({ type: GET_REFRESH_TOKEN_REQUEST });
+          const tokenResult = await getRefreshToken();
+          
+          if (tokenResult.success) {
+            dispatch({ type: GET_REFRESH_TOKEN_SUCCESS });
+            
+            setCookie(
+              'accessToken',
+              tokenResult.accessToken.split('Bearer ')[1],
+              {expires: accessTokenLifetime}
+            )
+            setCookie(
+              'refreshToken',
+              setCookie.refreshToken,
+              {expires: refreshLifetime}
+            );
 
-// export const getUserWithCheckToken = () => {
-//   return function(dispatch) {
-//     if (!getCookie('accessToken')) {
-//       dispatch(getRefreshToken());
-//     } else {
-//       dispatch(getUser());     
-//     }
-//   }
-// }
+            // Новый запрос на обновление данных пользователя
+            const res = await patchUpdateUser(form);
+            if (res?.success) {
+              dispatch({type: GET_UPDATE_USER_SUCCESS});
+              dispatch({
+                type: SET_USER_DATA,
+                user: res.user
+              });
+            } else {
+              return Promise.reject(error);
+            }         
+          } else {
+            return Promise.reject(error);
+          }
+        }
+      } catch(error) {
+        dispatch({
+          type: GET_UPDATE_USER_FAILED,
+          error
+        });
+        dispatch({
+          type: GET_REFRESH_TOKEN_FAILED,
+          error
+        })
+      }
+    }
+  }
+};

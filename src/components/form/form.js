@@ -1,5 +1,6 @@
 import styles from './form.module.css';
 import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
+import PropTypes from 'prop-types';
 
 const Form = ({ formTitle, formButtonText, formButtonClick, children }) => {
 
@@ -23,5 +24,12 @@ const Form = ({ formTitle, formButtonText, formButtonClick, children }) => {
     </div>
   )
 }
+
+Form.propTypes = {
+  formTitle: PropTypes.string,
+  formButtonText: PropTypes.string,
+  formButtonClick: PropTypes.func,
+  children: PropTypes.node.isRequired
+};
 
 export default Form

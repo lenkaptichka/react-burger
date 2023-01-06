@@ -55,7 +55,6 @@ export const Ingredient = ({ ingredient, onClick }) => {
         }
       </li>
     </Link>
-
   )
 }
 

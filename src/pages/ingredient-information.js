@@ -22,14 +22,12 @@ const IngredientInformation = () => {
       {ingredients && (
         <Modal title={'Детали ингредиента'} closeModal={closeModal}>
           <IngredientDetails
-            ingredient={ingredients.filter(item => item._id === id)[0]}
+            ingredient={ingredients.find(item => item._id === id)}
           />
         </Modal>
-
       )}
     </div>
   );
-
 }
 
 export default IngredientInformation

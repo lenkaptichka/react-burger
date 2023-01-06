@@ -6,11 +6,11 @@ import { useState, useMemo } from 'react';
 import { bunsCount } from '../../constants/constants';
 import { useSelector, useDispatch } from 'react-redux';
 import { sendOrder } from '../../services/actions/order';
-import { useDrop } from "react-dnd";
+import { useDrop } from 'react-dnd';
 import { addIngredient } from '../../services/actions/burger-constructor';
 import ConstructorCard from '../constructor-card/constructor-card';
 import { getCookie } from '../../utils/cookie';
-import { Redirect, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 export default function BurgerConstructor() {
   const [modalIsOpen, setModalsOpen] = useState(false);

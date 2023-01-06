@@ -1,16 +1,13 @@
-import { Link, useRouteMatch, useHistory, Redirect } from 'react-router-dom';
+import { Link, useRouteMatch } from 'react-router-dom';
 import styles from './profile-menu.module.css';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { logout } from '../../services/actions/user';
 
 const ProfileMenu = () => {
   const profilePage = useRouteMatch('/profile');
   const orderHistoryPage = useRouteMatch('/profile/orders');
-  const logoutRequest = useSelector(state => state.userInformation.logoutRequest);
-  const logoutIsSuccess = useSelector(state => state.userInformation.logoutSuccess);
 
   const dispatch = useDispatch();
-  const history = useHistory();
 
   const clickLogout = () => {
     dispatch(logout());
