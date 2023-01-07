@@ -14,7 +14,7 @@ export default function AppHeader() {
         <ul className={styles['navigation-list']}>
 
           <li className={`${styles['navigation-list-item']} pt-4 pb-4 pr-5 mr-2`}>
-            <Link to={{ pathname: '/' }} className={`${styles.tab}`}>
+            <Link to={{ pathname: '/' }} className={`${styles.tab}`}>              
               <BurgerIcon type={mainPage?.isExact ? 'primary' : 'secondary'} />
               <p className={`text text_type_main-default ml-2 ${mainPage?.isExact ? 'text_color_primary' : 'text_color_inactive'}`}>
                 Конструктор
@@ -27,7 +27,7 @@ export default function AppHeader() {
               <ListIcon type={orderFeedPage?.isExact ? 'primary' : 'secondary'} />
               <p className={`text text_type_main-default ml-2 ${orderFeedPage?.isExact ? 'text_color_primary' : 'text_color_inactive'}`}>
                 Лента заказов
-                </p>
+              </p>
             </Link>
           </li>
 

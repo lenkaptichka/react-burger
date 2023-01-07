@@ -1,4 +1,4 @@
-import { accessTokenLifetime, INGREDIENT_API_URL, refreshLifetime } from '../../constants/constants';
+import { ACCESS_TOKEN_LIFETIME, INGREDIENT_API_URL, REFRESH_TOKEN_LIFETIME } from '../../constants/constants';
 import checkResponse from '../../utils/check-response';
 import { setCookie, getCookie, deleteCookie } from '../../utils/cookie';
 import {
@@ -48,7 +48,7 @@ export const sendRegisterData = (form) => {
     fetch(`${INGREDIENT_API_URL}/auth/register`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json;charset=utf-8',
       },
       body: JSON.stringify(form)
     })
@@ -58,12 +58,12 @@ export const sendRegisterData = (form) => {
         setCookie(
           'accessToken',
           data.accessToken.split('Bearer ')[1],
-          {expires: accessTokenLifetime}
+          {expires: ACCESS_TOKEN_LIFETIME}
         )
         setCookie(
           'refreshToken',
           data.refreshToken,
-          {expires: refreshLifetime}
+          {expires: REFRESH_TOKEN_LIFETIME}
         )
       })
       .catch(error => dispatch({
@@ -76,7 +76,7 @@ export const sendRegisterData = (form) => {
 export const sendLoginData = (form) => {
   return function(dispatch) {
     dispatch({type: GET_LOGIN_REQUEST});
-
+    console.log({form})
     fetch(`${INGREDIENT_API_URL}/auth/login`, {
       method: 'POST',
       headers: {
@@ -90,12 +90,12 @@ export const sendLoginData = (form) => {
         setCookie(
           'accessToken',
           data.accessToken.split('Bearer ')[1],
-          {expires: accessTokenLifetime}
+          {expires: ACCESS_TOKEN_LIFETIME}
         );
         setCookie(
           'refreshToken',
           data.refreshToken,
-          {expires: refreshLifetime}
+          {expires: REFRESH_TOKEN_LIFETIME}
         );
         dispatch({
           type: USER_IS_AUTHORIZED,
@@ -242,12 +242,12 @@ export const getUser = () => {
             setCookie(
               'accessToken',
               tokenResult.accessToken.split('Bearer ')[1],
-              {expires: accessTokenLifetime}
+              {expires: ACCESS_TOKEN_LIFETIME}
             )
             setCookie(
               'refreshToken',
               setCookie.refreshToken,
-              {expires: refreshLifetime}
+              {expires: REFRESH_TOKEN_LIFETIME}
             );
 
             // Новый запрос пользователя
@@ -309,12 +309,12 @@ export const updateUser = (form) => {
             setCookie(
               'accessToken',
               tokenResult.accessToken.split('Bearer ')[1],
-              {expires: accessTokenLifetime}
+              {expires: ACCESS_TOKEN_LIFETIME}
             )
             setCookie(
               'refreshToken',
               setCookie.refreshToken,
-              {expires: refreshLifetime}
+              {expires: REFRESH_TOKEN_LIFETIME}
             );
 
             // Новый запрос на обновление данных пользователя

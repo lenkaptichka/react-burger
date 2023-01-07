@@ -9,8 +9,7 @@ const NotFound = () => {
       <h4 className='text text_type_main-medium mb-5'>Кажется, тут ничего нет...</h4>
       <h5 className='text text_type_main-medium mb-10'> Может стоит заказать ещё один бургер? </h5>
       <Link
-        className='text text_type_main-medium text_color_primary'
-        style={{textDecoration: 'none'}}
+        className={`${styles.link} text text_type_main-medium text_color_primary`}
         to='/'
       >
         <Button htmlType='button' type='primary' size='large'>

@@ -28,5 +28,5 @@ export default function IngredientDetails({ingredient}) {
 };
 
 IngredientDetails.propTypes = {
-  ingredient: ingredientType,
+  ingredient: ingredientType.isRequired,
 }

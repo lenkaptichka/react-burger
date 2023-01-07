@@ -7,9 +7,10 @@ import { sendResetPassword } from '../services/actions/user';
 import styles from './pages.module.css';
 import { Redirect } from 'react-router-dom';
 import { getCookie } from '../utils/cookie';
+import { RESET_PASSWORD_INITIAL_STATE } from '../constants/constants';
 
 const ResetPassword = () => {
-  const [form, setValue] = useState({password: '', token: ''});
+  const [formState, setFormState] = useState(RESET_PASSWORD_INITIAL_STATE);
   const [passwordIsShown, setPasswordIsShown] = useState(false);
 
   const userIsAuthorized = useSelector(state => state.userInformation.userIsAuthorized);
@@ -21,13 +22,18 @@ const ResetPassword = () => {
   const codeInputRef = useRef(null);
 
   const onChange = event => {
-    setValue({...form, [event.target.name]: event.target.value})
+    setFormState({...formState, [event.target.name]: event.target.value})
   };
 
   const onIconClick = () => {
     setTimeout(() => passwordInputRef.current.focus(), 0);
     setPasswordIsShown(!passwordIsShown);
   };
+
+  const sendResetPasswordData = (event) => {
+    event.preventDefault();
+    dispatch(sendResetPassword(formState))
+  }
 
   if (userIsAuthorized || getCookie('accessToken')) {
     return (
@@ -54,13 +60,13 @@ const ResetPassword = () => {
       <Form
         formTitle={'Восстановление пароля'}
         formButtonText={'Сохранить'}
-        formButtonClick={() => dispatch(sendResetPassword(form))}
+        formButtonClick={sendResetPasswordData}
       >
       <Input
           type={passwordIsShown ? 'text' : 'password'}
           placeholder={'Введите новый пароль'}
           onChange={onChange}
-          value={form.password}
+          value={formState.password}
           name={'password'}
           error={false}
           ref={passwordInputRef}
@@ -74,7 +80,7 @@ const ResetPassword = () => {
           type={'text'}
           placeholder={'Введите код из письма'}
           onChange={onChange}
-          value={form.token}
+          value={formState.token}
           name={'token'}
           error={false}
           ref={codeInputRef}

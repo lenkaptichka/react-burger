@@ -7,9 +7,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import styles from './pages.module.css';
 import { Redirect } from 'react-router-dom';
 import { getCookie } from '../utils/cookie';
+import { REGISTER_INITIAL_STATE } from '../constants/constants';
 
 const Register = () => {
-  const [form, setValue] = useState({email: '', password: '', name: ''});
+  const [formState, setFormState] = useState(REGISTER_INITIAL_STATE);
   const [passwordIsShown, setPasswordIsShown] = useState(false);
   const userIsAuthorized = useSelector(state => state.userInformation.userIsAuthorized);
 
@@ -21,11 +22,11 @@ const Register = () => {
 
   const sendRegister = (event) => {
     event.preventDefault();
-    dispatch(sendRegisterData(form));
+    dispatch(sendRegisterData(formState));
   }
 
   const onChange = event => {
-    setValue({...form, [event.target.name]: event.target.value})
+    setFormState({...formState, [event.target.name]: event.target.value})
   };
 
   const onIconClick = () => {
@@ -50,7 +51,7 @@ const Register = () => {
           type={'text'}
           placeholder={'Имя'}
           onChange={onChange}
-          value={form.name}
+          value={formState.name}
           name={'name'}
           error={false}
           ref={nameInputRef}
@@ -62,7 +63,7 @@ const Register = () => {
           type={'email'}
           placeholder={'E-mail'}
           onChange={onChange}
-          value={form.email}
+          value={formState.email}
           name={'email'}
           error={false}
           ref={emailInputRef}
@@ -74,7 +75,7 @@ const Register = () => {
           type={passwordIsShown ? 'text' : 'password'}
           placeholder={'Пароль'}
           onChange={onChange}
-          value={form.password}
+          value={formState.password}
           name={'password'}
           error={false}
           ref={passwordInputRef}

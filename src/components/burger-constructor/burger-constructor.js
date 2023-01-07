@@ -3,7 +3,7 @@ import { ConstructorElement, Button, CurrencyIcon } from '@ya.praktikum/react-de
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
 import { useState, useMemo } from 'react';
-import { bunsCount } from '../../constants/constants';
+import { BUNS_COUNT } from '../../constants/constants';
 import { useSelector, useDispatch } from 'react-redux';
 import { sendOrder } from '../../services/actions/order';
 import { useDrop } from 'react-dnd';
@@ -52,7 +52,7 @@ export default function BurgerConstructor() {
 
   const bunPrice = useMemo(() => {
     return bun[0] ?
-      allIngredients.find(item => item._id === bun[0]).price * bunsCount :
+      allIngredients.find(item => item._id === bun[0]).price * BUNS_COUNT :
       0
   }, [bun, allIngredients]);
 

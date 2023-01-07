@@ -16,13 +16,15 @@ const IngredientInformation = () => {
     dispatch(deleteIngredientDetails());
     history.goBack();
   };
+
+  const ingredient = ingredients.find(item => item._id === id);
   
   return (
     <div>
-      {ingredients && (
+      {ingredient && (
         <Modal title={'Детали ингредиента'} closeModal={closeModal}>
           <IngredientDetails
-            ingredient={ingredients.find(item => item._id === id)}
+            ingredient={ingredient}
           />
         </Modal>
       )}

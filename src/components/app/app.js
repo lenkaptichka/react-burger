@@ -4,7 +4,7 @@ import styles from './app.module.css';
 import AppHeader from '../app-header/app-header';
 import { useDispatch, useSelector } from 'react-redux';
 import { getIngredients } from '../../services/actions/burger-ingredients';
-import { accessTokenLifetime } from '../../constants/constants';
+import { ACCESS_TOKEN_LIFETIME } from '../../constants/constants';
 import {
   ForgotPassword,
   Login,
@@ -30,20 +30,23 @@ function App() {
 
   useEffect(() => {
     dispatch(getIngredients());
-
     if (getCookie('accessToken')) {
       dispatch(getUser());
     }
+    // TODO Здесь не нужны зависимости, т.к. это действия при монтировании компонента
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
     if (isAuthorized) {
-      const timer = setInterval(() => dispatch(getRefreshToken()), accessTokenLifetime * 1000) ;
+      const timer = setInterval(() => dispatch(getRefreshToken()), ACCESS_TOKEN_LIFETIME * 1000) ;
       setTimerId(timer);
     } else {
       clearInterval(timerId);
       setTimerId(null);
     }
+    // TODO Здесь не нужнa зависимости dispatch, т.к. нет необходимости его отслеживать
+    // eslint-disable-next-line
   }, [isAuthorized]);
 
   return (

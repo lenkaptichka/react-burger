@@ -1,6 +1,7 @@
 import styles from './additional-action.module.css';
-import { Input, Button, ShowIcon, HideIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import { Link, useRouteMatch } from 'react-router-dom';
+import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 const AdditionalAction = ({question, buttonText, linkPath}) => {
   return (
@@ -15,6 +16,12 @@ const AdditionalAction = ({question, buttonText, linkPath}) => {
       </Link>
     </div>
   )
-}
+};
+
+AdditionalAction.propTypes = {
+  question: PropTypes.string.isRequired,
+  buttonText: PropTypes.string.isRequired,
+  linkPath: PropTypes.string.isRequired,
+};
 
 export default AdditionalAction

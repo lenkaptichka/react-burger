@@ -1,7 +1,7 @@
 import styles from './ingredient.module.css';
 import { useSelector } from 'react-redux';
 import { CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components';
-import { bunsCount } from '../../constants/constants';
+import { BUNS_COUNT } from '../../constants/constants';
 import { useDrag } from 'react-dnd';
 import PropTypes from 'prop-types';
 import { ingredientType } from '../../utils/types';
@@ -11,7 +11,7 @@ import { Link, useLocation } from 'react-router-dom';
 export const Ingredient = ({ ingredient, onClick }) => {
   const { bun, otherItems } = useSelector(state => state.selectedIngredients);
 
-  let location = useLocation();
+  const location = useLocation();
   
   const [, dragRef] = useDrag({
     type: 'ingredient',
@@ -20,7 +20,7 @@ export const Ingredient = ({ ingredient, onClick }) => {
 
   const countIngredients = (ingredientId) => {
     if (bun.find(item => item === ingredientId)) {
-      return bunsCount;
+      return BUNS_COUNT;
     } else {
       return otherItems.filter(item => item._id === ingredientId).length;
     }

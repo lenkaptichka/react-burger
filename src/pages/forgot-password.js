@@ -8,9 +8,10 @@ import { sendForgotPassword } from '../services/actions/user';
 import { Redirect } from 'react-router-dom';
 import styles from './pages.module.css';
 import { getCookie } from '../utils/cookie';
+import { FORGOT_PASSWORD_INITIAL_STATE } from '../constants/constants';
 
 const ForgotPassword = () => {
-  const [form, setValue] = useState({email: ''});
+  const [formState, setFormState] = useState(FORGOT_PASSWORD_INITIAL_STATE);
   const emailInputRef = useRef(null);
 
   const forgotPasswordRequest = useSelector(state => state.userInformation.forgotPasswordRequest);
@@ -19,12 +20,12 @@ const ForgotPassword = () => {
   const dispatch = useDispatch();
 
   const onChange = event => {
-    setValue({...form, [event.target.name]: event.target.value})
+    setFormState({...formState, [event.target.name]: event.target.value})
   };
 
   const sendEmail = (event) => {
     event.preventDefault();
-    dispatch(sendForgotPassword(form));
+    dispatch(sendForgotPassword(formState));
   };
 
   if (userIsAuthorized || getCookie('accessToken')) {
@@ -58,7 +59,7 @@ const ForgotPassword = () => {
           type={'email'}
           placeholder={'Укажите e-mail'}
           onChange={onChange}
-          value={form.email}
+          value={formState.email}
           name={'email'}
           error={false}
           ref={emailInputRef}

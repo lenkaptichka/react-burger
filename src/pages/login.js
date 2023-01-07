@@ -7,9 +7,10 @@ import { sendLoginData, SET_PASSWORD } from '../services/actions/user';
 import { Redirect, useLocation } from 'react-router-dom';
 import styles from './pages.module.css';
 import { getCookie } from '../utils/cookie';
+import { LOGIN_INITIAL_STATE } from '../constants/constants';
 
 const Login = () => {
-  const [form, setValue] = useState({email: '', password: ''})
+  const [formState, setFormState] = useState(LOGIN_INITIAL_STATE)
   const [passwordIsShown, setPasswordIsShown] = useState(false);
   const userIsAuthorized = useSelector(state => state.userInformation.userIsAuthorized);
   const loginFailed = useSelector(state => state.userInformation.loginFailed);
@@ -21,16 +22,16 @@ const Login = () => {
   const passwordInputRef = useRef(null);
 
   const onChange = event => {
-    setValue({...form, [event.target.name]: event.target.value});
+    setFormState({...formState, [event.target.name]: event.target.value});
   };
 
   const sendLogin = (event) => {
     event.preventDefault();
     dispatch({
       type: SET_PASSWORD,
-      password: form.password
+      password: formState.password
     });
-    dispatch(sendLoginData(form))
+    dispatch(sendLoginData(formState))
   };
 
   if (userIsAuthorized || getCookie('accessToken')) {
@@ -57,7 +58,7 @@ const Login = () => {
           type={'email'}
           placeholder={'E-mail'}
           onChange={onChange}
-          value={form.email}
+          value={formState.email}
           name={'email'}
           ref={emailInputRef}
           
@@ -68,7 +69,7 @@ const Login = () => {
           type={passwordIsShown ? 'text' : 'password'}
           placeholder={'Пароль'}
           onChange={onChange}
-          value={form.password}
+          value={formState.password}
           name={'password'}
           error={!!loginFailed}
           ref={passwordInputRef}

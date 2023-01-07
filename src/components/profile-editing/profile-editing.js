@@ -5,12 +5,13 @@ import styles from './profile-editing.module.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { updateUser, SET_PASSWORD } from '../../services/actions/user';
+import { PROFILE_EDITING_INITIAL_STATE } from '../../constants/constants';
 
 const ProfileEditing = () => {
   const userData = useSelector(state => state.userInformation.userData);
   const userIsAuthorized = useSelector(state => state.userInformation.userIsAuthorized);
   const userPassword = useSelector(state => state.userInformation.userPassword);
-  const [form, setValue] = useState({ name: '', email: '', password: '' });
+  const [formState, setFormState] = useState(PROFILE_EDITING_INITIAL_STATE);
   const [formIsChanged, setFormIsChanged] = useState(false);
 
   const dispatch = useDispatch();
@@ -24,20 +25,19 @@ const ProfileEditing = () => {
   const [passwordInputIsActive, setPasswordInputIsActive] = useState(false);
 
   useEffect(() => {
-    setValue({
-      ...form,
-      name: userData?.name ? userData.name : '',
-      email: userData?.email ? userData.email : '',
-      password: userPassword ? userPassword : ''
+    setFormState({
+      name: userData?.name || '',
+      email: userData?.email || '',
+      password: userPassword || ''
     })
-  }, [userData]);
+  }, [userData, userPassword]);
 
 
   const onChange = event => {
-    setValue({ ...form, [event.target.name]: event.target.value });
+    setFormState({ ...formState, [event.target.name]: event.target.value });
     dispatch({
       type: SET_PASSWORD,
-      password: form.password
+      password: formState.password
     })
     setFormIsChanged(true);
   };
@@ -57,13 +57,13 @@ const ProfileEditing = () => {
 
   const formSubmit = (event) => {
     event.preventDefault();
-    dispatch(updateUser(form));
+    dispatch(updateUser(formState));
     setFormIsChanged(false);
   };
 
   const resetEditing = () => {
-    setValue({
-      ...form,
+    setFormState({
+      ...formState,
       name: userData?.name ? userData.name : '',
       email: userData?.email ? userData.email : ''
     });
@@ -88,7 +88,7 @@ const ProfileEditing = () => {
           disabled={!nameInputIsActive}
           placeholder={'Имя'}
           onChange={onChange}
-          value={form.name}
+          value={formState.name}
           name={'name'}
           error={false}
           ref={nameInputRef}
@@ -104,7 +104,7 @@ const ProfileEditing = () => {
           disabled={!emailInputIsActive}
           placeholder={'E-mail'}
           onChange={onChange}
-          value={form.email}
+          value={formState.email}
           name={'email'}
           error={false}
           ref={emailInputRef}
@@ -120,7 +120,7 @@ const ProfileEditing = () => {
           disabled={!passwordInputIsActive}
           placeholder={'Пароль'}
           onChange={onChange}
-          value={form.password}
+          value={formState.password}
           name={'password'}
           error={false}
           ref={passwordInputRef}
