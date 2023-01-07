@@ -3,19 +3,24 @@ import { ConstructorElement, Button, CurrencyIcon } from '@ya.praktikum/react-de
 import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
 import { useState, useMemo } from 'react';
-import { bunsCount } from '../../constants/constants';
+import { BUNS_COUNT } from '../../constants/constants';
 import { useSelector, useDispatch } from 'react-redux';
 import { sendOrder } from '../../services/actions/order';
-import { useDrop } from "react-dnd";
+import { useDrop } from 'react-dnd';
 import { addIngredient } from '../../services/actions/burger-constructor';
 import ConstructorCard from '../constructor-card/constructor-card';
+import { getCookie } from '../../utils/cookie';
+import { useHistory } from 'react-router-dom';
 
 export default function BurgerConstructor() {
   const [modalIsOpen, setModalsOpen] = useState(false);
 
   const { allIngredients } = useSelector(state => state.ingredients);
   const { bun, otherItems } = useSelector(state => state.selectedIngredients);
+  const userIsAuthorized = useSelector(state => state.userInformation.userIsAuthorized);
+
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const [{isHover}, dropTarget] = useDrop({
     accept: 'ingredient',
@@ -26,6 +31,15 @@ export default function BurgerConstructor() {
       isHover: monitor.isOver(),
     })
   });
+
+  const checkToken = () => {
+    if (getCookie('accessToken') && userIsAuthorized) {
+      setModalsOpen(true);
+      sendOrderHandler();
+    } else {
+      history.push('/login');
+    }
+  }
 
   const closeModal = () => {
     setModalsOpen(false);
@@ -38,9 +52,9 @@ export default function BurgerConstructor() {
 
   const bunPrice = useMemo(() => {
     return bun[0] ?
-      allIngredients.find(item => item._id === bun[0]).price * bunsCount :
+      allIngredients.find(item => item._id === bun[0]).price * BUNS_COUNT :
       0
-  }, [bun]);
+  }, [bun, allIngredients]);
 
   const getIngredientKey = (index) => {
     return otherItems[index].key
@@ -51,7 +65,7 @@ export default function BurgerConstructor() {
       const ingredientPrice = allIngredients.find(item => item._id === ingredient._id).price;
       return currentSum + ingredientPrice;
     }, 0);
-  }, [otherItems])
+  }, [otherItems, allIngredients])
 
   const calculateTotalAmount = () => {
     return bunPrice + otherItemsPrice;
@@ -59,11 +73,11 @@ export default function BurgerConstructor() {
 
   const selectedBun = useMemo(() => {
     return allIngredients.filter(item => item._id === bun[0]);
-  }, [bun[0]]);
+  }, [bun, allIngredients]);
 
   const selectedOtherItems = useMemo(() => {
     return otherItems.map(item => allIngredients.find(el => el._id === item._id));
-  }, [otherItems])
+  }, [otherItems, allIngredients])
 
   return (
     <section className={`${styles['burger-constructor']} ${isHover ? styles['burger-constructor-hovered'] : ''} pt-25 pl-4`} ref={dropTarget} >
@@ -105,11 +119,10 @@ export default function BurgerConstructor() {
           htmlType='button'
           type='primary'
           size='large'
-          onClick={() => {
-            setModalsOpen(true);
-            sendOrderHandler();
-          }}
-        >Оформить заказ</Button>
+          onClick={checkToken}
+        >
+          Оформить заказ
+        </Button>
       </div>
       {modalIsOpen ?
         <Modal closeModal={closeModal}>
