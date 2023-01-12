@@ -23,7 +23,7 @@ export default function Modal({title, children, closeModal}) {
       <div className={`${styles.modal} pt-10 pl-10 pr-10`}>
         <div className={styles.header}>
           {title && <h5 className={`${styles.title} text text_type_main-large`}>{title}</h5>}
-          <CloseIcon type="primary" onClick={closeModal} />
+          <CloseIcon type='primary' onClick={closeModal} />
         </div>
         {children}
       </div>
@@ -34,5 +34,5 @@ export default function Modal({title, children, closeModal}) {
 Modal.propTypes = {
   title: PropTypes.string,
   children: PropTypes.element.isRequired,
-  closeModal: PropTypes.func.isRequired,
+  closeModal: PropTypes.func,
 };

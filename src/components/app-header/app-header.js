@@ -1,34 +1,53 @@
-import { Logo, BurgerIcon, ListIcon, ProfileIcon } from '@ya.praktikum/react-developer-burger-ui-components'
+import { Logo, BurgerIcon, ListIcon, ProfileIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './app-header.module.css';
+import { Link, useRouteMatch } from 'react-router-dom';
 
 export default function AppHeader() {
+  const mainPage = useRouteMatch('/');
+  const orderFeedPage = useRouteMatch('/order-feed');
+  const profilePage = useRouteMatch('/profile');
+  const orderHistoryPage = useRouteMatch('/profile/orders');
+
   return (
     <header className={`${styles.header} pt-4 pb-4`}>
       <nav className={styles.navigation}>
         <ul className={styles['navigation-list']}>
+
           <li className={`${styles['navigation-list-item']} pt-4 pb-4 pr-5 mr-2`}>
-            <a href='#' className={`${styles.tab}`}>
-              <BurgerIcon type='primary' />
-              <p className='text text_type_main-default text_color_primary ml-2'>Конструктор</p>
-            </a>
+            <Link to={{ pathname: '/' }} className={`${styles.tab}`}>              
+              <BurgerIcon type={mainPage?.isExact ? 'primary' : 'secondary'} />
+              <p className={`text text_type_main-default ml-2 ${mainPage?.isExact ? 'text_color_primary' : 'text_color_inactive'}`}>
+                Конструктор
+              </p>
+            </Link>
           </li>
+
           <li className={`${styles['navigation-list-item']} pt-4 pb-4 pr-5 pl-5`}>
-            <a href='#' className={`${styles.tab}`}>
-              <ListIcon type='secondary' />
-              <p className='text text_type_main-default ml-2 text_color_inactive'>Лента заказов</p>
-            </a>
+            <Link  to={{ pathname: '/order-feed' }} className={`${styles.tab}`}>
+              <ListIcon type={orderFeedPage?.isExact ? 'primary' : 'secondary'} />
+              <p className={`text text_type_main-default ml-2 ${orderFeedPage?.isExact ? 'text_color_primary' : 'text_color_inactive'}`}>
+                Лента заказов
+              </p>
+            </Link>
           </li>
+
           <li className={`${styles['navigation-list-item']} ${styles.profile} pt-4 pb-4 pl-5`}>
-            <a href='#' className={`${styles.tab}`}>
-              <ProfileIcon type='secondary' />
-              <p className='text text_type_main-default ml-2 text_color_inactive'>Личный кабинет</p>
-            </a>
+            <Link href='#' className={`${styles.tab}`} to={{ pathname: '/profile' }}>
+              <ProfileIcon type={profilePage?.isExact || orderHistoryPage?.isExact ? 'primary' : 'secondary'} />
+              <p className={`text text_type_main-default ml-2 ${profilePage?.isExact || orderHistoryPage?.isExact ?
+                'text_color_primary' : 'text_color_inactive'}`}>
+                Личный кабинет
+                </p>
+            </Link>
           </li>
+          
         </ul>
       </nav>
-      <div className={styles.logo}>
-        <Logo />
-      </div>
+      <Link to={{pathname: '/'}}>
+        <div className={styles.logo}>
+          <Logo />
+        </div>
+      </Link>
     </header>
   )
 }

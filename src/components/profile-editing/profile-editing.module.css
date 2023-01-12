@@ -1,0 +1,14 @@
+.profile-editing {
+    display: flex;
+    flex-direction: column;
+    margin-right: auto;
+}
+
+.buttons {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.cancel-button {
+    padding: 0;
+}
