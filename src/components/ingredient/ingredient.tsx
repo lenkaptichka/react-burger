@@ -12,9 +12,14 @@ interface IIngredientProps {
   onClick: (ingredient: IIngredient) => void
 }
 
+type TOtherItem = {
+  _id: string;
+  key: string;
+}
+
 interface ISelectedIngredients {
   bun: Array<string>;
-  otherItems: Array<{_id: string, key: string}>
+  otherItems: Array<TOtherItem>
 }
 
 export const Ingredient: FC<IIngredientProps> = ({ ingredient, onClick }) => {
