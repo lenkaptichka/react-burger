@@ -1,7 +1,7 @@
 import AdditionalAction from '../components/additional-action/additional-action'
 import Form from '../components/form/form'
 import { Input } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useState, useRef } from 'react';
+import { useState, useRef, ChangeEvent, FormEvent } from 'react';
 import { sendRegisterData } from '../services/actions/user';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './pages.module.css';
@@ -9,28 +9,39 @@ import { Redirect } from 'react-router-dom';
 import { getCookie } from '../utils/cookie';
 import { REGISTER_INITIAL_STATE } from '../constants/constants';
 
+interface IFormState {
+  email: string;
+  password: string;
+  name: string;
+}
+
 const Register = () => {
-  const [formState, setFormState] = useState(REGISTER_INITIAL_STATE);
-  const [passwordIsShown, setPasswordIsShown] = useState(false);
-  const userIsAuthorized = useSelector(state => state.userInformation.userIsAuthorized);
+  const [formState, setFormState] = useState<IFormState>(REGISTER_INITIAL_STATE);
+  const [passwordIsShown, setPasswordIsShown] = useState<boolean>(false);
+  
+  // TODO Временное решение пока не типизирован store
+  // @ts-expect-error
+  const userIsAuthorized = useSelector(state => state.userInformation.userIsAuthorized) as boolean;
 
   const dispatch = useDispatch();
 
-  const nameInputRef = useRef(null);
-  const emailInputRef = useRef(null);
-  const passwordInputRef = useRef(null);
+  const nameInputRef = useRef<HTMLInputElement>(null);
+  const emailInputRef = useRef<HTMLInputElement>(null);
+  const passwordInputRef = useRef<HTMLInputElement>(null);
 
-  const sendRegister = (event) => {
+  const sendRegister = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    // TODO Временное решение пока не типизирован store
+    // @ts-expect-error
     dispatch(sendRegisterData(formState));
   }
 
-  const onChange = event => {
+  const onChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setFormState({...formState, [event.target.name]: event.target.value})
   };
 
-  const onIconClick = () => {
-    setTimeout(() => passwordInputRef.current.focus(), 0);
+  const onIconClick = (): void => {
+    setTimeout(() => passwordInputRef.current?.focus(), 0);
     setPasswordIsShown(!passwordIsShown);
   };
 

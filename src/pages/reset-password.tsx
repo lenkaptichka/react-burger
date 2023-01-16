@@ -1,6 +1,6 @@
 import Form from '../components/form/form'
 import { Input } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useState, useRef } from 'react';
+import { useState, useRef, FC, ChangeEvent, FormEvent } from 'react';
 import AdditionalAction from '../components/additional-action/additional-action';
 import { useDispatch, useSelector } from 'react-redux';
 import { sendResetPassword } from '../services/actions/user';
@@ -9,29 +9,39 @@ import { Redirect } from 'react-router-dom';
 import { getCookie } from '../utils/cookie';
 import { RESET_PASSWORD_INITIAL_STATE } from '../constants/constants';
 
-const ResetPassword = () => {
-  const [formState, setFormState] = useState(RESET_PASSWORD_INITIAL_STATE);
-  const [passwordIsShown, setPasswordIsShown] = useState(false);
+interface IFormState {
+  password: string;
+  token: string;
+}
 
-  const userIsAuthorized = useSelector(state => state.userInformation.userIsAuthorized);
-  const forgotPasswordRequest = useSelector(state => state.userInformation.forgotPasswordRequest);
+const ResetPassword: FC = () => {
+  const [formState, setFormState] = useState<IFormState>(RESET_PASSWORD_INITIAL_STATE);
+  const [passwordIsShown, setPasswordIsShown] = useState<boolean>(false);
+
+  // TODO Временное решение пока не типизирован store
+  // @ts-expect-error
+  const userIsAuthorized = useSelector(state => state.userInformation.userIsAuthorized) as boolean;
+  // @ts-expect-error
+  const forgotPasswordRequest = useSelector(state => state.userInformation.forgotPasswordRequest) as boolean;
 
   const dispatch = useDispatch();
 
-  const passwordInputRef = useRef(null);
-  const codeInputRef = useRef(null);
+  const passwordInputRef = useRef<HTMLInputElement>(null);
+  const codeInputRef = useRef<HTMLInputElement>(null);
 
-  const onChange = event => {
-    setFormState({...formState, [event.target.name]: event.target.value})
+  const onChange = (event: ChangeEvent<HTMLInputElement>): void => {
+    setFormState({ ...formState, [event.target.name]: event.target.value })
   };
 
-  const onIconClick = () => {
-    setTimeout(() => passwordInputRef.current.focus(), 0);
+  const onIconClick = (): void => {
+    setTimeout(() => passwordInputRef.current?.focus(), 0);
     setPasswordIsShown(!passwordIsShown);
   };
 
-  const sendResetPasswordData = (event) => {
+  const sendResetPasswordData = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
+    // TODO Временное решение пока не типизирован store
+    // @ts-expect-error
     dispatch(sendResetPassword(formState))
   }
 
@@ -62,7 +72,7 @@ const ResetPassword = () => {
         formButtonText={'Сохранить'}
         formButtonClick={sendResetPasswordData}
       >
-      <Input
+        <Input
           type={passwordIsShown ? 'text' : 'password'}
           placeholder={'Введите новый пароль'}
           onChange={onChange}
@@ -90,7 +100,7 @@ const ResetPassword = () => {
           extraClass='mb-6'
         />
       </Form>
-      <AdditionalAction question={'Вспомнили пароль?'} buttonText={'Войти'} linkPath={'/login'}/>
+      <AdditionalAction question={'Вспомнили пароль?'} buttonText={'Войти'} linkPath={'/login'} />
     </section>
   )
 }

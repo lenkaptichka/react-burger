@@ -3,22 +3,34 @@ import { useSelector } from 'react-redux';
 import { CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 import { BUNS_COUNT } from '../../constants/constants';
 import { useDrag } from 'react-dnd';
-import PropTypes from 'prop-types';
-import { ingredientType } from '../../utils/types';
+import { IIngredient } from '../../utils/types';
 import { Link, useLocation } from 'react-router-dom';
+import { FC } from 'react';
 
+interface IIngredientProps {
+  ingredient: IIngredient;
+  onClick: (ingredient: IIngredient) => void
+}
 
-export const Ingredient = ({ ingredient, onClick }) => {
-  const { bun, otherItems } = useSelector(state => state.selectedIngredients);
+interface ISelectedIngredients {
+  bun: Array<string>;
+  otherItems: Array<{_id: string, key: string}>
+}
 
-  const location = useLocation();
+export const Ingredient: FC<IIngredientProps> = ({ ingredient, onClick }) => {
+  
+  // TODO Исправить в следующем спринте
+  // @ts-expect-error
+  const { bun, otherItems } = useSelector(state => state.selectedIngredients) as ISelectedIngredients;
+
+  const location = useLocation<Location>();
   
   const [, dragRef] = useDrag({
     type: 'ingredient',
     item: ingredient
   });
 
-  const countIngredients = (ingredientId) => {
+  const countIngredients = (ingredientId: string): number => {
     if (bun.find(item => item === ingredientId)) {
       return BUNS_COUNT;
     } else {
@@ -57,8 +69,3 @@ export const Ingredient = ({ ingredient, onClick }) => {
     </Link>
   )
 }
-
-Ingredient.propTypes = {
-  ingredient: ingredientType.isRequired,
-  onClick: PropTypes.func.isRequired
-};

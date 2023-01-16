@@ -1,7 +1,7 @@
 
 import Form from '../components/form/form';
 import { Input } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useState, useRef } from 'react';
+import React, { useState, useRef, FC, ChangeEvent, FormEvent } from 'react';
 import AdditionalAction from '../components/additional-action/additional-action';
 import { useDispatch, useSelector } from 'react-redux';
 import { sendForgotPassword } from '../services/actions/user';
@@ -10,21 +10,26 @@ import styles from './pages.module.css';
 import { getCookie } from '../utils/cookie';
 import { FORGOT_PASSWORD_INITIAL_STATE } from '../constants/constants';
 
-const ForgotPassword = () => {
-  const [formState, setFormState] = useState(FORGOT_PASSWORD_INITIAL_STATE);
-  const emailInputRef = useRef(null);
+const ForgotPassword: FC = () => {
+  const [formState, setFormState] = useState<{email: string}>(FORGOT_PASSWORD_INITIAL_STATE);
+  const emailInputRef = useRef<HTMLInputElement>(null);
 
-  const forgotPasswordRequest = useSelector(state => state.userInformation.forgotPasswordRequest);
-  const userIsAuthorized = useSelector(state => state.userInformation.userIsAuthorized);
+  // TODO Временное решение пока не типизирован store
+  // @ts-expect-error
+  const forgotPasswordRequest = useSelector(state => state.userInformation.forgotPasswordRequest) as boolean;
+  // @ts-expect-error
+  const userIsAuthorized = useSelector(state => state.userInformation.userIsAuthorized) as boolean;
 
   const dispatch = useDispatch();
 
-  const onChange = event => {
+  const onChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setFormState({...formState, [event.target.name]: event.target.value})
   };
 
-  const sendEmail = (event) => {
+  const sendEmail = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
+    // TODO Исправить в следующем спринте
+    // @ts-expect-error
     dispatch(sendForgotPassword(formState));
   };
 

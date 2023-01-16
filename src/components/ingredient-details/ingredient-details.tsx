@@ -1,8 +1,12 @@
 import styles from './ingredient-details.module.css';
-import PropTypes from 'prop-types';
-import { ingredientType } from '../../utils/types';
+import { IIngredient } from '../../utils/types';
+import {FC} from 'react';
 
-export default function IngredientDetails({ingredient}) {
+interface IIngredientDetailsProps {
+  ingredient: IIngredient
+}
+
+const IngredientDetails: FC<IIngredientDetailsProps> = ({ ingredient }) => {
   return (
     <div className={styles.details}>
       <img className={`${styles.image} mb-4`} src={ingredient?.image} alt={ingredient?.name}/>
@@ -27,6 +31,4 @@ export default function IngredientDetails({ingredient}) {
   )
 };
 
-IngredientDetails.propTypes = {
-  ingredient: ingredientType.isRequired,
-}
+export default IngredientDetails

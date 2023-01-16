@@ -24,7 +24,7 @@ export const tokenReducer = (state = initialState, action) => {
       }
     }
     case GET_REFRESH_TOKEN_FAILED: {
-      return {...state, refreshTokenRequest: false, refreshTokenFailed: action.error, refreshTokenSuccess: false}
+      return {...state, refreshTokenRequest: false, refreshTokenFailed: action.error.message, refreshTokenSuccess: false}
     }
 
     default:

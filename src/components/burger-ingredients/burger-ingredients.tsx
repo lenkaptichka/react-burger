@@ -1,41 +1,39 @@
-import { useEffect, useRef, useState, useMemo } from 'react';
+import { useEffect, useRef, useState, useMemo, FC } from 'react';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useInView } from 'react-intersection-observer';
 import styles from './burger-ingredients.module.css';
-import IngredientDetails from '../ingredient-details/ingredient-details';
-import Modal from '../modal/modal';
 import { useSelector, useDispatch } from 'react-redux';
-import { addIngredientDetails, deleteIngredientDetails } from '../../services/actions/ingredient-details';
+import { addIngredientDetails } from '../../services/actions/ingredient-details';
 import { Ingredient } from '../ingredient/ingredient';
-import { useHistory } from 'react-router-dom';
+import { IIngredient } from '../../utils/types';
 
-export default function BurgerIngredients() {
-  const [activeTab, setActiveTab] = useState('bun');
-  const [modalIsOpen, setModalsOpen] = useState(false);
+const BurgerIngredients: FC = () => {
+  const [activeTab, setActiveTab] = useState<'bun' | 'sauce' | 'main'>('bun');
 
   const {ref: bunsSectionArea, inView: bunsSectionInView} = useInView({threshold: 0});
   const {ref: saucesSectionArea, inView: saucesSectionView} = useInView({threshold: 0});
   const {ref: mainsSectionArea, inView: mainsSectionView} = useInView({threshold: 0});
 
-  const { allIngredients } = useSelector(state => state.ingredients);
+  // TODO Исправить в следующем спринте
+  // @ts-expect-error
+  const allIngredients = useSelector(state => state.ingredients.allIngredients) as Array<IIngredient>;
 
   const dispatch = useDispatch();
-  const history = useHistory();
 
-  const bunsSection = useRef(null);
-  const saucesSection = useRef(null);
-  const mainsSection = useRef(null);
+  const bunsSection = useRef<HTMLHeadingElement>(null);
+  const saucesSection = useRef<HTMLHeadingElement>(null);
+  const mainsSection = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
     switch(activeTab) {
       case 'bun':
-        bunsSection.current.scrollIntoView({behavior: 'smooth'});
+        bunsSection.current?.scrollIntoView({behavior: 'smooth'});
         break;
       case 'sauce':
-        saucesSection.current.scrollIntoView({behavior: 'smooth'});
+        saucesSection.current?.scrollIntoView({behavior: 'smooth'});
         break;
       case 'main':
-        mainsSection.current.scrollIntoView({behavior: 'smooth'});
+        mainsSection.current?.scrollIntoView({behavior: 'smooth'});
         break;
     }
   }, [activeTab]);
@@ -62,15 +60,8 @@ export default function BurgerIngredients() {
     () => allIngredients.filter(ingredient => ingredient.type === 'main'),
     [allIngredients]);
 
-  const openModal = (ingredient) => {
-    setModalsOpen(true);
+  const openModal = (ingredient: IIngredient): void => {
     dispatch(addIngredientDetails(ingredient));
-  };
-
-  const closeModal = () => {
-    setModalsOpen(false);
-    dispatch(deleteIngredientDetails());
-    history.goBack();
   };
 
   return (
@@ -116,12 +107,8 @@ export default function BurgerIngredients() {
           </ul>
         </div>
       </div>
-      {modalIsOpen ?
-        <Modal title={'Детали ингредиента'} closeModal={closeModal}>
-          <IngredientDetails />
-        </Modal> :
-        null
-      }
     </section>
   )
 }
+
+export default BurgerIngredients
