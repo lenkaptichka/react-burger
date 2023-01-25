@@ -1,4 +1,4 @@
-const checkResponse = (res) => {
+const checkResponse = <T>(res: Response): Promise<T> => {
   if (res.ok) {
     return res.json();
   } else {

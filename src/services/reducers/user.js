@@ -74,7 +74,7 @@ export const userReducer = (state = initialState, action) => {
       }
     }
     case GET_REGISTER_FAILED: {
-      return {...state, registerRequest: false, registerFailed: action.error, registerSuccess: false}
+      return {...state, registerRequest: false, registerFailed: action.error.message, registerSuccess: false}
     }
 
     case GET_LOGIN_REQUEST: {
@@ -90,7 +90,7 @@ export const userReducer = (state = initialState, action) => {
       }
     }
     case GET_LOGIN_FAILED: {
-      return {...state, loginRequest: false, loginFailed: action.error, loginSuccess: false}
+      return {...state, loginRequest: false, loginFailed: action.error.message, loginSuccess: false}
     }
 
     case GET_FORGOT_PASSWORD_REQUEST: {
@@ -105,7 +105,7 @@ export const userReducer = (state = initialState, action) => {
       }
     }
     case GET_FORGOT_PASSWORD_FAILED: {
-      return {...state, resetPasswordRequest: false, resetPasswordFailed: action.error, resetPasswordSuccess: false}
+      return {...state, resetPasswordRequest: false, resetPasswordFailed: action.error.message, resetPasswordSuccess: false}
     }
 
     case GET_RESET_PASSWORD_REQUEST: {
@@ -120,7 +120,7 @@ export const userReducer = (state = initialState, action) => {
       }
     }
     case GET_RESET_PASSWORD_FAILED: {
-      return {...state, resetPasswordRequest: false, resetPasswordFailed: action.error, resetPasswordSuccess: false}
+      return {...state, resetPasswordRequest: false, resetPasswordFailed: action.error.message, resetPasswordSuccess: false}
     }
 
     case GET_LOGOUT_REQUEST: {
@@ -135,7 +135,7 @@ export const userReducer = (state = initialState, action) => {
       }
     }
     case GET_LOGOUT_FAILED: {
-      return {...state, logoutRequest: false, logoutFailed: action.error, logoutSuccess: false}
+      return {...state, logoutRequest: false, logoutFailed: action.error.message, logoutSuccess: false}
     }
 
     case GET_USER_REQUEST: {
@@ -150,7 +150,7 @@ export const userReducer = (state = initialState, action) => {
       }
     }
     case GET_USER_FAILED: {
-      return {...state, userRequest: false, userFailed: action.error, userSuccess: false}
+      return {...state, userRequest: false, userFailed: action.error.message, userSuccess: false}
     }
 
     case GET_UPDATE_USER_REQUEST: {
@@ -165,7 +165,7 @@ export const userReducer = (state = initialState, action) => {
       }
     }
     case GET_UPDATE_USER_FAILED: {
-      return {...state, userUpdateRequest: false, userUpdateFailed: action.error, userUpdateSuccess: false}
+      return {...state, userUpdateRequest: false, userUpdateFailed: action.error.message, userUpdateSuccess: false}
     }
 
     case USER_IS_AUTHORIZED: {

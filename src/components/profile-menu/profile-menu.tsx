@@ -2,18 +2,21 @@ import { Link, useRouteMatch } from 'react-router-dom';
 import styles from './profile-menu.module.css';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../services/actions/user';
+import { FC } from 'react';
 
-const ProfileMenu = () => {
+const ProfileMenu: FC = () => {
   const profilePage = useRouteMatch('/profile');
   const orderHistoryPage = useRouteMatch('/profile/orders');
 
   const dispatch = useDispatch();
 
-  const clickLogout = () => {
+  const clickLogout = (): void => {
+    // TODO Исправить в следующем спринте
+    // @ts-expect-error
     dispatch(logout());
   };
 
-  return ( 
+  return (
     <div className={`${styles.navigation} mr-15 mt-30`}>
       <nav>
         <ul className={styles['navigation-list']}>

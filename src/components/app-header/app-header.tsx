@@ -1,8 +1,9 @@
 import { Logo, BurgerIcon, ListIcon, ProfileIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './app-header.module.css';
 import { Link, useRouteMatch } from 'react-router-dom';
+import { FC } from 'react';
 
-export default function AppHeader() {
+const AppHeader: FC = () => {
   const mainPage = useRouteMatch('/');
   const orderFeedPage = useRouteMatch('/order-feed');
   const profilePage = useRouteMatch('/profile');
@@ -51,3 +52,5 @@ export default function AppHeader() {
     </header>
   )
 }
+
+export default AppHeader

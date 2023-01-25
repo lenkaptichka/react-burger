@@ -1,8 +1,15 @@
 import styles from './form.module.css';
 import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
-import PropTypes from 'prop-types';
+import { FC, ReactNode, FormEvent } from 'react';
 
-const Form = ({ formTitle, formButtonText, formButtonClick, children }) => {
+interface IFormProps {
+  formTitle?: string;
+  formButtonText?: string;
+  formButtonClick?: (event: FormEvent<HTMLFormElement>) => void;
+  children: ReactNode;
+}
+
+const Form: FC<IFormProps> = ({ formTitle, formButtonText, formButtonClick, children }) => {
 
   return (
     <div className={styles['form-wrapper']}>
@@ -24,12 +31,5 @@ const Form = ({ formTitle, formButtonText, formButtonClick, children }) => {
     </div>
   )
 }
-
-Form.propTypes = {
-  formTitle: PropTypes.string,
-  formButtonText: PropTypes.string,
-  formButtonClick: PropTypes.func,
-  children: PropTypes.node.isRequired
-};
 
 export default Form

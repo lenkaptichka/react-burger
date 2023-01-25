@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom';
 import styles from './pages.module.css';
 import { Button } from '@ya.praktikum/react-developer-burger-ui-components';
+import { FC } from 'react';
 
-const NotFound = () => {
+const NotFound: FC = () => {
   return (
     <section className={styles.section}>
       <h2 className={`${styles['light-digits']} text text_type_digits-large mb-15`}>404</h2>

@@ -1,5 +1,5 @@
 import { Input } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useState, useRef } from 'react';
+import { useState, useRef, FC, ChangeEvent, FormEvent } from 'react';
 import AdditionalAction from '../components/additional-action/additional-action';
 import Form from '../components/form/form';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,28 +9,39 @@ import styles from './pages.module.css';
 import { getCookie } from '../utils/cookie';
 import { LOGIN_INITIAL_STATE } from '../constants/constants';
 
-const Login = () => {
-  const [formState, setFormState] = useState(LOGIN_INITIAL_STATE)
-  const [passwordIsShown, setPasswordIsShown] = useState(false);
-  const userIsAuthorized = useSelector(state => state.userInformation.userIsAuthorized);
-  const loginFailed = useSelector(state => state.userInformation.loginFailed);
+interface IFormState {
+  email: string;
+  password: string;
+}
+
+const Login: FC = () => {
+  const [formState, setFormState] = useState<IFormState>(LOGIN_INITIAL_STATE)
+  const [passwordIsShown, setPasswordIsShown] = useState<boolean>(false);
+
+  // TODO Исправить в следующем спринте
+  // @ts-expect-error
+  const userIsAuthorized = useSelector(state => state.userInformation.userIsAuthorized) as boolean;
+  // @ts-expect-error
+  const loginFailed = useSelector(state => state.userInformation.loginFailed) as string | null;
 
   const dispatch = useDispatch();
-  const location = useLocation();
+  const location = useLocation<{from: string}>();
 
-  const emailInputRef = useRef(null);
-  const passwordInputRef = useRef(null);
+  const emailInputRef = useRef<HTMLInputElement>(null);
+  const passwordInputRef = useRef<HTMLInputElement>(null);
 
-  const onChange = event => {
+  const onChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setFormState({...formState, [event.target.name]: event.target.value});
   };
 
-  const sendLogin = (event) => {
+  const sendLogin = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
     dispatch({
       type: SET_PASSWORD,
       password: formState.password
     });
+    // TODO Исправить в следующем спринте
+    // @ts-expect-error
     dispatch(sendLoginData(formState))
   };
 
@@ -42,8 +53,8 @@ const Login = () => {
     )
   };
 
-  const onIconClick = () => {
-    setTimeout(() => passwordInputRef.current.focus(), 0)
+  const onIconClick = (): void => {
+    setTimeout(() => passwordInputRef.current?.focus(), 0)
     setPasswordIsShown(!passwordIsShown);
   }
 

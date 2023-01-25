@@ -3,16 +3,20 @@ import { useSelector, useDispatch } from 'react-redux';
 import IngredientDetails from '../components/ingredient-details/ingredient-details';
 import Modal from '../components/modal/modal';
 import { deleteIngredientDetails } from '../services/actions/ingredient-details';
+import { IIngredient } from '../utils/types';
+import { FC } from 'react';
 
-const IngredientInformation = () => {
-  const ingredients = useSelector((store) => store.ingredients.allIngredients);
+const IngredientInformation: FC = () => {
+  // TODO Исправить в следующем спринте
+  // @ts-expect-error
+  const ingredients = useSelector(store => store.ingredients.allIngredients) as Array<IIngredient>;
 
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const { id } = useParams();
+  const { id } = useParams<{id: string}>();
 
-  const closeModal = () => {
+  const closeModal = (): void => {
     dispatch(deleteIngredientDetails());
     history.goBack();
   };

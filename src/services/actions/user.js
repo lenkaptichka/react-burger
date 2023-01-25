@@ -76,7 +76,6 @@ export const sendRegisterData = (form) => {
 export const sendLoginData = (form) => {
   return function(dispatch) {
     dispatch({type: GET_LOGIN_REQUEST});
-    console.log({form})
     fetch(`${INGREDIENT_API_URL}/auth/login`, {
       method: 'POST',
       headers: {

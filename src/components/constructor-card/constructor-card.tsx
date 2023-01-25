@@ -3,11 +3,15 @@ import styles from './constructor-card.module.css'
 import { useDispatch } from 'react-redux';
 import { deleteIngredient, moveIngredient } from '../../services/actions/burger-constructor';
 import { useDrag, useDrop } from 'react-dnd';
-import {useEffect} from 'react';
-import PropTypes from 'prop-types';
-import { ingredientType } from '../../utils/types';
+import {FC, useEffect} from 'react';
+import { IIngredient } from '../../utils/types';
 
-export default function ConstructorCard({ingredient, ingredientKey}) {
+interface IConstructorCardProps {
+  ingredient: IIngredient;
+  ingredientKey: string
+}
+
+const ConstructorCard: FC<IConstructorCardProps> = ({ ingredient, ingredientKey }) => {
   const dispatch = useDispatch();
 
   const [{opacity}, dragRef] = useDrag({
@@ -22,7 +26,7 @@ export default function ConstructorCard({ingredient, ingredientKey}) {
     accept: 'constructor-card',
     collect: (monitor) => ({
       isOver: monitor.isOver(),
-      dragElement: monitor.getItem()?.key,
+      dragElement: (monitor.getItem() as {key: typeof ingredientKey})?.key
     })
   });
 
@@ -50,7 +54,4 @@ export default function ConstructorCard({ingredient, ingredientKey}) {
   )
 }
 
-ConstructorCard.propTypes = {
-  ingredient: ingredientType.isRequired,
-  ingredientKey: PropTypes.string.isRequired
-};
+export default ConstructorCard

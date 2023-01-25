@@ -3,10 +3,14 @@ import ProfileMenu from '../components/profile-menu/profile-menu';
 import { useSelector } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import styles from './pages.module.css';
+import { FC } from 'react';
 
-const Profile = () => {
-  const logoutRequest = useSelector(state => state.userInformation.logoutRequest);
-  const logoutIsSuccess = useSelector(state => state.userInformation.logoutSuccess);
+const Profile: FC = () => {
+  // TODO Исправить в следующем спринте
+  // @ts-expect-error
+  const logoutRequest = useSelector(state => state.userInformation.logoutRequest) as boolean;
+  // @ts-expect-error
+  const logoutIsSuccess = useSelector(state => state.userInformation.logoutSuccess) as boolean;
 
   if (logoutRequest) {
     return (

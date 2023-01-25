@@ -1,5 +1,5 @@
 import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, FC, ChangeEvent, SyntheticEvent } from 'react';
 import Form from '../form/form';
 import styles from './profile-editing.module.css';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,22 +7,37 @@ import { Redirect } from 'react-router-dom';
 import { updateUser, SET_PASSWORD } from '../../services/actions/user';
 import { PROFILE_EDITING_INITIAL_STATE } from '../../constants/constants';
 
-const ProfileEditing = () => {
-  const userData = useSelector(state => state.userInformation.userData);
-  const userIsAuthorized = useSelector(state => state.userInformation.userIsAuthorized);
-  const userPassword = useSelector(state => state.userInformation.userPassword);
-  const [formState, setFormState] = useState(PROFILE_EDITING_INITIAL_STATE);
-  const [formIsChanged, setFormIsChanged] = useState(false);
+interface IUserData {
+  email: string;
+  name: string
+}
+
+interface IFormState {
+  email: string;
+  name: string;
+  password: string
+}
+
+const ProfileEditing: FC = () => {
+  // TODO Исправить в следующем спринте
+  // @ts-expect-error
+  const userData = useSelector(state => state.userInformation.userData) as IUserData;
+  // @ts-expect-error
+  const userIsAuthorized = useSelector(state => state.userInformation.userIsAuthorized) as boolean;
+  // @ts-expect-error
+  const userPassword = useSelector(state => state.userInformation.userPassword) as string;
+
+  const [formState, setFormState] = useState<IFormState>(PROFILE_EDITING_INITIAL_STATE);
+  const [formIsChanged, setFormIsChanged] = useState<boolean>(false);
+  const [nameInputIsActive, setNameInputIsActive] = useState<boolean>(false);
+  const [emailInputIsActive, setEmailInputIsActive] = useState<boolean>(false);
+  const [passwordInputIsActive, setPasswordInputIsActive] = useState<boolean>(false);
 
   const dispatch = useDispatch();
 
-  const nameInputRef = useRef(null);
-  const emailInputRef = useRef(null);
-  const passwordInputRef = useRef(null);
-
-  const [nameInputIsActive, setNameInputIsActive] = useState(false);
-  const [emailInputIsActive, setEmailInputIsActive] = useState(false);
-  const [passwordInputIsActive, setPasswordInputIsActive] = useState(false);
+  const nameInputRef = useRef<HTMLInputElement>(null);
+  const emailInputRef = useRef<HTMLInputElement>(null);
+  const passwordInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setFormState({
@@ -33,7 +48,7 @@ const ProfileEditing = () => {
   }, [userData, userPassword]);
 
 
-  const onChange = event => {
+  const onChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setFormState({ ...formState, [event.target.name]: event.target.value });
     dispatch({
       type: SET_PASSWORD,
@@ -42,26 +57,30 @@ const ProfileEditing = () => {
     setFormIsChanged(true);
   };
 
-  const onNameIconClick = () => {
-    setTimeout(() => nameInputRef.current.focus(), 0);
+  const onNameIconClick = (): void => {
+    setTimeout(() => nameInputRef.current?.focus(), 0);
     setNameInputIsActive(true);
   };
-  const onEmailIconClick = () => {
-    setTimeout(() => emailInputRef.current.focus(), 0);
+
+  const onEmailIconClick = (): void => {
+    setTimeout(() => emailInputRef.current?.focus(), 0);
     setEmailInputIsActive(true);
   };
-  const onPasswordIconClick = () => {
-    setTimeout(() => passwordInputRef.current.focus(), 0);
+
+  const onPasswordIconClick = (): void => {
+    setTimeout(() => passwordInputRef.current?.focus(), 0);
     setPasswordInputIsActive(true);
   };
 
-  const formSubmit = (event) => {
+  const formSubmit = (event: SyntheticEvent): void => {
     event.preventDefault();
+    // TODO Исправить в следующем спринте
+    // @ts-expect-error
     dispatch(updateUser(formState));
     setFormIsChanged(false);
   };
 
-  const resetEditing = () => {
+  const resetEditing = (): void => {
     setFormState({
       ...formState,
       name: userData?.name ? userData.name : '',
@@ -131,28 +150,28 @@ const ProfileEditing = () => {
           extraClass='mb-6'
           onBlur={() => setPasswordInputIsActive(false)}
         />
-      </Form>
-      <div className={styles.buttons}>
-        <Button
-          htmlType='button'
-          type='secondary'
-          size='medium'
-          disabled={!formIsChanged}
-          extraClass={`${styles['cancel-button']} mr-7`}
-          onClick={resetEditing}
-        >
-          Отмена
-        </Button>
-        <Button
-          htmlType='button'
-          type='primary'
-          size='medium'
-          disabled={!formIsChanged}
-          onClick={formSubmit}
+        <div className={styles.buttons}>
+          <Button
+            htmlType='button'
+            type='secondary'
+            size='medium'
+            disabled={!formIsChanged}
+            extraClass={`${styles['cancel-button']} mr-7`}
+            onClick={resetEditing}
+          >
+            Отмена
+          </Button>
+          <Button
+            htmlType='button'
+            type='primary'
+            size='medium'
+            disabled={!formIsChanged}
+            onClick={formSubmit}
           >
             Сохранить
           </Button>
-      </div>
+        </div>
+      </Form>
     </div>
   )
 }

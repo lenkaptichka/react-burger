@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, FC } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import styles from './app.module.css';
 import AppHeader from '../app-header/app-header';
@@ -22,15 +22,21 @@ import { getUser } from '../../services/actions/user';
 import { getCookie } from '../../utils/cookie';
 import ProtectedRoute from '../protected-route/protected-route';
 
-function App() {
-  const [timerId, setTimerId] = useState(null);
+const App: FC = () => {
+  const [timerId, setTimerId] = useState<ReturnType<typeof setInterval> | null>(null);
 
   const dispatch = useDispatch();
-  const isAuthorized = useSelector(state => state.userInformation.userIsAuthorized);
+
+  // TODO Исправить в следующем спринте
+  // @ts-expect-error
+  const isAuthorized = useSelector(state => state.userInformation.userIsAuthorized) as boolean;
 
   useEffect(() => {
+    // TODO Исправить в следующем спринте
+    // @ts-expect-error
     dispatch(getIngredients());
     if (getCookie('accessToken')) {
+      // @ts-expect-error
       dispatch(getUser());
     }
     // TODO Здесь не нужны зависимости, т.к. это действия при монтировании компонента
@@ -39,11 +45,14 @@ function App() {
 
   useEffect(() => {
     if (isAuthorized) {
+      // @ts-expect-error
       const timer = setInterval(() => dispatch(getRefreshToken()), ACCESS_TOKEN_LIFETIME * 1000) ;
       setTimerId(timer);
     } else {
-      clearInterval(timerId);
-      setTimerId(null);
+      if (timerId) {
+        clearInterval(timerId);
+        setTimerId(null);
+      }
     }
     // TODO Здесь не нужнa зависимости dispatch, т.к. нет необходимости его отслеживать
     // eslint-disable-next-line

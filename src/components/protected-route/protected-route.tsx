@@ -1,13 +1,15 @@
-import { Route, Redirect } from 'react-router-dom';
+import { Route, Redirect, RouteProps } from 'react-router-dom';
 import { getCookie } from '../../utils/cookie';
 import { useSelector } from 'react-redux';
+import { FC, ReactElement } from 'react';
 
-const ProtectedRoute = ({ children, ...rest }) => {
-  const userIsAuthorized = useSelector(state => state.userInformation.userIsAuthorized);
+const ProtectedRoute: FC<RouteProps & {children: ReactElement}> = ({ children, ...rest }) => {
+  // TODO Исправить в следующем спринте
+  // @ts-expect-error
+  const userIsAuthorized = useSelector(state => state.userInformation.userIsAuthorized) as boolean;
 
   return (
-    <Route
-      {...rest}
+    <Route {...rest}
       render={({ location }) =>
         userIsAuthorized && getCookie('accessToken') ? (
           children
