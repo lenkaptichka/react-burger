@@ -1,5 +1,5 @@
 import styles from './order-details.module.css';
-import { useSelector } from 'react-redux';
+import { useSelector } from '../../hooks/hooks';
 import orderIsDonePicture from '../../images/order-is-done.png';
 import { FC } from 'react';
 
@@ -10,9 +10,8 @@ interface IOrderInformation {
 }
 
 const OrderDetails: FC = () => {
-  // TODO Исправить в следующем спринте
-  // @ts-expect-error
-  const { orderNumber, orderRequest, orderFailed } = useSelector(state => state.orderInformation) as IOrderInformation;
+  const { orderNumber, orderRequest, orderFailed } = useSelector(state => state.orderInformation);
+  console.log({orderNumber, orderRequest, orderFailed})
 
   return (
     <div className={`${styles['order-details']} pt-4 pb-30`}>

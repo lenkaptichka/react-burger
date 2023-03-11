@@ -1,11 +1,26 @@
-import { ADD_INGREDIENT, DELETE_INGREDIENT, MOVE_INGREDIENT } from '../actions/burger-constructor';
+import {
+  ADD_INGREDIENT,
+  DELETE_INGREDIENT,
+  MOVE_INGREDIENT,
+  TBurgerConstructorActions
+} from '../actions/burger-constructor';
 
-const initialState = {
-  bun: [],
-  otherItems: []
+interface IOtherItems {
+  _id: string;
+  key: string;
 }
 
-export const selectedIngredientsReducer = (state = initialState, action) => {
+interface IBurgerConstructorState {
+  bun: Array<string>;
+  otherItems: Array<IOtherItems>
+}
+
+const initialState: IBurgerConstructorState = {
+  bun: [],
+  otherItems: []
+};
+
+export const selectedIngredientsReducer = (state = initialState, action: TBurgerConstructorActions): IBurgerConstructorState => {
   switch(action.type) {
     case ADD_INGREDIENT: {
       if (action.ingredient.type === 'bun') {

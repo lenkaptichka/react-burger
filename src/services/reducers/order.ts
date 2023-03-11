@@ -1,16 +1,23 @@
 import {
   GET_ORDER_REQUEST,
   GET_ORDER_SUCCESS,
-  GET_ORDER_FAILED
+  GET_ORDER_FAILED,
+  TOrderActions
 } from '../actions/order';
 
-const initialState = {
+interface IOrderState {
+  orderNumber: null | number;
+  orderRequest: boolean;
+  orderFailed: null | string;
+}
+
+const initialState: IOrderState = {
   orderNumber: null,
   orderRequest: false,
   orderFailed: null
 }
 
-export const orderInformationReducer = (state = initialState, action) => {
+export const orderInformationReducer = (state = initialState, action: TOrderActions): IOrderState => {
   switch (action.type) {
     case GET_ORDER_REQUEST: {
       return {...state, orderRequest: true}
@@ -24,7 +31,7 @@ export const orderInformationReducer = (state = initialState, action) => {
       }
     }
     case GET_ORDER_FAILED: {
-      return {...state, orderRequest: false, orderFailed: action.error.message, orderNumber: null}
+      return {...state, orderRequest: false, orderFailed: action.error, orderNumber: null}
     }
     default:
       return state

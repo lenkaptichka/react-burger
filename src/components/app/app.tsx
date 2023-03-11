@@ -35,28 +35,34 @@ const App: FC = () => {
     // TODO Исправить в следующем спринте
     // @ts-expect-error
     dispatch(getIngredients());
+    console.log({isAuthorized});
     if (getCookie('accessToken')) {
       // @ts-expect-error
+      // getUser();
       dispatch(getUser());
     }
     // TODO Здесь не нужны зависимости, т.к. это действия при монтировании компонента
     // eslint-disable-next-line
   }, []);
 
-  useEffect(() => {
-    if (isAuthorized) {
-      // @ts-expect-error
-      const timer = setInterval(() => dispatch(getRefreshToken()), ACCESS_TOKEN_LIFETIME * 1000) ;
-      setTimerId(timer);
-    } else {
-      if (timerId) {
-        clearInterval(timerId);
-        setTimerId(null);
-      }
-    }
-    // TODO Здесь не нужнa зависимости dispatch, т.к. нет необходимости его отслеживать
-    // eslint-disable-next-line
-  }, [isAuthorized]);
+  // useEffect(() => {
+  //   if (isAuthorized) {
+  //     // @ts-expect-error
+  //     const timer = setInterval(() => dispatch(getUser()), ACCESS_TOKEN_LIFETIME * 1000);
+  //     // const timer = setInterval(() => dispatch(getUser()), 5000) ;
+
+  //     // @ts-expect-error
+  //     // const timer = setInterval(() => dispatch(getRefreshToken()), ACCESS_TOKEN_LIFETIME * 1000) ;
+  //     setTimerId(timer);
+  //   } else {
+  //     if (timerId) {
+  //       clearInterval(timerId);
+  //       setTimerId(null);
+  //     }
+  //   }
+  //   // TODO Здесь не нужнa зависимости dispatch, т.к. нет необходимости его отслеживать
+  //   // eslint-disable-next-line
+  // }, [isAuthorized]);
 
   return (
     <Router>

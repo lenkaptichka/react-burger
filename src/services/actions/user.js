@@ -7,6 +7,7 @@ import {
   GET_REFRESH_TOKEN_REQUEST,
   GET_REFRESH_TOKEN_FAILED
 } from './token';
+import { fetchWithRefresh } from './token';
 
 export const GET_REGISTER_REQUEST = 'GET_REGISTER_REQUEST';
 export const GET_REGISTER_SUCCESS = 'GET_REGISTER_SUCCESS';
@@ -211,7 +212,53 @@ export const patchUpdateUser = async (form) => {
   return checkResponse(res); 
 }
 
+
 export const getUser = () => {
+  return function(dispatch) {
+    dispatch({type: GET_USER_REQUEST});
+    
+    fetchWithRefresh(`${INGREDIENT_API_URL}/auth/user`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + getCookie('accessToken')
+      }
+    }).then(data => {
+      console.log({data});
+      if (data.success) {
+        dispatch({type: GET_USER_SUCCESS});
+        dispatch({
+          type: USER_IS_AUTHORIZED,
+          isAuthorized: true
+        });
+        dispatch({
+          type: SET_USER_DATA,
+          user: data.user
+        })
+      } else {
+        dispatch({
+          type: GET_USER_FAILED,
+          error
+        });
+      }
+    })
+
+  }
+}
+
+export const getUserItWorks = () => {
+  return fetchWithRefresh(`${INGREDIENT_API_URL}/auth/user`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + getCookie('accessToken')
+    }
+  }).then(data => console.log({data}))
+}
+
+
+
+export const getUserTest = () => {
   return async function (dispatch) {
     dispatch({type: GET_USER_REQUEST});
     try {
