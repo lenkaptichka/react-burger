@@ -5,6 +5,7 @@ import AppHeader from '../app-header/app-header';
 import { useDispatch, useSelector } from 'react-redux';
 import { getIngredients } from '../../services/actions/burger-ingredients';
 import { ACCESS_TOKEN_LIFETIME } from '../../constants/constants';
+import { USER_IS_AUTHORIZED } from '../../services/actions/user';
 import {
   ForgotPassword,
   Login,
@@ -35,8 +36,14 @@ const App: FC = () => {
     // TODO Исправить в следующем спринте
     // @ts-expect-error
     dispatch(getIngredients());
+
     console.log({isAuthorized});
     if (getCookie('accessToken')) {
+      
+      // dispatch({
+      //   type: USER_IS_AUTHORIZED,
+      //   isAuthorized: true
+      // });
       // @ts-expect-error
       // getUser();
       dispatch(getUser());

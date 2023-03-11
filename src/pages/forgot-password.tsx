@@ -4,7 +4,7 @@ import { Input } from '@ya.praktikum/react-developer-burger-ui-components';
 import React, { useState, useRef, FC, ChangeEvent, FormEvent } from 'react';
 import AdditionalAction from '../components/additional-action/additional-action';
 import { useDispatch, useSelector } from 'react-redux';
-import { sendForgotPassword } from '../services/actions/user';
+import { sendForgotPassword } from '../services/actions/forgot-password';
 import { Redirect } from 'react-router-dom';
 import styles from './pages.module.css';
 import { getCookie } from '../utils/cookie';

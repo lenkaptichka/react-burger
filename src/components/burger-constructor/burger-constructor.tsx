@@ -12,7 +12,7 @@ import ConstructorCard from '../constructor-card/constructor-card';
 import { getCookie } from '../../utils/cookie';
 import { useHistory } from 'react-router-dom';
 import { IIngredient } from '../../utils/types';
-
+import { USER_IS_AUTHORIZED } from '../../services/actions/user';
 interface IOtherItems {
   _id: string;
   key: string;
@@ -48,7 +48,8 @@ const BurgerConstructor: FC = () => {
   });
 
   const checkToken = (): void => {
-    if (getCookie('accessToken') && userIsAuthorized) {
+    if (getCookie('accessToken')) {
+    // if (getCookie('accessToken') && userIsAuthorized) {
       setModalsOpen(true);
       sendOrderHandler();
     } else {

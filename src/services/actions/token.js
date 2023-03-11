@@ -35,16 +35,17 @@ export const fetchWithRefresh = async(url, options) => {
       setCookie(
         'accessToken',
         refreshData.accessToken.split('Bearer ')[1],
-        {expires: ACCESS_TOKEN_LIFETIME}
+        // {expires: ACCESS_TOKEN_LIFETIME}
       );
       setCookie(
         'refreshToken',
         refreshData.refreshToken,
-        {expires: REFRESH_TOKEN_LIFETIME}
+        // {expires: REFRESH_TOKEN_LIFETIME}
       );
       // localStorage.setItem("refreshToken", refreshData.refreshToken);
       // setCookie("accessToken", refreshData.accessToken);
       options.headers.authorization = refreshData.accessToken;
+      console.log({options});
       const result = await fetch(url, options); //повторяем запрос
       return await checkResponse(result);
     } else {

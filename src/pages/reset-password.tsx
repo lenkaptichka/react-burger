@@ -3,7 +3,7 @@ import { Input } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useState, useRef, FC, ChangeEvent, FormEvent } from 'react';
 import AdditionalAction from '../components/additional-action/additional-action';
 import { useDispatch, useSelector } from 'react-redux';
-import { sendResetPassword } from '../services/actions/user';
+import { sendResetPassword } from '../services/actions/reset-password';
 import styles from './pages.module.css';
 import { Redirect } from 'react-router-dom';
 import { getCookie } from '../utils/cookie';

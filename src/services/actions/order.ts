@@ -10,7 +10,8 @@ import {
 } from '../../utils/types';
 import { fetchWithRefresh } from '../actions/token';
 import { useDispatch } from 'react-redux';
-
+import { orderBurgerApi } from '../../utils/api';
+import { EventEmitter } from 'stream';
 // const dispatch = useDispatch();
 
 export const GET_ORDER_REQUEST: 'GET_ORDER_REQUEST' = 'GET_ORDER_REQUEST';
@@ -36,72 +37,80 @@ export type TOrderActions =
   IGetOrderSuccessAction |
   IGetOrderFailedAction;
 
-
-interface IOwner {
-  createdAt: string;
-  email: string;
-  name: string;
-  updatedAt: string;
-}
-
-interface IOrder {
-  createdAt: string;
-  ingredients: Array<IIngredient>;
-  name: string;
-  number: number;
-  owner: IOwner;
-  price: number;
-  status: string;
-  updatedAt: string;
-  _id: string;
-}
-
-type TSendOrderResponse = TServerResponse<{
-  name: string;
-  order: IOrder;
-  success: boolean;
-}>
-
-const orderBurger = (ingredients: Array<string>) => {
-  console.log('orderBurger')
-  return fetchWithRefresh(`${INGREDIENT_API_URL}/orders`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + getCookie('accessToken')
-      },
-      body: JSON.stringify({
-        ingredients
-      })
-    })
-    .then((data) => {
-      if (data?.success) {
-        return data;
-      } else {
-        console.log('error', Promise.reject(data))
-        return Promise.reject(data)
-      }
-    })
-}
-
 export const sendOrder = (ingredients: Array<string>) => (dispatch: AppDispatch) => {
   dispatch({type: GET_ORDER_REQUEST})
-  return orderBurger(ingredients).then(data => {
-    console.log(data)
-    if (data && data.success) {
-      dispatch({
-        type: GET_ORDER_SUCCESS,
-        orderNumber: data.order.number
-      });
-    } else {
+  return orderBurgerApi(ingredients)
+    .then(data => {
+      console.log(data)
+      if (data && data.success) {
+        dispatch({
+          type: GET_ORDER_SUCCESS,
+          orderNumber: data.order.number
+        });
+      } 
+      // else {
+      //   dispatch({
+      //     type: GET_ORDER_FAILED,
+      //     error: null
+      //   });
+      // }
+    })
+    .catch((error: TResponseError) => {
       dispatch({
         type: GET_ORDER_FAILED,
-        error: null
+        error: error.message
       });
-    }
-  })
-
+    })
 }
+
+// interface IOwner {
+//   createdAt: string;
+//   email: string;
+//   name: string;
+//   updatedAt: string;
+// }
+
+// interface IOrder {
+//   createdAt: string;
+//   ingredients: Array<IIngredient>;
+//   name: string;
+//   number: number;
+//   owner: IOwner;
+//   price: number;
+//   status: string;
+//   updatedAt: string;
+//   _id: string;
+// }
+
+// type TSendOrderResponse = TServerResponse<{
+//   name: string;
+//   order: IOrder;
+//   success: boolean;
+// }>
+
+// const orderBurger = (ingredients: Array<string>) => {
+//   console.log('orderBurger')
+//   return fetchWithRefresh(`${INGREDIENT_API_URL}/orders`, {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//         Authorization: 'Bearer ' + getCookie('accessToken')
+//       },
+//       body: JSON.stringify({
+//         ingredients
+//       })
+//     })
+//     .then((data) => {
+//       if (data?.success) {
+//         return data;
+//       } else {
+//         console.log('error', Promise.reject(data))
+//         return Promise.reject(data)
+//       }
+//     })
+// }
+
+
 
 // export const sendOrder = (ingredients: Array<string>): AppThunk => {
 //   console.log('sendOrder')

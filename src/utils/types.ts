@@ -6,12 +6,22 @@ import { TBurgerConstructorActions } from "../services/actions/burger-constructo
 import { TBurgerIngredientsActions } from '../services/actions/burger-ingredients';
 import { TIngredientDetailsActions } from '../services/actions/ingredient-details';
 import { TOrderActions } from '../services/actions/order';
+import { TRegisterActions } from '../services/actions/register';
+import { TLoginActions } from '../services/actions/login';
+import { TForgotPasswordActions } from '../services/actions/forgot-password';
+import { TResetPasswordActions } from '../services/actions/reset-password';
+import { TLogoutActions } from '../services/actions/logout';
 
 export type TApplicationActions =
   TBurgerConstructorActions |
   TBurgerIngredientsActions |
   TIngredientDetailsActions |
-  TOrderActions;
+  TOrderActions |
+  TRegisterActions |
+  TLoginActions |
+  TForgotPasswordActions |
+  TResetPasswordActions |
+  TLogoutActions;
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = ThunkDispatch<RootState, never, TApplicationActions>;
@@ -42,5 +52,22 @@ export interface IIngredient {
   '__v': number
 };
 
+export interface IRegisterFormState {
+  email: string;
+  password: string;
+  name: string;
+}
 
+export interface ILoginFormState {
+  email: string;
+  password: string;
+}
 
+export interface IForgotPasswordFormState {
+  email: string;
+}
+
+export interface IResetPasswordFormState {
+  password: string;
+  token: string;
+}

@@ -2,7 +2,7 @@ type TProps = {
   expires?: Date | string | number;
 }
 
-export function setCookie(name: string, value: string | null, props: TProps) {
+export function setCookie(name: string, value: string | null, props?: TProps) {
   props = props || {};
   let exp = props.expires;
   if (typeof exp === 'number' && exp) {

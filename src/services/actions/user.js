@@ -9,9 +9,9 @@ import {
 } from './token';
 import { fetchWithRefresh } from './token';
 
-export const GET_REGISTER_REQUEST = 'GET_REGISTER_REQUEST';
-export const GET_REGISTER_SUCCESS = 'GET_REGISTER_SUCCESS';
-export const GET_REGISTER_FAILED = 'GET_REGISTER_FAILED';
+// export const GET_REGISTER_REQUEST = 'GET_REGISTER_REQUEST';
+// export const GET_REGISTER_SUCCESS = 'GET_REGISTER_SUCCESS';
+// export const GET_REGISTER_FAILED = 'GET_REGISTER_FAILED';
 
 export const GET_LOGIN_REQUEST = 'GET_LOGIN_REQUEST';
 export const GET_LOGIN_SUCCESS = 'GET_LOGIN_SUCCESS';
@@ -42,150 +42,150 @@ export const SET_PASSWORD = 'SET_PASSWORD';
 export const SET_USER_DATA = 'SET_USER_DATA';
 export const CLEAR_USER_DATA = 'CLEAR_USER_DATA';
 
-export const sendRegisterData = (form) => {
-  return function(dispatch) {
-    dispatch({type: GET_REGISTER_REQUEST});
+// export const sendRegisterData = (form) => {
+//   return function(dispatch) {
+//     dispatch({type: GET_REGISTER_REQUEST});
 
-    fetch(`${INGREDIENT_API_URL}/auth/register`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json;charset=utf-8',
-      },
-      body: JSON.stringify(form)
-    })
-      .then(checkResponse)
-      .then(data => {
-        dispatch({type: GET_REGISTER_SUCCESS});
-        setCookie(
-          'accessToken',
-          data.accessToken.split('Bearer ')[1],
-          {expires: ACCESS_TOKEN_LIFETIME}
-        )
-        setCookie(
-          'refreshToken',
-          data.refreshToken,
-          {expires: REFRESH_TOKEN_LIFETIME}
-        )
-      })
-      .catch(error => dispatch({
-        type: GET_REGISTER_FAILED,
-        error
-      }))
-  }
-}
+//     fetch(`${INGREDIENT_API_URL}/auth/register`, {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json;charset=utf-8',
+//       },
+//       body: JSON.stringify(form)
+//     })
+//       .then(checkResponse)
+//       .then(data => {
+//         dispatch({type: GET_REGISTER_SUCCESS});
+//         setCookie(
+//           'accessToken',
+//           data.accessToken.split('Bearer ')[1],
+//           // {expires: ACCESS_TOKEN_LIFETIME}
+//         )
+//         setCookie(
+//           'refreshToken',
+//           data.refreshToken,
+//           // {expires: REFRESH_TOKEN_LIFETIME}
+//         )
+//       })
+//       .catch(error => dispatch({
+//         type: GET_REGISTER_FAILED,
+//         error
+//       }))
+//   }
+// }
 
-export const sendLoginData = (form) => {
-  return function(dispatch) {
-    dispatch({type: GET_LOGIN_REQUEST});
-    fetch(`${INGREDIENT_API_URL}/auth/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(form)
-    })
-      .then(checkResponse)
-      .then(data => {
-        dispatch({type: GET_LOGIN_SUCCESS});
-        setCookie(
-          'accessToken',
-          data.accessToken.split('Bearer ')[1],
-          {expires: ACCESS_TOKEN_LIFETIME}
-        );
-        setCookie(
-          'refreshToken',
-          data.refreshToken,
-          {expires: REFRESH_TOKEN_LIFETIME}
-        );
-        dispatch({
-          type: USER_IS_AUTHORIZED,
-          isAuthorized: true
-        });
+// export const sendLoginData = (form) => {
+//   return function(dispatch) {
+//     dispatch({type: GET_LOGIN_REQUEST});
+//     fetch(`${INGREDIENT_API_URL}/auth/login`, {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify(form)
+//     })
+//       .then(checkResponse)
+//       .then(data => {
+//         dispatch({type: GET_LOGIN_SUCCESS});
+//         setCookie(
+//           'accessToken',
+//           data.accessToken.split('Bearer ')[1],
+//           // {expires: ACCESS_TOKEN_LIFETIME}
+//         );
+//         setCookie(
+//           'refreshToken',
+//           data.refreshToken,
+//           // {expires: REFRESH_TOKEN_LIFETIME}
+//         );
+//         dispatch({
+//           type: USER_IS_AUTHORIZED,
+//           isAuthorized: true
+//         });
 
-        dispatch({
-          type: SET_USER_DATA,
-          user: data.user
-        });
-      })
-      .catch(error => dispatch({
-        type: GET_LOGIN_FAILED,
-        error
-      }))
-  }
-}
+//         dispatch({
+//           type: SET_USER_DATA,
+//           user: data.user
+//         });
+//       })
+//       .catch(error => dispatch({
+//         type: GET_LOGIN_FAILED,
+//         error
+//       }))
+//   }
+// }
 
-export const sendForgotPassword = (form) => {
-  return function(dispatch) {
-    dispatch({type: GET_FORGOT_PASSWORD_REQUEST});
+// export const sendForgotPassword = (form) => {
+//   return function(dispatch) {
+//     dispatch({type: GET_FORGOT_PASSWORD_REQUEST});
 
-    fetch(`${INGREDIENT_API_URL}/password-reset`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(form)
-    })
-      .then(checkResponse)
-      .then(() => {
-        dispatch({type: GET_FORGOT_PASSWORD_SUCCESS});
-      })
-      .catch(error => dispatch({
-        type: GET_FORGOT_PASSWORD_FAILED,
-        error
-      }))
-  }
-}
+//     fetch(`${INGREDIENT_API_URL}/password-reset`, {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify(form)
+//     })
+//       .then(checkResponse)
+//       .then(() => {
+//         dispatch({type: GET_FORGOT_PASSWORD_SUCCESS});
+//       })
+//       .catch(error => dispatch({
+//         type: GET_FORGOT_PASSWORD_FAILED,
+//         error
+//       }))
+//   }
+// }
 
-export const sendResetPassword = (form) => {
-  return function(dispatch) {
-    dispatch({type: GET_RESET_PASSWORD_REQUEST});
+// export const sendResetPassword = (form) => {
+//   return function(dispatch) {
+//     dispatch({type: GET_RESET_PASSWORD_REQUEST});
 
-    fetch(`${INGREDIENT_API_URL}/password-reset/reset`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(form)
-    })
-      .then(checkResponse)
-      .then(() => {
-        dispatch({type: GET_RESET_PASSWORD_SUCCESS});
-      })
-      .catch(error => dispatch({
-        type: GET_RESET_PASSWORD_FAILED,
-        error
-      }))
-  }
-}
+//     fetch(`${INGREDIENT_API_URL}/password-reset/reset`, {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify(form)
+//     })
+//       .then(checkResponse)
+//       .then(() => {
+//         dispatch({type: GET_RESET_PASSWORD_SUCCESS});
+//       })
+//       .catch(error => dispatch({
+//         type: GET_RESET_PASSWORD_FAILED,
+//         error
+//       }))
+//   }
+// }
 
-export const logout = () => {
-  return function(dispatch) {
-    dispatch({type: GET_LOGOUT_REQUEST});
+// export const logout = () => {
+//   return function(dispatch) {
+//     dispatch({type: GET_LOGOUT_REQUEST});
 
-    fetch(`${INGREDIENT_API_URL}/auth/logout`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({token: getCookie('refreshToken')})
-    })
-      .then(checkResponse)
-      .then(() => {
-        dispatch({type: GET_LOGOUT_SUCCESS});
-        deleteCookie('accessToken');
-        deleteCookie('refreshToken');
-        dispatch({
-          type: USER_IS_AUTHORIZED,
-          isAuthorized: false
-        });
-        dispatch({type: CLEAR_USER_DATA});
-      })
-      .catch(error => dispatch({
-        type: GET_LOGOUT_FAILED,
-        error
-      }))
-  }
-}
+//     fetch(`${INGREDIENT_API_URL}/auth/logout`, {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify({token: getCookie('refreshToken')})
+//     })
+//       .then(checkResponse)
+//       .then(() => {
+//         dispatch({type: GET_LOGOUT_SUCCESS});
+//         deleteCookie('accessToken');
+//         deleteCookie('refreshToken');
+//         dispatch({
+//           type: USER_IS_AUTHORIZED,
+//           isAuthorized: false
+//         });
+//         dispatch({type: CLEAR_USER_DATA});
+//       })
+//       .catch(error => dispatch({
+//         type: GET_LOGOUT_FAILED,
+//         error
+//       }))
+//   }
+// }
 
 const getUserRequest = async () => {
   const res = await fetch(`${INGREDIENT_API_URL}/auth/user`, {
@@ -288,12 +288,12 @@ export const getUserTest = () => {
             setCookie(
               'accessToken',
               tokenResult.accessToken.split('Bearer ')[1],
-              {expires: ACCESS_TOKEN_LIFETIME}
+              // {expires: ACCESS_TOKEN_LIFETIME}
             )
             setCookie(
               'refreshToken',
               setCookie.refreshToken,
-              {expires: REFRESH_TOKEN_LIFETIME}
+              // {expires: REFRESH_TOKEN_LIFETIME}
             );
 
             // Новый запрос пользователя
@@ -355,12 +355,12 @@ export const updateUser = (form) => {
             setCookie(
               'accessToken',
               tokenResult.accessToken.split('Bearer ')[1],
-              {expires: ACCESS_TOKEN_LIFETIME}
+              // {expires: ACCESS_TOKEN_LIFETIME}
             )
             setCookie(
               'refreshToken',
               setCookie.refreshToken,
-              {expires: REFRESH_TOKEN_LIFETIME}
+              // {expires: REFRESH_TOKEN_LIFETIME}
             );
 
             // Новый запрос на обновление данных пользователя

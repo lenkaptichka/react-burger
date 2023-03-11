@@ -2,7 +2,7 @@ import AdditionalAction from '../components/additional-action/additional-action'
 import Form from '../components/form/form'
 import { Input } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useState, useRef, ChangeEvent, FormEvent } from 'react';
-import { sendRegisterData } from '../services/actions/user';
+import { sendRegisterData } from '../services/actions/register';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from './pages.module.css';
 import { Redirect } from 'react-router-dom';

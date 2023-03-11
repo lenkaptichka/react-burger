@@ -1,7 +1,7 @@
 import { Link, useRouteMatch } from 'react-router-dom';
 import styles from './profile-menu.module.css';
 import { useDispatch } from 'react-redux';
-import { logout } from '../../services/actions/user';
+import { logout } from '../../services/actions/logout';
 import { FC } from 'react';
 
 const ProfileMenu: FC = () => {

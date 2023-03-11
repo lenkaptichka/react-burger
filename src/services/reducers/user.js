@@ -1,10 +1,10 @@
 import {
-  GET_REGISTER_REQUEST,
-  GET_REGISTER_SUCCESS,
-  GET_REGISTER_FAILED,
-  GET_LOGIN_REQUEST,
-  GET_LOGIN_SUCCESS,
-  GET_LOGIN_FAILED,
+  // GET_REGISTER_REQUEST,
+  // GET_REGISTER_SUCCESS,
+  // GET_REGISTER_FAILED,
+  // GET_LOGIN_REQUEST,
+  // GET_LOGIN_SUCCESS,
+  // GET_LOGIN_FAILED,
   GET_FORGOT_PASSWORD_REQUEST,
   GET_FORGOT_PASSWORD_SUCCESS,
   GET_FORGOT_PASSWORD_FAILED,
@@ -62,81 +62,81 @@ const initialState = {
 
 export const userReducer = (state = initialState, action) => {
   switch (action.type) {
-    case GET_REGISTER_REQUEST: {
-      return {...state, registerRequest: true}
-    }
-    case GET_REGISTER_SUCCESS: {
-      return {
-        ...state,
-        registerRequest: false,
-        registerFailed: null,
-        registerSuccess: true
-      }
-    }
-    case GET_REGISTER_FAILED: {
-      return {...state, registerRequest: false, registerFailed: action.error.message, registerSuccess: false}
-    }
+    // case GET_REGISTER_REQUEST: {
+    //   return {...state, registerRequest: true}
+    // }
+    // case GET_REGISTER_SUCCESS: {
+    //   return {
+    //     ...state,
+    //     registerRequest: false,
+    //     registerFailed: null,
+    //     registerSuccess: true
+    //   }
+    // }
+    // case GET_REGISTER_FAILED: {
+    //   return {...state, registerRequest: false, registerFailed: action.error.message, registerSuccess: false}
+    // }
 
-    case GET_LOGIN_REQUEST: {
-      return {...state, loginRequest: true}
-    }
-    case GET_LOGIN_SUCCESS: {
-      return {
-        ...state,
-        loginRequest: false,
-        loginFailed: null,
-        loginSuccess: true,
-        logoutSuccess: false
-      }
-    }
-    case GET_LOGIN_FAILED: {
-      return {...state, loginRequest: false, loginFailed: action.error.message, loginSuccess: false}
-    }
+    // case GET_LOGIN_REQUEST: {
+    //   return {...state, loginRequest: true}
+    // }
+    // case GET_LOGIN_SUCCESS: {
+    //   return {
+    //     ...state,
+    //     loginRequest: false,
+    //     loginFailed: null,
+    //     loginSuccess: true,
+    //     logoutSuccess: false
+    //   }
+    // }
+    // case GET_LOGIN_FAILED: {
+    //   return {...state, loginRequest: false, loginFailed: action.error.message, loginSuccess: false}
+    // }
 
-    case GET_FORGOT_PASSWORD_REQUEST: {
-      return {...state, forgotPasswordRequest: true}
-    }
-    case GET_FORGOT_PASSWORD_SUCCESS: {
-      return {
-        ...state,
-        forgotPasswordRequest: false,
-        forgotPasswordFailed: null,
-        forgotPasswordSuccess: true
-      }
-    }
-    case GET_FORGOT_PASSWORD_FAILED: {
-      return {...state, resetPasswordRequest: false, resetPasswordFailed: action.error.message, resetPasswordSuccess: false}
-    }
+    // case GET_FORGOT_PASSWORD_REQUEST: {
+    //   return {...state, forgotPasswordRequest: true}
+    // }
+    // case GET_FORGOT_PASSWORD_SUCCESS: {
+    //   return {
+    //     ...state,
+    //     forgotPasswordRequest: false,
+    //     forgotPasswordFailed: null,
+    //     forgotPasswordSuccess: true
+    //   }
+    // }
+    // case GET_FORGOT_PASSWORD_FAILED: {
+    //   return {...state, resetPasswordRequest: false, resetPasswordFailed: action.error.message, resetPasswordSuccess: false}
+    // }
 
-    case GET_RESET_PASSWORD_REQUEST: {
-      return {...state, resetPasswordRequest: true}
-    }
-    case GET_RESET_PASSWORD_SUCCESS: {
-      return {
-        ...state,
-        resetPasswordRequest: false,
-        resetPasswordFailed: null,
-        resetPasswordSuccess: true
-      }
-    }
-    case GET_RESET_PASSWORD_FAILED: {
-      return {...state, resetPasswordRequest: false, resetPasswordFailed: action.error.message, resetPasswordSuccess: false}
-    }
+    // case GET_RESET_PASSWORD_REQUEST: {
+    //   return {...state, resetPasswordRequest: true}
+    // }
+    // case GET_RESET_PASSWORD_SUCCESS: {
+    //   return {
+    //     ...state,
+    //     resetPasswordRequest: false,
+    //     resetPasswordFailed: null,
+    //     resetPasswordSuccess: true
+    //   }
+    // }
+    // case GET_RESET_PASSWORD_FAILED: {
+    //   return {...state, resetPasswordRequest: false, resetPasswordFailed: action.error.message, resetPasswordSuccess: false}
+    // }
 
-    case GET_LOGOUT_REQUEST: {
-      return {...state, logoutRequest: true}
-    }
-    case GET_LOGOUT_SUCCESS: {
-      return {
-        ...state,
-        logoutRequest: false,
-        logoutFailed: null,
-        logoutSuccess: true
-      }
-    }
-    case GET_LOGOUT_FAILED: {
-      return {...state, logoutRequest: false, logoutFailed: action.error.message, logoutSuccess: false}
-    }
+    // case GET_LOGOUT_REQUEST: {
+    //   return {...state, logoutRequest: true}
+    // }
+    // case GET_LOGOUT_SUCCESS: {
+    //   return {
+    //     ...state,
+    //     logoutRequest: false,
+    //     logoutFailed: null,
+    //     logoutSuccess: true
+    //   }
+    // }
+    // case GET_LOGOUT_FAILED: {
+    //   return {...state, logoutRequest: false, logoutFailed: action.error.message, logoutSuccess: false}
+    // }
 
     case GET_USER_REQUEST: {
       return {...state, userRequest: true}
