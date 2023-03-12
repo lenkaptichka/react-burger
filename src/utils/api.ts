@@ -1,7 +1,7 @@
 import { INGREDIENT_API_URL } from "../constants/constants";
 import { fetchWithRefresh } from "../services/actions/token";
 import { getCookie } from "./cookie";
-import { TServerResponse, IIngredient } from "./types";
+import { TServerResponse, IIngredient, IEditUserDataFormState } from "./types";
 
 interface IOwner {
   createdAt: string;
@@ -39,6 +39,45 @@ export const orderBurgerApi = (ingredients: Array<string>) => {
     body: JSON.stringify({
       ingredients
     })
+  })
+  .then((data) => {
+    if (data?.success) {
+      return data;
+    } else {
+      // console.log('error', Promise.reject(data))
+      return Promise.reject(data)
+    }
+  })
+}
+
+export const getUserApi = () => {
+  console.log('getUserApi')
+  return fetchWithRefresh(`${INGREDIENT_API_URL}/auth/user`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + getCookie('accessToken')
+    }
+  })
+  .then((data) => {
+    if (data?.success) {
+      return data;
+    } else {
+      // console.log('error', Promise.reject(data))
+      return Promise.reject(data)
+    }
+  })
+}
+
+export const updateUserApi = (form: IEditUserDataFormState) => {
+  console.log('updateUserApi')
+  return fetchWithRefresh(`${INGREDIENT_API_URL}/auth/user`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + getCookie('accessToken')
+    },
+    body: JSON.stringify(form)
   })
   .then((data) => {
     if (data?.success) {

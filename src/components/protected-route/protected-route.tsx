@@ -7,11 +7,18 @@ const ProtectedRoute: FC<RouteProps & {children: ReactElement}> = ({ children, .
   // TODO Исправить в следующем спринте
   // @ts-expect-error
   const userIsAuthorized = useSelector(state => state.userInformation.userIsAuthorized) as boolean;
+  // @ts-expect-error
+  const isAuthChecked = useSelector(state => state.userInformation.isAuthChecked);
+  const userData = useSelector(state => state.userInformation.userData);
+
+  if (!isAuthChecked) {
+    return <p>Подождите</p>
+  }
 
   return (
     <Route {...rest}
       render={({ location }) =>
-        userIsAuthorized && getCookie('accessToken') ? (
+        userData && getCookie('accessToken') ? (
           children
         ) : (
           <Redirect

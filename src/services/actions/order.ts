@@ -48,19 +48,19 @@ export const sendOrder = (ingredients: Array<string>) => (dispatch: AppDispatch)
           orderNumber: data.order.number
         });
       } 
-      // else {
-      //   dispatch({
-      //     type: GET_ORDER_FAILED,
-      //     error: null
-      //   });
-      // }
+      else {
+        dispatch({
+          type: GET_ORDER_FAILED,
+          error: 'Ошибка'
+        });
+      }
     })
-    .catch((error: TResponseError) => {
-      dispatch({
-        type: GET_ORDER_FAILED,
-        error: error.message
-      });
-    })
+    // .catch((error: TResponseError) => {
+    //   dispatch({
+    //     type: GET_ORDER_FAILED,
+    //     error: error.message
+    //   });
+    // })
 }
 
 // interface IOwner {

@@ -19,7 +19,7 @@ import {
   IngredientInformation
 } from '../../pages'
 import { getRefreshToken } from '../../services/actions/token';
-import { getUser } from '../../services/actions/user';
+import { getUser, checkUserAuth } from '../../services/actions/user';
 import { getCookie } from '../../utils/cookie';
 import ProtectedRoute from '../protected-route/protected-route';
 
@@ -36,18 +36,20 @@ const App: FC = () => {
     // TODO Исправить в следующем спринте
     // @ts-expect-error
     dispatch(getIngredients());
+    // @ts-expect-error
+    dispatch(checkUserAuth());
 
-    console.log({isAuthorized});
-    if (getCookie('accessToken')) {
+    // console.log({isAuthorized});
+    // if (getCookie('accessToken')) {
       
-      // dispatch({
-      //   type: USER_IS_AUTHORIZED,
-      //   isAuthorized: true
-      // });
-      // @ts-expect-error
-      // getUser();
-      dispatch(getUser());
-    }
+    //   // dispatch({
+    //   //   type: USER_IS_AUTHORIZED,
+    //   //   isAuthorized: true
+    //   // });
+    //   // @ts-expect-error
+    //   // getUser();
+    //   dispatch(getUser());
+    // }
     // TODO Здесь не нужны зависимости, т.к. это действия при монтировании компонента
     // eslint-disable-next-line
   }, []);

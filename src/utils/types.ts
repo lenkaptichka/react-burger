@@ -11,6 +11,7 @@ import { TLoginActions } from '../services/actions/login';
 import { TForgotPasswordActions } from '../services/actions/forgot-password';
 import { TResetPasswordActions } from '../services/actions/reset-password';
 import { TLogoutActions } from '../services/actions/logout';
+import { TUserActions } from '../services/actions/user';
 
 export type TApplicationActions =
   TBurgerConstructorActions |
@@ -21,7 +22,8 @@ export type TApplicationActions =
   TLoginActions |
   TForgotPasswordActions |
   TResetPasswordActions |
-  TLogoutActions;
+  TLogoutActions |
+  TUserActions;
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = ThunkDispatch<RootState, never, TApplicationActions>;
@@ -70,4 +72,15 @@ export interface IForgotPasswordFormState {
 export interface IResetPasswordFormState {
   password: string;
   token: string;
+}
+
+export interface IUserData {
+  email: string;
+  name: string
+}
+
+export interface IEditUserDataFormState {
+  email: string;
+  name: string;
+  password: string
 }
