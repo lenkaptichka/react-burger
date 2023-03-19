@@ -1,7 +1,7 @@
 import { INGREDIENT_API_URL } from "../constants/constants";
 import { fetchWithRefresh } from "../services/actions/token";
 import { getCookie } from "./cookie";
-import { TServerResponse, IIngredient, IEditUserDataFormState } from "./types";
+import { TServerResponse, IIngredient, IEditUserDataFormState, IUserData } from "./types";
 
 interface IOwner {
   createdAt: string;
@@ -28,9 +28,13 @@ type TSendOrderResponse = TServerResponse<{
   success: boolean;
 }>
 
-export const orderBurgerApi = (ingredients: Array<string>) => {
+type TUserResponse = TServerResponse<{
+  user: IUserData;
+}>
+
+export const orderApi = (ingredients: Array<string>): Promise<TSendOrderResponse> => {
   console.log('orderBurger')
-  return fetchWithRefresh(`${INGREDIENT_API_URL}/orders`, {
+  return fetchWithRefresh<TSendOrderResponse>(`${INGREDIENT_API_URL}/orders`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -50,9 +54,9 @@ export const orderBurgerApi = (ingredients: Array<string>) => {
   })
 }
 
-export const getUserApi = () => {
+export const getUserApi = (): Promise<TUserResponse> => {
   console.log('getUserApi')
-  return fetchWithRefresh(`${INGREDIENT_API_URL}/auth/user`, {
+  return fetchWithRefresh<TUserResponse>(`${INGREDIENT_API_URL}/auth/user`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -60,6 +64,7 @@ export const getUserApi = () => {
     }
   })
   .then((data) => {
+    console.log({data})
     if (data?.success) {
       return data;
     } else {
@@ -69,9 +74,9 @@ export const getUserApi = () => {
   })
 }
 
-export const updateUserApi = (form: IEditUserDataFormState) => {
+export const updateUserApi = (form: IEditUserDataFormState): Promise<TUserResponse> => {
   console.log('updateUserApi')
-  return fetchWithRefresh(`${INGREDIENT_API_URL}/auth/user`, {
+  return fetchWithRefresh<TUserResponse>(`${INGREDIENT_API_URL}/auth/user`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',

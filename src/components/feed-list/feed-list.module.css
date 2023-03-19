@@ -1,0 +1,30 @@
+.feed-list  {
+    width: calc((100% - 60px) / 2);
+    /* border: 1px solid darkorange; */
+}
+
+.feeds {
+    max-height: calc(100vh - 250px);
+    overflow-y: overlay;
+    overflow-x: hidden;
+
+    /* border: 1px solid cornflowerblue; */
+}
+
+.feeds::-webkit-scrollbar {
+    width: 8px;
+}
+
+.feeds::-webkit-scrollbar-thumb {
+    border-radius: 0;
+    border: none;
+}
+
+.link {
+    text-decoration: none;
+    display: block;
+}
+
+.link:first-of-type {
+    margin-top: 0;
+}

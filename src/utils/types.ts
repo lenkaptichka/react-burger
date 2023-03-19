@@ -12,6 +12,9 @@ import { TForgotPasswordActions } from '../services/actions/forgot-password';
 import { TResetPasswordActions } from '../services/actions/reset-password';
 import { TLogoutActions } from '../services/actions/logout';
 import { TUserActions } from '../services/actions/user';
+import { TOrderFeedActions } from '../services/actions/order-feed';
+import { TOrdersHistoryActions } from '../services/actions/orders-history';
+import { TOrderDetailsActions } from '../services/actions/order-details';
 
 export type TApplicationActions =
   TBurgerConstructorActions |
@@ -23,7 +26,10 @@ export type TApplicationActions =
   TForgotPasswordActions |
   TResetPasswordActions |
   TLogoutActions |
-  TUserActions;
+  TUserActions |
+  TOrderFeedActions |
+  TOrdersHistoryActions |
+  TOrderDetailsActions;
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = ThunkDispatch<RootState, never, TApplicationActions>;
@@ -83,4 +89,28 @@ export interface IEditUserDataFormState {
   email: string;
   name: string;
   password: string
+}
+
+export interface IOrder {
+  ingredients: Array<string>
+  _id: string;
+  status: 'done' | 'pending' | 'created' | 'canceled';
+  number: number;
+  createdAt: string;
+  updatedAt: string;
+  name: string;
+}
+
+export interface IOrderDetails extends IOrder {
+  owner: string;
+}
+
+export interface IOrderData {
+  orders: Array<IOrder>;
+  total: number;
+  totalToday: number;
+}
+
+export interface IMatchParams {
+  id: string;
 }

@@ -44,7 +44,7 @@ const initialState = {
   isAuthChecked: false
 }
 
-export const userReducer = (state = initialState, action: TUserActions): IUserState  => {
+export const userReducer = (state: IUserState = initialState, action: TUserActions): IUserState  => {
   switch (action.type) {
     case GET_USER_REQUEST: {
       return {...state, userRequest: true}

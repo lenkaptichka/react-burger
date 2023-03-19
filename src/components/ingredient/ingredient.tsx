@@ -1,5 +1,5 @@
 import styles from './ingredient.module.css';
-import { useSelector } from 'react-redux';
+import { useSelector } from '../../hooks/hooks';
 import { CurrencyIcon, Counter } from '@ya.praktikum/react-developer-burger-ui-components';
 import { BUNS_COUNT } from '../../constants/constants';
 import { useDrag } from 'react-dnd';
@@ -24,9 +24,7 @@ interface ISelectedIngredients {
 
 export const Ingredient: FC<IIngredientProps> = ({ ingredient, onClick }) => {
   
-  // TODO Исправить в следующем спринте
-  // @ts-expect-error
-  const { bun, otherItems } = useSelector(state => state.selectedIngredients) as ISelectedIngredients;
+  const { bun, otherItems } = useSelector(state => state.selectedIngredients);
 
   const location = useLocation<Location>();
   

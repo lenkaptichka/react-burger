@@ -13,7 +13,7 @@ const IngredientDetails: FC<IIngredientDetailsProps> = ({ ingredient }) => {
       <h6 className={`${styles.name} text text_type_main-medium mb-8`}>
         {ingredient?.name}
       </h6>
-      <div className={`${styles.information} mb-15`}>
+      <div className={`${styles.information} mb-5`}>
         <p className={`${styles.data} text text_type_main-default text_color_inactive`}>
           {'Калории,ккал\n'}<span className={`${styles.value} text text_type_digits-default mt-2`}>{ingredient?.calories}</span>
         </p>

@@ -4,7 +4,7 @@ import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
 import { useState, useMemo, FC } from 'react';
 import { BUNS_COUNT } from '../../constants/constants';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from '../../hooks/hooks';
 import { sendOrder } from '../../services/actions/order';
 import { useDrop } from 'react-dnd';
 import { addIngredient } from '../../services/actions/burger-constructor';
@@ -26,13 +26,10 @@ interface ISelectedIngredients {
 const BurgerConstructor: FC = () => {
   const [modalIsOpen, setModalsOpen] = useState<boolean>(false);
 
-  // TODO Исправить в следующем спринте
-  // @ts-expect-error
-  const allIngredients = useSelector(state => state.ingredients.allIngredients) as Array<IIngredient>;
-  // @ts-expect-error
-  const { bun, otherItems } = useSelector(state => state.selectedIngredients) as ISelectedIngredients;
-  // @ts-expect-error
-  const userIsAuthorized = useSelector(state => state.userInformation.userIsAuthorized) as boolean;
+
+  const allIngredients = useSelector(state => state.ingredients.allIngredients);
+  const { bun, otherItems } = useSelector(state => state.selectedIngredients);
+  // const userIsAuthorized = useSelector(state => state.userInformation.userIsAuthorized);
 
   const dispatch = useDispatch();
   const history = useHistory();
@@ -49,7 +46,6 @@ const BurgerConstructor: FC = () => {
 
   const checkToken = (): void => {
     if (getCookie('accessToken')) {
-    // if (getCookie('accessToken') && userIsAuthorized) {
       setModalsOpen(true);
       sendOrderHandler();
     } else {

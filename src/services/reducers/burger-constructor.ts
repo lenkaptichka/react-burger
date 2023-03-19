@@ -20,7 +20,7 @@ const initialState: IBurgerConstructorState = {
   otherItems: []
 };
 
-export const selectedIngredientsReducer = (state = initialState, action: TBurgerConstructorActions): IBurgerConstructorState => {
+export const selectedIngredientsReducer = (state: IBurgerConstructorState = initialState, action: TBurgerConstructorActions): IBurgerConstructorState => {
   switch(action.type) {
     case ADD_INGREDIENT: {
       if (action.ingredient.type === 'bun') {

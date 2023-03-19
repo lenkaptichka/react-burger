@@ -6,8 +6,10 @@ import Profile from './profile';
 import Main from './main';
 import NotFound from './not-found';
 import OrderFeed from './order-feed';
-import OrderHistory from './order-history';
+import OrderHistory from './orders-history';
 import IngredientInformation from './ingredient-information';
+import FeedInformation from './feed-information';
+import MyOrderInformation from './my-order-information';
 
 export {
 	ForgotPassword,
@@ -19,5 +21,7 @@ export {
 	NotFound,
 	OrderFeed,
 	OrderHistory,
-	IngredientInformation
+	IngredientInformation,
+	FeedInformation,
+  MyOrderInformation
 }

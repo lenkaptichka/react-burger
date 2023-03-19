@@ -17,7 +17,7 @@ const initialState: IResetPasswordrState = {
   resetPasswordFailed: null
 };
 
-export const resetPasswordReducer = (state = initialState, action: TResetPasswordActions): IResetPasswordrState => {
+export const resetPasswordReducer = (state: IResetPasswordrState = initialState, action: TResetPasswordActions): IResetPasswordrState => {
   switch (action.type) {    
     case GET_RESET_PASSWORD_REQUEST: {
       return {...state, resetPasswordRequest: true}

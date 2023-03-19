@@ -1,6 +1,6 @@
 import { Link, useRouteMatch } from 'react-router-dom';
 import styles from './profile-menu.module.css';
-import { useDispatch } from 'react-redux';
+import { useDispatch } from '../../hooks/hooks';
 import { logout } from '../../services/actions/logout';
 import { FC } from 'react';
 
@@ -11,8 +11,6 @@ const ProfileMenu: FC = () => {
   const dispatch = useDispatch();
 
   const clickLogout = (): void => {
-    // TODO Исправить в следующем спринте
-    // @ts-expect-error
     dispatch(logout());
   };
 

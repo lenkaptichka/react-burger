@@ -2,7 +2,7 @@ import { Input, Button } from '@ya.praktikum/react-developer-burger-ui-component
 import { useState, useRef, useEffect, FC, ChangeEvent, SyntheticEvent } from 'react';
 import Form from '../form/form';
 import styles from './profile-editing.module.css';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from '../../hooks/hooks';
 import { Redirect } from 'react-router-dom';
 import { updateUser, SET_PASSWORD } from '../../services/actions/user';
 import { PROFILE_EDITING_INITIAL_STATE } from '../../constants/constants';
@@ -19,13 +19,9 @@ interface IFormState {
 }
 
 const ProfileEditing: FC = () => {
-  // TODO Исправить в следующем спринте
-  // @ts-expect-error
-  const userData = useSelector(state => state.userInformation.userData) as IUserData;
-  // @ts-expect-error
-  const userIsAuthorized = useSelector(state => state.userInformation.userIsAuthorized) as boolean;
-  // @ts-expect-error
-  const userPassword = useSelector(state => state.userInformation.userPassword) as string;
+  const userData = useSelector(state => state.userInformation.userData);
+  const userIsAuthorized = useSelector(state => state.userInformation.userIsAuthorized);
+  const userPassword = useSelector(state => state.userInformation.userPassword);
 
   const [formState, setFormState] = useState<IFormState>(PROFILE_EDITING_INITIAL_STATE);
   const [formIsChanged, setFormIsChanged] = useState<boolean>(false);
@@ -74,8 +70,6 @@ const ProfileEditing: FC = () => {
 
   const formSubmit = (event: SyntheticEvent): void => {
     event.preventDefault();
-    // TODO Исправить в следующем спринте
-    // @ts-expect-error
     dispatch(updateUser(formState));
     setFormIsChanged(false);
   };

@@ -1,10 +1,10 @@
 import { useEffect, useState, FC } from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, useLocation, useHistory, useRouteMatch } from 'react-router-dom';
 import styles from './app.module.css';
 import AppHeader from '../app-header/app-header';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from '../../hooks/hooks';
 import { getIngredients } from '../../services/actions/burger-ingredients';
-import { ACCESS_TOKEN_LIFETIME } from '../../constants/constants';
+import { ACCESS_TOKEN_LIFETIME, ORDER_NUMBER_LENGTH } from '../../constants/constants';
 import { USER_IS_AUTHORIZED } from '../../services/actions/user';
 import {
   ForgotPassword,
@@ -16,27 +16,31 @@ import {
   NotFound,
   OrderFeed,
   OrderHistory,
-  IngredientInformation
+  IngredientInformation,
+  FeedInformation,
+  MyOrderInformation
 } from '../../pages'
-import { getRefreshToken } from '../../services/actions/token';
 import { getUser, checkUserAuth } from '../../services/actions/user';
-import { getCookie } from '../../utils/cookie';
 import ProtectedRoute from '../protected-route/protected-route';
+import Modal from '../modal/modal';
+import { deleteIngredientDetails } from '../../services/actions/ingredient-details';
+import { IMatchParams } from '../../utils/types';
+import { Location } from 'history'; 
+
 
 const App: FC = () => {
-  const [timerId, setTimerId] = useState<ReturnType<typeof setInterval> | null>(null);
-
   const dispatch = useDispatch();
+  const history = useHistory();
+  
+  const location = useLocation<{background?: Location}>();
+  const background = location.state && location.state.background;
 
-  // TODO Исправить в следующем спринте
-  // @ts-expect-error
-  const isAuthorized = useSelector(state => state.userInformation.userIsAuthorized) as boolean;
+  const feedTitle = useRouteMatch<IMatchParams>('/order-feed/:id')?.params?.id;
+  const myOrdersTitle = useRouteMatch<IMatchParams>('/profile/orders/:id')?.params?.id;
 
+  // const isAuthorized = useSelector(state => state.userInformation.userIsAuthorized);
   useEffect(() => {
-    // TODO Исправить в следующем спринте
-    // @ts-expect-error
     dispatch(getIngredients());
-    // @ts-expect-error
     dispatch(checkUserAuth());
 
     // console.log({isAuthorized});
@@ -73,12 +77,24 @@ const App: FC = () => {
   //   // eslint-disable-next-line
   // }, [isAuthorized]);
 
+
+  const closeModal = (): void => {
+    // dispatch(deleteIngredientDetails());
+    history.goBack();
+  };
+
+  // const formatedOrderNumber = useMemo(() => {
+  //   return `#${String(order?.number).padStart(ORDER_NUMBER_LENGTH, '0')}`
+  // }, [order.number]);
+
   return (
-    <Router>
+    // <Router>
       <div className={`${styles.main} body`}>
         <AppHeader />
         <main className={styles.mainsection}>
-        <Switch>
+
+        {/* <Switch> */}
+        <Switch location={background || location}>
           <Route path='/' exact={true} >
             <Main />
           </Route>
@@ -99,6 +115,12 @@ const App: FC = () => {
             <OrderHistory />
           </ProtectedRoute>
 
+            <ProtectedRoute path='/profile/orders/:id' exact={true}>
+              <div className={styles['page-wrapper']}>
+                <MyOrderInformation />
+              </div>
+            </ProtectedRoute>
+
           <Route path='/register' exact={true}>
             <Register />
           </Route>
@@ -112,16 +134,52 @@ const App: FC = () => {
           </Route>
 
           <Route path='/ingredients/:id' exact={true}>
-            <IngredientInformation />
+            <div className={styles['page-wrapper']}>
+              <IngredientInformation />
+            </div>
           </Route>
+
+          <Route path='/order-feed/:id' exact={true}>
+            <div className={styles['page-wrapper']}>
+              <FeedInformation />
+            </div>
+          </Route> 
 
           <Route>
             <NotFound />
           </Route>
           </Switch>
+
+          {background && (
+            <>
+              <Route path='/ingredients/:id' exact={true}>
+                <Modal title={'Детали ингредиента'} closeModal={closeModal}>
+                  <IngredientInformation />
+                </Modal>
+              </Route>
+
+              <Route path='/order-feed/:id' exact={true}>
+                <Modal
+                  title={`#${feedTitle?.padStart(ORDER_NUMBER_LENGTH, '0')}`}
+                  closeModal={closeModal}
+                >
+                  <FeedInformation />
+                </Modal>
+              </Route>
+              <ProtectedRoute path='/profile/orders/:id' exact={true}>  
+                <Modal
+                  title={`#${myOrdersTitle?.padStart(ORDER_NUMBER_LENGTH, '0')}`}
+                  closeModal={closeModal}
+                >
+                  <MyOrderInformation />
+                </Modal>
+              </ProtectedRoute>
+            </>
+          )
+          }
         </main>
       </div>
-    </Router>
+    // </Router>
   )
 }
 

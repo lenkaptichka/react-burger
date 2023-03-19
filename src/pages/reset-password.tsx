@@ -2,27 +2,21 @@ import Form from '../components/form/form'
 import { Input } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useState, useRef, FC, ChangeEvent, FormEvent } from 'react';
 import AdditionalAction from '../components/additional-action/additional-action';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from '../hooks/hooks';
 import { sendResetPassword } from '../services/actions/reset-password';
 import styles from './pages.module.css';
 import { Redirect } from 'react-router-dom';
 import { getCookie } from '../utils/cookie';
 import { RESET_PASSWORD_INITIAL_STATE } from '../constants/constants';
+import { IResetPasswordFormState } from '../utils/types';
 
-interface IFormState {
-  password: string;
-  token: string;
-}
 
 const ResetPassword: FC = () => {
-  const [formState, setFormState] = useState<IFormState>(RESET_PASSWORD_INITIAL_STATE);
+  const [formState, setFormState] = useState<IResetPasswordFormState>(RESET_PASSWORD_INITIAL_STATE);
   const [passwordIsShown, setPasswordIsShown] = useState<boolean>(false);
 
-  // TODO Временное решение пока не типизирован store
-  // @ts-expect-error
-  const userIsAuthorized = useSelector(state => state.userInformation.userIsAuthorized) as boolean;
-  // @ts-expect-error
-  const forgotPasswordRequest = useSelector(state => state.userInformation.forgotPasswordRequest) as boolean;
+  const userIsAuthorized = useSelector(state => state.userInformation.userIsAuthorized);
+  const forgotPasswordRequest = useSelector(state => state.forgotPassword.forgotPasswordRequest);
 
   const dispatch = useDispatch();
 
@@ -40,8 +34,6 @@ const ResetPassword: FC = () => {
 
   const sendResetPasswordData = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
-    // TODO Временное решение пока не типизирован store
-    // @ts-expect-error
     dispatch(sendResetPassword(formState))
   }
 

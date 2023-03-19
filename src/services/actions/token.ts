@@ -1,33 +1,47 @@
 import { INGREDIENT_API_URL } from '../../constants/constants';
 import checkResponse from '../../utils/check-response';
 import { getCookie, setCookie } from '../../utils/cookie';
+import { TServerResponse } from '../../utils/types';
 
 export const GET_REFRESH_TOKEN_REQUEST = 'GET_REFRESH_TOKEN_REQUEST';
 export const GET_REFRESH_TOKEN_SUCCESS = 'GET_REFRESH_TOKEN_SUCCESS'
 export const GET_REFRESH_TOKEN_FAILED = 'GET_REFRESH_TOKEN_FAILED';
 
+interface IOptions {
+  method: 'POST' | 'PATCH' | 'GET';
+  headers: {
+    'Content-Type': string;
+    'Authorization'?: string;
+  };
+  body?: string;
+} 
 
-const refreshToken = () => {
+type TRefreshResponse = TServerResponse<{
+  refreshToken: string;
+  accessToken: string;
+}>;
+
+const refreshToken = (): Promise<TRefreshResponse> => {
   console.log('запуск функции refreshToken')
   return fetch(`${INGREDIENT_API_URL}/auth/token`, {
     method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ token: getCookie('refreshToken') })
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ token: getCookie('refreshToken') })
     })
-    .then(checkResponse);
+    .then(checkResponse<TRefreshResponse>);
 }
 
-export const fetchWithRefresh = async(url, options) => {
+export const fetchWithRefresh = async<T> (url: string, options: IOptions) => {
   console.log('fetchWithRefresh')
   try {
     const result = await fetch(url, options);
-    console.log({result})
-    return await checkResponse(result);
+    return await checkResponse<T>(result);
   } catch (error) {
-    if (error.message === 'jwt expired' || error.message === 'Token is invalid') {
-      const refreshData = await refreshToken(); //обновляем токен
+    if (error instanceof Error && (error.message === 'jwt expired' || error.message === 'Token is invalid')) {
+      // Обновление токена
+      const refreshData = await refreshToken();
       if (!refreshData.success) {
         console.log({refreshData })
         return Promise.reject(refreshData);
@@ -35,19 +49,16 @@ export const fetchWithRefresh = async(url, options) => {
       setCookie(
         'accessToken',
         refreshData.accessToken.split('Bearer ')[1],
-        // {expires: ACCESS_TOKEN_LIFETIME}
       );
       setCookie(
         'refreshToken',
         refreshData.refreshToken,
-        // {expires: REFRESH_TOKEN_LIFETIME}
       );
-      // localStorage.setItem("refreshToken", refreshData.refreshToken);
-      // setCookie("accessToken", refreshData.accessToken);
-      options.headers.authorization = refreshData.accessToken;
-      console.log({options});
-      const result = await fetch(url, options); //повторяем запрос
-      return await checkResponse(result);
+
+      options.headers.Authorization = refreshData.accessToken;
+      // Повторение запроса
+      const result = await fetch(url, options);
+      return await checkResponse<T>(result);
     } else {
       return Promise.reject(error);
     }

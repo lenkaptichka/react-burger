@@ -17,7 +17,7 @@ const initialState: ILogoutState = {
   logoutFailed: null
 };
 
-export const logoutReducer = (state = initialState, action: TLogoutActions): ILogoutState => {
+export const logoutReducer = (state: ILogoutState = initialState, action: TLogoutActions): ILogoutState => {
   switch (action.type) {
     case GET_LOGOUT_REQUEST: {
       return {...state, logoutRequest: true}

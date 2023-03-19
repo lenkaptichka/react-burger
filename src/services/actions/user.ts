@@ -74,7 +74,7 @@ export type TUserActions =
   IAuthIsCheckedAction;
 
 export const checkUserAuth = () => (dispatch: AppDispatch) => {
-  console.log('checkUserAuth');
+  // console.log('checkUserAuth');
   if (getCookie('accessToken')) {
     dispatch(getUser())
     .finally(() => {

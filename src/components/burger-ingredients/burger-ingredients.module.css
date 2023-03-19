@@ -7,6 +7,11 @@
     display: flex;
 }
 
+.tabs > div {
+    min-width: 100px;
+    width: 100%;
+}
+
 .ingredients {
     max-height: calc(100vh - 336px);
     overflow-y: overlay;

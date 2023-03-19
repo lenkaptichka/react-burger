@@ -2,7 +2,7 @@ import {
   GET_REFRESH_TOKEN_REQUEST,
   GET_REFRESH_TOKEN_SUCCESS,
   GET_REFRESH_TOKEN_FAILED
-} from '../actions/token.js';
+} from '../actions/token';
 
 const initialState = {
   refreshTokenRequest: false,

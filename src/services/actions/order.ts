@@ -9,9 +9,8 @@ import {
   TResponseError
 } from '../../utils/types';
 import { fetchWithRefresh } from '../actions/token';
-import { useDispatch } from 'react-redux';
-import { orderBurgerApi } from '../../utils/api';
-import { EventEmitter } from 'stream';
+import { useDispatch } from '../../hooks/hooks';
+import { orderApi } from '../../utils/api';
 // const dispatch = useDispatch();
 
 export const GET_ORDER_REQUEST: 'GET_ORDER_REQUEST' = 'GET_ORDER_REQUEST';
@@ -37,9 +36,35 @@ export type TOrderActions =
   IGetOrderSuccessAction |
   IGetOrderFailedAction;
 
+interface IOwner {
+  createdAt: string;
+  email: string;
+  name: string;
+  updatedAt: string;
+}
+
+interface IOrder {
+  createdAt: string;
+  ingredients: Array<IIngredient>;
+  name: string;
+  number: number;
+  owner: IOwner;
+  price: number;
+  status: string;
+  updatedAt: string;
+  _id: string;
+}
+
+type TSendOrderResponse = TServerResponse<{
+  name: string;
+  order: IOrder;
+  success: boolean;
+}>
+
+
 export const sendOrder = (ingredients: Array<string>) => (dispatch: AppDispatch) => {
   dispatch({type: GET_ORDER_REQUEST})
-  return orderBurgerApi(ingredients)
+  return orderApi(ingredients)
     .then(data => {
       console.log(data)
       if (data && data.success) {

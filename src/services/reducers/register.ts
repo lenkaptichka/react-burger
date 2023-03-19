@@ -17,7 +17,7 @@ const initialState: IRegisterState = {
   registerFailed: null,
 };
 
-export const registerReducer = (state = initialState, action: TRegisterActions): IRegisterState => {
+export const registerReducer = (state: IRegisterState = initialState, action: TRegisterActions): IRegisterState => {
   switch (action.type) {
     case GET_REGISTER_REQUEST: {
       return {...state, registerRequest: true}

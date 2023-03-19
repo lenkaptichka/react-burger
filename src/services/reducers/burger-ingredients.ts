@@ -19,7 +19,7 @@ const initialState: IBurgerIngredientsState = {
   ingredientsFailed: null
 }
 
-export const ingredientsReducer = (state = initialState, action: TBurgerIngredientsActions): IBurgerIngredientsState => {
+export const ingredientsReducer = (state: IBurgerIngredientsState = initialState, action: TBurgerIngredientsActions): IBurgerIngredientsState => {
   switch (action.type) {
     case GET_INGREDIENTS_REQUEST: {
       return {...state, ingredientsRequest: true}
