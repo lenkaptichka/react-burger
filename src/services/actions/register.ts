@@ -7,7 +7,7 @@ import {
 } from '../../utils/types';
 import { setCookie } from '../../utils/cookie';
 import checkResponse from '../../utils/check-response';
-import { INGREDIENT_API_URL, ACCESS_TOKEN_LIFETIME, REFRESH_TOKEN_LIFETIME } from '../../constants/constants';
+import { INGREDIENT_API_URL } from '../../constants/constants';
 
 export const GET_REGISTER_REQUEST: 'GET_REGISTER_REQUEST' = 'GET_REGISTER_REQUEST';
 export const GET_REGISTER_SUCCESS: 'GET_REGISTER_SUCCESS' = 'GET_REGISTER_SUCCESS';
@@ -60,12 +60,10 @@ export const sendRegisterData = (form: IRegisterFormState): AppThunk => {
         setCookie(
           'accessToken',
           data.accessToken.split('Bearer ')[1],
-          // {expires: ACCESS_TOKEN_LIFETIME}
         )
         setCookie(
           'refreshToken',
           data.refreshToken,
-          // {expires: REFRESH_TOKEN_LIFETIME}
         )
       })
       .catch((error: TResponseError) => dispatch({

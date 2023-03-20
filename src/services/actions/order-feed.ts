@@ -1,14 +1,11 @@
-import { IOrderData } from "../../utils/types";
+import { IOrderData } from '../../utils/types';
 
 export const ORDER_FEED_CONNECTION_START: 'ORDER_FEED_CONNECTION_START' = 'ORDER_FEED_CONNECTION_START';
 export const ORDER_FEED_CONNECTION_CLOSE: 'ORDER_FEED_CONNECTION_CLOSE' = 'ORDER_FEED_CONNECTION_CLOSE';
-
 export const ORDER_FEED_CONNECTION_SUCCESS: 'ORDER_FEED_CONNECTION_SUCCESS' = 'ORDER_FEED_CONNECTION_SUCCESS';
 export const ORDER_FEED_CONNECTION_ERROR: 'ORDER_FEED_CONNECTION_ERROR' = 'ORDER_FEED_CONNECTION_ERROR';
 export const ORDER_FEED_CONNECTION_CLOSED: 'ORDER_FEED_CONNECTION_CLOSED' = 'ORDER_FEED_CONNECTION_CLOSED';
 export const ORDER_FEED_GET_MESSAGE: 'ORDER_FEED_GET_MESSAGE' = 'ORDER_FEED_GET_MESSAGE';
-
-
 
 export interface IOrderFeedConnectionStartAction {
   readonly type: typeof ORDER_FEED_CONNECTION_START;
@@ -18,8 +15,6 @@ export interface IOrderFeedConnectionStartAction {
 export interface IOrderFeedConnectionCloseAction {
   readonly type: typeof ORDER_FEED_CONNECTION_CLOSE;
 };
-
-
 
 export interface IOrderFeedConnectionSuccessAction {
   readonly type: typeof ORDER_FEED_CONNECTION_SUCCESS;
@@ -39,7 +34,6 @@ export interface IOrderFeedGetMessageAction {
   payload: IOrderData;
 };
 
-
 export type TOrderFeedActions =
   IOrderFeedConnectionStartAction |
   IOrderFeedConnectionCloseAction |
@@ -54,11 +48,11 @@ export type TwsOrderFeedActions = {
   onOpen: typeof ORDER_FEED_CONNECTION_SUCCESS,
   onClose: typeof ORDER_FEED_CONNECTION_CLOSED,
   onError: typeof ORDER_FEED_CONNECTION_ERROR,
-  onMessage: typeof ORDER_FEED_GET_MESSAGE
+  onMessage: typeof ORDER_FEED_GET_MESSAGE,
+  wsSendMessage?: unknown;
 }
 
 export const orderFeedConnectionStart = (url: string): IOrderFeedConnectionStartAction => {
-  console.log({url})
   return {
     type: ORDER_FEED_CONNECTION_START,
     payload: url,
@@ -66,41 +60,10 @@ export const orderFeedConnectionStart = (url: string): IOrderFeedConnectionStart
 };
 
 export const orderFeedConnectionClose = (): IOrderFeedConnectionCloseAction => {
-  console.log('wsOrderFeedConnectionClose action')
   return {
     type: ORDER_FEED_CONNECTION_CLOSE
   }
 }
-
-
-// export const orderFeedConnectionSuccess = (): IOrderFeedConnectionSuccessAction => {
-//   console.log('onOpen')
-//   return {
-//     type: ORDER_FEED_CONNECTION_SUCCESS
-//   }
-// }
-
-// export const orderFeedConnectionError = (error: string): IOrderFeedConnectionErrorAction => {
-//   return {
-//     type: ORDER_FEED_CONNECTION_ERROR,
-//     payload: error
-//   }
-// }
-
-// export const orderFeedConnectionClosed = (): IOrderFeedConnectionClosedAction => {
-//   console.log('wsOrderFeedConnectionClosED action')
-//   return {
-//     type: ORDER_FEED_CONNECTION_CLOSED
-//   }
-// }
-
-// export const orderFeedGetMessage = (message: IOrderFeed): IOrderFeedGetMessageAction => {
-//   return {
-//     type: ORDER_FEED_GET_MESSAGE,
-//     payload: message
-//   }
-// }
-
 
 export const orderFeedActions = {
   wsInit: ORDER_FEED_CONNECTION_START,
@@ -110,5 +73,3 @@ export const orderFeedActions = {
   onError: ORDER_FEED_CONNECTION_ERROR,
   onMessage: ORDER_FEED_GET_MESSAGE
 }
-
-

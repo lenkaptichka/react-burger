@@ -1,4 +1,4 @@
-import { IOrderData } from "../../utils/types";
+import { IOrderData } from '../../utils/types';
 
 export const ORDERS_HISTORY_CONNECTION_START: 'ORDERS_HISTORY_CONNECTION_START' = 'ORDERS_HISTORY_CONNECTION_START';
 export const ORDERS_HISTORY_CONNECTION_CLOSE: 'ORDERS_HISTORY_CONNECTION_CLOSE' = 'ORDERS_HISTORY_CONNECTION_CLOSE';
@@ -51,7 +51,8 @@ export type TwsOrdersHistoryActions = {
   onOpen: typeof ORDERS_HISTORY_CONNECTION_SUCCESS,
   onClose: typeof ORDERS_HISTORY_CONNECTION_CLOSED,
   onError: typeof ORDERS_HISTORY_CONNECTION_ERROR,
-  onMessage: typeof ORDERS_HISTORY_GET_MESSAGE
+  onMessage: typeof ORDERS_HISTORY_GET_MESSAGE,
+  wsSendMessage?: unknown;
 }
 
 export const ordersHistoryConnectionStart = (url: string): IOrdersHistoryConnectionStartAction => {

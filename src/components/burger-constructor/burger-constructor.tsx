@@ -12,15 +12,10 @@ import ConstructorCard from '../constructor-card/constructor-card';
 import { getCookie } from '../../utils/cookie';
 import { useHistory } from 'react-router-dom';
 import { IIngredient } from '../../utils/types';
-import { USER_IS_AUTHORIZED } from '../../services/actions/user';
+
 interface IOtherItems {
   _id: string;
   key: string;
-}
-
-interface ISelectedIngredients {
-  bun: Array<string>;
-  otherItems: Array<IOtherItems>
 }
 
 const BurgerConstructor: FC = () => {
@@ -29,7 +24,6 @@ const BurgerConstructor: FC = () => {
 
   const allIngredients = useSelector(state => state.ingredients.allIngredients);
   const { bun, otherItems } = useSelector(state => state.selectedIngredients);
-  // const userIsAuthorized = useSelector(state => state.userInformation.userIsAuthorized);
 
   const dispatch = useDispatch();
   const history = useHistory();

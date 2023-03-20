@@ -1,15 +1,14 @@
-import { useEffect, useState, FC } from 'react';
+import { FC } from 'react';
 import styles from './orders-information.module.css';
 import { useSelector } from '../../hooks/hooks';
+import { ORDERS_MAX_COUNT, ORDER_NUMBER_LENGTH } from '../../constants/constants';
 
 
 const OrdersInformation: FC = () => {
   const {orders, total, totalToday} = useSelector(state => state.wsOrderFeed);
 
-  const ordersIsDone = orders.filter(order => order.status === 'done').slice(0, 20);
-  const ordersIsPending = orders.filter(order => order.status === 'pending').slice(0, 20);
-
-  // console.log(ordersIsDone)
+  const ordersIsDone = orders.filter(order => order.status === 'done').slice(0, ORDERS_MAX_COUNT);
+  const ordersIsPending = orders.filter(order => order.status === 'pending').slice(0, ORDERS_MAX_COUNT);
   return (
     <section className={`${styles['orders-information']} pt-25 pb-10`}>
       <div className={`${styles['orders-numbers']} mb-15`}>
@@ -18,7 +17,7 @@ const OrdersInformation: FC = () => {
           <div className={`${styles.numbers}`}>
             {ordersIsDone.map(order =>
               <p key={order.number} className='text text_type_digits-default text_color_success mb-2'>
-                {String(order.number).padStart(6, '0')}
+                {String(order.number).padStart(ORDER_NUMBER_LENGTH, '0')}
               </p>
             )}
           </div>
@@ -28,7 +27,7 @@ const OrdersInformation: FC = () => {
           <div className={`${styles.numbers}`}>
             {ordersIsPending.map(order =>
               <p key={order.number} className='text text_type_digits-default mb-2'>
-                {String(order.number).padStart(6, '0')}
+                {String(order.number).padStart(ORDER_NUMBER_LENGTH, '0')}
               </p>
             )}
           </div>

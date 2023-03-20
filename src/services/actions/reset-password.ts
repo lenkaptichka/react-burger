@@ -5,7 +5,7 @@ import {
   TServerResponse,
   TResponseError
 } from '../../utils/types';
-import checkResponse from "../../utils/check-response";
+import checkResponse from '../../utils/check-response';
 import { INGREDIENT_API_URL } from '../../constants/constants';
 
 export const GET_RESET_PASSWORD_REQUEST: 'GET_RESET_PASSWORD_REQUEST' = 'GET_RESET_PASSWORD_REQUEST';

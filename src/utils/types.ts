@@ -2,7 +2,7 @@ import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { store } from '../services/store';
 
 
-import { TBurgerConstructorActions } from "../services/actions/burger-constructor";
+import { TBurgerConstructorActions } from '../services/actions/burger-constructor';
 import { TBurgerIngredientsActions } from '../services/actions/burger-ingredients';
 import { TIngredientDetailsActions } from '../services/actions/ingredient-details';
 import { TOrderActions } from '../services/actions/order';
@@ -111,6 +111,6 @@ export interface IOrderData {
   totalToday: number;
 }
 
-export interface IMatchParams {
-  id: string;
+export interface IOrderDataResponse extends IOrderData{
+  success: boolean;
 }

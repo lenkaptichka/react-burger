@@ -3,15 +3,8 @@ import { useSelector } from '../../hooks/hooks';
 import orderIsDonePicture from '../../images/order-is-done.png';
 import { FC } from 'react';
 
-interface IOrderInformation {
-  orderNumber: number;
-  orderRequest: boolean;
-  orderFailed: string | null
-}
-
 const OrderDetails: FC = () => {
   const { orderNumber, orderRequest, orderFailed } = useSelector(state => state.orderInformation);
-  console.log({orderNumber, orderRequest, orderFailed})
 
   return (
     <div className={`${styles['order-details']} pt-4 pb-30`}>

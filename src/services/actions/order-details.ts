@@ -25,14 +25,12 @@ export type TOrderDetailsActions =
   IGetOrderDetailsSuccessAction |
   IGetOrderDetailsFailedAction;
 
-  type TGetOrderDetailsResponse = TServerResponse<{
-    success: boolean;
-    orders: Array<IOrderDetails>;
-  }>
-
+type TGetOrderDetailsResponse = TServerResponse<{
+  success: boolean;
+  orders: Array<IOrderDetails>;
+}>
 
 export const getOrderDetails = (orderNumber: string): AppThunk  => {
-  console.log('getOrderDetails', {orderNumber})
   return function(dispatch: AppDispatch) {
     dispatch({type: GET_ORDER_DETAILS_REQUEST});
 

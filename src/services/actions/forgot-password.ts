@@ -4,8 +4,8 @@ import {
   IForgotPasswordFormState,
   TServerResponse,
   TResponseError
-} from "../../utils/types";
-import checkResponse from "../../utils/check-response";
+} from '../../utils/types';
+import checkResponse from '../../utils/check-response';
 import { INGREDIENT_API_URL } from '../../constants/constants';
 
 export const GET_FORGOT_PASSWORD_REQUEST: 'GET_FORGOT_PASSWORD_REQUEST' = 'GET_FORGOT_PASSWORD_REQUEST';
@@ -51,7 +51,6 @@ export const sendForgotPassword = (form: IForgotPasswordFormState): AppThunk => 
       .then(() => {
         dispatch({type: GET_FORGOT_PASSWORD_SUCCESS});
       })
-      // TODO Добавить случай, когда resetPasswordRequest: false ??????? Вопрос
       .catch((error: TResponseError) => dispatch({
         type: GET_FORGOT_PASSWORD_FAILED,
         error: error.message

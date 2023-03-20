@@ -1,7 +1,7 @@
-import { INGREDIENT_API_URL } from "../constants/constants";
-import { fetchWithRefresh } from "../services/actions/token";
-import { getCookie } from "./cookie";
-import { TServerResponse, IIngredient, IEditUserDataFormState, IUserData } from "./types";
+import { INGREDIENT_API_URL } from '../constants/constants';
+import { fetchWithRefresh } from '../services/actions/token';
+import { getCookie } from './cookie';
+import { TServerResponse, IIngredient, IEditUserDataFormState, IUserData } from './types';
 
 interface IOwner {
   createdAt: string;
@@ -33,7 +33,6 @@ type TUserResponse = TServerResponse<{
 }>
 
 export const orderApi = (ingredients: Array<string>): Promise<TSendOrderResponse> => {
-  console.log('orderBurger')
   return fetchWithRefresh<TSendOrderResponse>(`${INGREDIENT_API_URL}/orders`, {
     method: 'POST',
     headers: {
@@ -48,14 +47,12 @@ export const orderApi = (ingredients: Array<string>): Promise<TSendOrderResponse
     if (data?.success) {
       return data;
     } else {
-      // console.log('error', Promise.reject(data))
       return Promise.reject(data)
     }
   })
 }
 
 export const getUserApi = (): Promise<TUserResponse> => {
-  console.log('getUserApi')
   return fetchWithRefresh<TUserResponse>(`${INGREDIENT_API_URL}/auth/user`, {
     method: 'GET',
     headers: {
@@ -64,18 +61,15 @@ export const getUserApi = (): Promise<TUserResponse> => {
     }
   })
   .then((data) => {
-    console.log({data})
     if (data?.success) {
       return data;
     } else {
-      // console.log('error', Promise.reject(data))
       return Promise.reject(data)
     }
   })
 }
 
 export const updateUserApi = (form: IEditUserDataFormState): Promise<TUserResponse> => {
-  console.log('updateUserApi')
   return fetchWithRefresh<TUserResponse>(`${INGREDIENT_API_URL}/auth/user`, {
     method: 'PATCH',
     headers: {
@@ -88,7 +82,6 @@ export const updateUserApi = (form: IEditUserDataFormState): Promise<TUserRespon
     if (data?.success) {
       return data;
     } else {
-      // console.log('error', Promise.reject(data))
       return Promise.reject(data)
     }
   })

@@ -30,10 +30,8 @@ export const forgotPasswordReducer = (state = initialState, action: TForgotPassw
         forgotPasswordSuccess: true
       }
     }
-    // TODO Поправить
     case GET_FORGOT_PASSWORD_FAILED: {
       return {...state, forgotPasswordRequest: false, forgotPasswordFailed: action.error, forgotPasswordSuccess: false}
-      // return {...state, resetPasswordRequest: false, resetPasswordFailed: action.error, resetPasswordSuccess: false}
     }
 
     default:

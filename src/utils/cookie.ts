@@ -19,15 +19,16 @@ export function setCookie(name: string, value: string | null, props?: TProps) {
     updatedCookie += '; ' + propName;
     const propValue = props[propName as keyof TProps];
     if (typeof propValue !== 'boolean' || propValue !== true) {
-      console.log({propValue}, Boolean(propValue));
       updatedCookie += '=' + propValue;
     }
   }
   document.cookie = updatedCookie;
+  
 };
 
 export function getCookie(name: string) {
   const matches = document.cookie.match(
+    // eslint-disable-next-line no-useless-escape
     new RegExp('(?:^|; )' + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + '=([^;]*)')
   );
   return matches ? decodeURIComponent(matches[1]) : undefined;

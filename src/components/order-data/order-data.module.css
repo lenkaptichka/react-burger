@@ -1,7 +1,6 @@
 .order-data {
     display: flex;
     flex-direction: column;
-    border: 1px solid salmon;
     width: 640px;
 }
 

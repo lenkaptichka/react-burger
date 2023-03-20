@@ -1,14 +1,13 @@
 
-import { setCookie, getCookie, deleteCookie } from '../../utils/cookie';
+import { setCookie } from '../../utils/cookie';
 import {
   AppDispatch,
   AppThunk,
-  IRegisterFormState,
   ILoginFormState,
   TServerResponse,
   TResponseError
 } from '../../utils/types';
-import { ACCESS_TOKEN_LIFETIME, INGREDIENT_API_URL, REFRESH_TOKEN_LIFETIME } from '../../constants/constants';
+import { INGREDIENT_API_URL } from '../../constants/constants';
 import checkResponse from '../../utils/check-response';
 import { USER_IS_AUTHORIZED, SET_USER_DATA } from './user';
 import { GET_LOGOUT_SUCCESS } from './logout';
@@ -47,9 +46,6 @@ type TSendLoginDataResponse = TServerResponse<{
   user: IUser;
 }>
 
-type TError = {
-  message: string;
-}
 
 export const sendLoginData = (form: ILoginFormState): AppThunk => {
   return function(dispatch: AppDispatch) {
@@ -67,12 +63,10 @@ export const sendLoginData = (form: ILoginFormState): AppThunk => {
         setCookie(
           'accessToken',
           data.accessToken.split('Bearer ')[1],
-          // {expires: ACCESS_TOKEN_LIFETIME}
         );
         setCookie(
           'refreshToken',
           data.refreshToken,
-          // {expires: REFRESH_TOKEN_LIFETIME}
         );
         dispatch({
           type: USER_IS_AUTHORIZED,
@@ -83,13 +77,12 @@ export const sendLoginData = (form: ILoginFormState): AppThunk => {
           type: SET_USER_DATA,
           user: data.user
         });
-// TODO Исправить экшен на правильный (добавить поле logoutIsSuccess)
         dispatch({
           type: GET_LOGOUT_SUCCESS,
           logoutIsSuccess: false
         });
       })
-      .catch(error => dispatch({
+      .catch((error: TResponseError) => dispatch({
         type: GET_LOGIN_FAILED,
         error: error.message
       }))

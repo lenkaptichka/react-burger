@@ -1,35 +1,32 @@
 import { Route, Redirect, RouteProps } from 'react-router-dom';
-import { getCookie } from '../../utils/cookie';
 import { useSelector } from '../../hooks/hooks';
 import { FC, ReactElement } from 'react';
+import styles from './protected-route.module.css';
 
 const ProtectedRoute: FC<RouteProps & {children: ReactElement}> = ({ children, ...rest }) => {
-
-  const userIsAuthorized = useSelector(state => state.userInformation.userIsAuthorized);
   const isAuthChecked = useSelector(state => state.userInformation.isAuthChecked);
   const userData = useSelector(state => state.userInformation.userData);
 
-  // console.log('Пр роут', {isAuthChecked, userData, token: getCookie('accessToken')});
-
-  if (!isAuthChecked) {
-    return <p>Подождите</p>
-  }
-
   return (
-    <Route {...rest}
-      render={({ location }) =>
-        userData && getCookie('accessToken') ? (
-          children
-        ) : (
-          <Redirect
-            to={{
-              pathname: '/login',
-              state: { from: location }
-            }}
-          />
-        )
+    <>
+      {isAuthChecked ?
+      <Route {...rest}
+        render={({ location }) =>
+          userData? (
+            children
+          ) : (
+            <Redirect
+              to={{
+                pathname: '/login',
+                state: { from: location }
+              }}
+            />
+          )
+        }
+      /> :
+        <h3 className={`${styles.wait} text text_type_main-large`}>Подождите...</h3>
       }
-    />
+    </>
   );
 };
 
