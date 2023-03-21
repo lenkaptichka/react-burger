@@ -53,7 +53,6 @@ const refreshToken = (): Promise<TRefreshResponse> => {
 export const fetchWithRefresh = async<T> (url: string, options: IOptions) => {
   try {
     const result = await fetch(url, options);
-    console.log({result})
     return await checkResponse<T>(result);
   } catch (error) {
     if (((error as {message: string}).message === 'jwt expired' ||

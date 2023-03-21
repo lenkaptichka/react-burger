@@ -67,7 +67,6 @@ export type TUserActions =
   IAuthIsCheckedAction;
 
 export const checkUserAuth = () => (dispatch: AppDispatch) => {
-  console.log('checkUserAuth');
   if (getCookie('accessToken')) {
     dispatch(getUser())
     .finally(() => {
@@ -79,12 +78,10 @@ export const checkUserAuth = () => (dispatch: AppDispatch) => {
 }
 
 export const getUser = () => (dispatch: AppDispatch) => {
-  console.log('getUser');
   dispatch({type: GET_USER_REQUEST});
   
   return getUserApi()
     .then(data => {
-      console.log('user data', data)
       if (data && data.success) {
         dispatch({type: GET_USER_SUCCESS});
         dispatch({

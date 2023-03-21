@@ -53,7 +53,6 @@ export const orderApi = (ingredients: Array<string>): Promise<TSendOrderResponse
 }
 
 export const getUserApi = (): Promise<TUserResponse> => {
-  console.log('Bearer ' + getCookie('accessToken'))
   return fetchWithRefresh<TUserResponse>(`${INGREDIENT_API_URL}/auth/user`, {
     method: 'GET',
     headers: {
@@ -80,7 +79,6 @@ export const updateUserApi = (form: IEditUserDataFormState): Promise<TUserRespon
     body: JSON.stringify(form)
   })
   .then((data) => {
-    console.log(data)
     if (data?.success) {
       return data;
     } else {
