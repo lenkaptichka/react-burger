@@ -1,4 +1,4 @@
-import { AppDispatch } from '../../utils/types';
+import { AppDispatch, TResponseError } from '../../utils/types';
 import { orderApi } from '../../utils/api';
 
 export const GET_ORDER_REQUEST: 'GET_ORDER_REQUEST' = 'GET_ORDER_REQUEST';
@@ -33,12 +33,12 @@ export const sendOrder = (ingredients: Array<string>) => (dispatch: AppDispatch)
           type: GET_ORDER_SUCCESS,
           orderNumber: data.order.number
         });
-      } 
-      else {
-        dispatch({
-          type: GET_ORDER_FAILED,
-          error: 'Запрос не отправлен'
-        });
       }
+    })
+    .catch((error: TResponseError) => {
+      dispatch({
+        type: GET_ORDER_FAILED,
+        error: error.message
+      });
     })
 }

@@ -12,7 +12,7 @@ export interface IGetOrderDetailsRequestAction {
 
 export interface IGetOrderDetailsSuccessAction {
   readonly type: typeof GET_ORDER_DETAILS_SUCCESS;
-  details: any
+  details: IOrderDetails
 }
 
 export interface IGetOrderDetailsFailedAction {

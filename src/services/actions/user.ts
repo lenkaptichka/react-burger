@@ -1,5 +1,5 @@
 import { getCookie } from '../../utils/cookie';
-import { AppDispatch, IEditUserDataFormState, IUserData } from '../../utils/types';
+import { AppDispatch, IEditUserDataFormState, IUserData, TResponseError } from '../../utils/types';
 import { getUserApi, updateUserApi } from '../../utils/api';
 
 export const GET_USER_REQUEST: 'GET_USER_REQUEST' = 'GET_USER_REQUEST';
@@ -92,12 +92,13 @@ export const getUser = () => (dispatch: AppDispatch) => {
           type: SET_USER_DATA,
           user: data.user
         })
-      } else {
-        dispatch({
-          type: GET_USER_FAILED,
-          error: 'Запрос не отправлен'
-        });
       }
+    })
+    .catch((error: TResponseError) => {
+      dispatch({
+        type: GET_USER_FAILED,
+        error: error.message
+      });
     })
 }
 
@@ -112,12 +113,12 @@ export const updateUser = (form: IEditUserDataFormState) => (dispatch: AppDispat
             type: SET_USER_DATA,
             user: data.user
           });
-        } else {
-          dispatch({
-            type: GET_UPDATE_USER_FAILED,
-            error: 'Запрос не отправлен'
-          });
         }
       })
-
+      .catch((error: TResponseError) => {
+        dispatch({
+          type: GET_UPDATE_USER_FAILED,
+          error: error.message
+        });
+      })
 };

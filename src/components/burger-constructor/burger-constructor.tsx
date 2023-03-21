@@ -53,7 +53,7 @@ const BurgerConstructor: FC = () => {
 
   const sendOrderHandler = (): void => { 
     const orderIngredients = [...bun, ...otherItems.map(item => item._id), ...bun]; 
-    dispatch(sendOrder(orderIngredients) as any);
+    dispatch(sendOrder(orderIngredients));
   }
 
   const bunPrice = useMemo(() => {
