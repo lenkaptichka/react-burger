@@ -3,9 +3,27 @@ import checkResponse from '../../utils/check-response';
 import { getCookie, setCookie } from '../../utils/cookie';
 import { TServerResponse } from '../../utils/types';
 
-export const GET_REFRESH_TOKEN_REQUEST = 'GET_REFRESH_TOKEN_REQUEST';
-export const GET_REFRESH_TOKEN_SUCCESS = 'GET_REFRESH_TOKEN_SUCCESS'
-export const GET_REFRESH_TOKEN_FAILED = 'GET_REFRESH_TOKEN_FAILED';
+export const GET_REFRESH_TOKEN_REQUEST: 'GET_REFRESH_TOKEN_REQUEST' = 'GET_REFRESH_TOKEN_REQUEST';
+export const GET_REFRESH_TOKEN_SUCCESS: 'GET_REFRESH_TOKEN_SUCCESS' = 'GET_REFRESH_TOKEN_SUCCESS'
+export const GET_REFRESH_TOKEN_FAILED: 'GET_REFRESH_TOKEN_FAILED' = 'GET_REFRESH_TOKEN_FAILED';
+
+export interface IGetRefreshTokenRequestAction {
+  readonly type: typeof GET_REFRESH_TOKEN_REQUEST;
+}
+
+export interface IGetRefreshTokenSuccessAction {
+  readonly type: typeof GET_REFRESH_TOKEN_SUCCESS;
+}
+
+export interface IGetRefreshTokenFailedAction {
+  readonly type: typeof GET_REFRESH_TOKEN_FAILED;
+  error: null | string;
+}
+
+export type TTokenActions = 
+  IGetRefreshTokenRequestAction |
+  IGetRefreshTokenSuccessAction |
+  IGetRefreshTokenFailedAction;
 
 interface IOptions {
   method: 'POST' | 'PATCH' | 'GET';
@@ -27,7 +45,7 @@ const refreshToken = (): Promise<TRefreshResponse> => {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ token: getCookie('refreshToken') })
+    body: JSON.stringify({ token: getCookie(' ') })
     })
     .then(checkResponse<TRefreshResponse>);
 }
@@ -35,6 +53,7 @@ const refreshToken = (): Promise<TRefreshResponse> => {
 export const fetchWithRefresh = async<T> (url: string, options: IOptions) => {
   try {
     const result = await fetch(url, options);
+    console.log({result})
     return await checkResponse<T>(result);
   } catch (error) {
     if (((error as {message: string}).message === 'jwt expired' ||

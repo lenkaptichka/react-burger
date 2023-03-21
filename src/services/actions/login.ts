@@ -69,6 +69,10 @@ export const sendLoginData = (form: ILoginFormState): AppThunk => {
           data.refreshToken,
         );
         dispatch({
+          type: GET_LOGOUT_SUCCESS,
+          logoutIsSuccess: false
+        });
+        dispatch({
           type: USER_IS_AUTHORIZED,
           isAuthorized: true
         });
@@ -77,10 +81,7 @@ export const sendLoginData = (form: ILoginFormState): AppThunk => {
           type: SET_USER_DATA,
           user: data.user
         });
-        dispatch({
-          type: GET_LOGOUT_SUCCESS,
-          logoutIsSuccess: false
-        });
+
       })
       .catch((error: TResponseError) => dispatch({
         type: GET_LOGIN_FAILED,

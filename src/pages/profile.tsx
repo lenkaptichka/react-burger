@@ -7,7 +7,6 @@ import { FC, useEffect } from 'react';
 
 const Profile: FC = () => {
   const logoutRequest = useSelector(state => state.logout.logoutRequest);
-  const logoutIsSuccess = useSelector(state => state.logout.logoutSuccess);
 
   if (logoutRequest) {
     return (
@@ -16,16 +15,6 @@ const Profile: FC = () => {
       </div>
     );
   }
-
-  if (logoutIsSuccess) {
-    return (
-      <Redirect
-        to={{
-          pathname: '/login'
-        }}
-      />
-    )
-  };
 
   return (
     <>

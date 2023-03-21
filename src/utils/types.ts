@@ -15,6 +15,7 @@ import { TUserActions } from '../services/actions/user';
 import { TOrderFeedActions } from '../services/actions/order-feed';
 import { TOrdersHistoryActions } from '../services/actions/orders-history';
 import { TOrderDetailsActions } from '../services/actions/order-details';
+import { TTokenActions } from '../services/actions/token';
 
 export type TApplicationActions =
   TBurgerConstructorActions |
@@ -29,7 +30,8 @@ export type TApplicationActions =
   TUserActions |
   TOrderFeedActions |
   TOrdersHistoryActions |
-  TOrderDetailsActions;
+  TOrderDetailsActions |
+  TTokenActions;
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = ThunkDispatch<RootState, never, TApplicationActions>;

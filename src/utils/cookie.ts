@@ -1,9 +1,14 @@
 type TProps = {
   expires?: Date | string | number;
+  path?: string;
 }
 
 export function setCookie(name: string, value: string | null, props?: TProps) {
-  props = props || {};
+  props = {
+    path: '/',
+    ...props
+  }
+
   let exp = props.expires;
   if (typeof exp === 'number' && exp) {
     const d = new Date();
