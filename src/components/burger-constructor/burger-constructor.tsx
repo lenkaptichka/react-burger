@@ -4,7 +4,7 @@ import Modal from '../modal/modal';
 import OrderDetails from '../order-details/order-details';
 import { useState, useMemo, FC } from 'react';
 import { BUNS_COUNT } from '../../constants/constants';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from '../../hooks/hooks';
 import { sendOrder } from '../../services/actions/order';
 import { useDrop } from 'react-dnd';
 import { addIngredient } from '../../services/actions/burger-constructor';
@@ -18,28 +18,19 @@ interface IOtherItems {
   key: string;
 }
 
-interface ISelectedIngredients {
-  bun: Array<string>;
-  otherItems: Array<IOtherItems>
-}
-
 const BurgerConstructor: FC = () => {
   const [modalIsOpen, setModalsOpen] = useState<boolean>(false);
 
-  // TODO Исправить в следующем спринте
-  // @ts-expect-error
-  const allIngredients = useSelector(state => state.ingredients.allIngredients) as Array<IIngredient>;
-  // @ts-expect-error
-  const { bun, otherItems } = useSelector(state => state.selectedIngredients) as ISelectedIngredients;
-  // @ts-expect-error
-  const userIsAuthorized = useSelector(state => state.userInformation.userIsAuthorized) as boolean;
+
+  const allIngredients = useSelector(state => state.ingredients.allIngredients);
+  const { bun, otherItems } = useSelector(state => state.selectedIngredients);
 
   const dispatch = useDispatch();
   const history = useHistory();
 
   const [{isHover}, dropTarget] = useDrop({
     accept: 'ingredient',
-    drop(ingredient) {
+    drop(ingredient: IIngredient) {
       dispatch(addIngredient(ingredient));
     },
     collect: monitor => ({
@@ -48,7 +39,7 @@ const BurgerConstructor: FC = () => {
   });
 
   const checkToken = (): void => {
-    if (getCookie('accessToken') && userIsAuthorized) {
+    if (getCookie('accessToken')) {
       setModalsOpen(true);
       sendOrderHandler();
     } else {
@@ -62,7 +53,7 @@ const BurgerConstructor: FC = () => {
 
   const sendOrderHandler = (): void => { 
     const orderIngredients = [...bun, ...otherItems.map(item => item._id), ...bun]; 
-    dispatch(sendOrder(orderIngredients) as any);
+    dispatch(sendOrder(orderIngredients));
   }
 
   const bunPrice = useMemo(() => {

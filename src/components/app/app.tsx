@@ -1,10 +1,9 @@
-import { useEffect, useState, FC } from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { useEffect, FC } from 'react';
+import { Switch, Route, useLocation, useHistory } from 'react-router-dom';
 import styles from './app.module.css';
 import AppHeader from '../app-header/app-header';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from '../../hooks/hooks';
 import { getIngredients } from '../../services/actions/burger-ingredients';
-import { ACCESS_TOKEN_LIFETIME } from '../../constants/constants';
 import {
   ForgotPassword,
   Login,
@@ -15,98 +14,120 @@ import {
   NotFound,
   OrderFeed,
   OrderHistory,
-  IngredientInformation
+  IngredientInformation,
+  FeedInformation,
+  MyOrderInformation
 } from '../../pages'
-import { getRefreshToken } from '../../services/actions/token';
-import { getUser } from '../../services/actions/user';
-import { getCookie } from '../../utils/cookie';
+import { checkUserAuth } from '../../services/actions/user';
 import ProtectedRoute from '../protected-route/protected-route';
+import Modal from '../modal/modal';
+import { Location } from 'history'; 
+
 
 const App: FC = () => {
-  const [timerId, setTimerId] = useState<ReturnType<typeof setInterval> | null>(null);
-
   const dispatch = useDispatch();
-
-  // TODO Исправить в следующем спринте
-  // @ts-expect-error
-  const isAuthorized = useSelector(state => state.userInformation.userIsAuthorized) as boolean;
+  const history = useHistory();
+  
+  const location = useLocation<{background?: Location}>();
+  const background = location.state && location.state.background;
 
   useEffect(() => {
-    // TODO Исправить в следующем спринте
-    // @ts-expect-error
     dispatch(getIngredients());
-    if (getCookie('accessToken')) {
-      // @ts-expect-error
-      dispatch(getUser());
-    }
-    // TODO Здесь не нужны зависимости, т.к. это действия при монтировании компонента
-    // eslint-disable-next-line
+    dispatch(checkUserAuth());
   }, []);
 
-  useEffect(() => {
-    if (isAuthorized) {
-      // @ts-expect-error
-      const timer = setInterval(() => dispatch(getRefreshToken()), ACCESS_TOKEN_LIFETIME * 1000) ;
-      setTimerId(timer);
-    } else {
-      if (timerId) {
-        clearInterval(timerId);
-        setTimerId(null);
-      }
-    }
-    // TODO Здесь не нужнa зависимости dispatch, т.к. нет необходимости его отслеживать
-    // eslint-disable-next-line
-  }, [isAuthorized]);
+  const closeModal = (): void => {
+    history.goBack();
+  };
 
   return (
-    <Router>
-      <div className={`${styles.main} body`}>
-        <AppHeader />
-        <main className={styles.mainsection}>
-        <Switch>
-          <Route path='/' exact={true} >
-            <Main />
-          </Route>
+    <div className={`${styles.main} body`}>
+      <AppHeader />
+      <main className={styles.mainsection}>
 
-          <Route path='/order-feed' exact={true}>
-            <OrderFeed />
-          </Route>
+      <Switch location={background || location}>
+        <Route path='/' exact={true} >
+          <Main />
+        </Route>
 
-          <Route path='/login' exact={true}>
-            <Login />
-          </Route>
+        <Route path='/order-feed' exact={true}>
+          <OrderFeed />
+        </Route>
 
-          <ProtectedRoute path='/profile' exact={true}>
-            <Profile />
+        <Route path='/login' exact={true}>
+          <Login />
+        </Route>
+
+        <ProtectedRoute path='/profile' exact={true}>
+          <Profile />
+        </ProtectedRoute>
+
+        <ProtectedRoute path='/profile/orders' exact={true}>
+          <OrderHistory />
+        </ProtectedRoute>
+
+          <ProtectedRoute path='/profile/orders/:id' exact={true}>
+            <div className={styles['page-wrapper']}>
+              <MyOrderInformation />
+            </div>
           </ProtectedRoute>
 
-          <ProtectedRoute path='/profile/orders' exact={true}>
-            <OrderHistory />
-          </ProtectedRoute>
+        <Route path='/register' exact={true}>
+          <Register />
+        </Route>
 
-          <Route path='/register' exact={true}>
-            <Register />
-          </Route>
+        <Route path='/forgot-password' exact={true}>
+          <ForgotPassword />
+        </Route>
 
-          <Route path='/forgot-password' exact={true}>
-            <ForgotPassword />
-          </Route>
+        <Route path='/reset-password' exact={true}>
+          <ResetPassword />
+        </Route>
 
-          <Route path='/reset-password' exact={true}>
-            <ResetPassword />
-          </Route>
-
-          <Route path='/ingredients/:id' exact={true}>
+        <Route path='/ingredients/:id' exact={true}>
+          <div className={styles['page-wrapper']}>
             <IngredientInformation />
-          </Route>
+          </div>
+        </Route>
 
-          <Route>
-            <NotFound />
-          </Route>
-          </Switch>
-        </main>
-      </div>
-    </Router>
+        <Route path='/order-feed/:id' exact={true}>
+          <div className={styles['page-wrapper']}>
+            <FeedInformation />
+          </div>
+        </Route> 
+
+        <Route>
+          <NotFound />
+        </Route>
+        </Switch>
+
+        {background && (
+          <>
+            <Route path='/ingredients/:id' exact={true}>
+              <Modal title={'Детали ингредиента'} closeModal={closeModal}>
+                <IngredientInformation />
+              </Modal>
+            </Route>
+
+            <Route path='/order-feed/:id' exact={true}>
+              <Modal
+                closeModal={closeModal}
+              >
+                <FeedInformation />
+              </Modal>
+            </Route>
+            <ProtectedRoute path='/profile/orders/:id' exact={true}>  
+              <Modal
+                closeModal={closeModal}
+              >
+                <MyOrderInformation/>
+              </Modal>
+            </ProtectedRoute>
+          </>
+        )
+        }
+      </main>
+    </div>
   )
 }
 

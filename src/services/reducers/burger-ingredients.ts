@@ -1,16 +1,25 @@
+import { IIngredient } from '../../utils/types';
 import {
   GET_INGREDIENTS_REQUEST,
   GET_INGREDIENTS_SUCCESS,
-  GET_INGREDIENTS_FAILED
+  GET_INGREDIENTS_FAILED,
+  TBurgerIngredientsActions
 } from '../actions/burger-ingredients';
 
-const initialState = {
+
+interface IBurgerIngredientsState {
+  allIngredients: Array<IIngredient>;
+  ingredientsRequest: boolean;
+  ingredientsFailed: null | string;
+}
+
+const initialState: IBurgerIngredientsState = {
   allIngredients: [],
   ingredientsRequest: false,
   ingredientsFailed: null
 }
 
-export const ingredientsReducer = (state = initialState, action) => {
+export const ingredientsReducer = (state: IBurgerIngredientsState = initialState, action: TBurgerIngredientsActions): IBurgerIngredientsState => {
   switch (action.type) {
     case GET_INGREDIENTS_REQUEST: {
       return {...state, ingredientsRequest: true}
@@ -24,7 +33,7 @@ export const ingredientsReducer = (state = initialState, action) => {
       }
     }
     case GET_INGREDIENTS_FAILED: {
-      return {...state, ingredientsRequest: false, ingredientsFailed: action.error.message, allIngredients: []}
+      return {...state, ingredientsRequest: false, ingredientsFailed: action.error, allIngredients: []}
     }
     default:
       return state

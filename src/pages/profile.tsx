@@ -1,16 +1,12 @@
 import ProfileEditing from '../components/profile-editing/profile-editing';
 import ProfileMenu from '../components/profile-menu/profile-menu';
-import { useSelector } from 'react-redux';
+import { useSelector } from '../hooks/hooks';
 import { Redirect } from 'react-router-dom';
 import styles from './pages.module.css';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 
 const Profile: FC = () => {
-  // TODO Исправить в следующем спринте
-  // @ts-expect-error
-  const logoutRequest = useSelector(state => state.userInformation.logoutRequest) as boolean;
-  // @ts-expect-error
-  const logoutIsSuccess = useSelector(state => state.userInformation.logoutSuccess) as boolean;
+  const logoutRequest = useSelector(state => state.logout.logoutRequest);
 
   if (logoutRequest) {
     return (
@@ -19,16 +15,6 @@ const Profile: FC = () => {
       </div>
     );
   }
-
-  if (logoutIsSuccess) {
-    return (
-      <Redirect
-        to={{
-          pathname: '/login'
-        }}
-      />
-    )
-  };
 
   return (
     <>

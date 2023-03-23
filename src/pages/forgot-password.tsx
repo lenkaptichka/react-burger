@@ -3,8 +3,8 @@ import Form from '../components/form/form';
 import { Input } from '@ya.praktikum/react-developer-burger-ui-components';
 import React, { useState, useRef, FC, ChangeEvent, FormEvent } from 'react';
 import AdditionalAction from '../components/additional-action/additional-action';
-import { useDispatch, useSelector } from 'react-redux';
-import { sendForgotPassword } from '../services/actions/user';
+import { useDispatch, useSelector } from '../hooks/hooks';
+import { sendForgotPassword } from '../services/actions/forgot-password';
 import { Redirect } from 'react-router-dom';
 import styles from './pages.module.css';
 import { getCookie } from '../utils/cookie';
@@ -14,11 +14,8 @@ const ForgotPassword: FC = () => {
   const [formState, setFormState] = useState<{email: string}>(FORGOT_PASSWORD_INITIAL_STATE);
   const emailInputRef = useRef<HTMLInputElement>(null);
 
-  // TODO Временное решение пока не типизирован store
-  // @ts-expect-error
-  const forgotPasswordRequest = useSelector(state => state.userInformation.forgotPasswordRequest) as boolean;
-  // @ts-expect-error
-  const userIsAuthorized = useSelector(state => state.userInformation.userIsAuthorized) as boolean;
+  const forgotPasswordRequest = useSelector(state => state.forgotPassword.forgotPasswordRequest);
+  const userIsAuthorized = useSelector(state => state.userInformation.userIsAuthorized);
 
   const dispatch = useDispatch();
 
@@ -28,8 +25,6 @@ const ForgotPassword: FC = () => {
 
   const sendEmail = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
-    // TODO Исправить в следующем спринте
-    // @ts-expect-error
     dispatch(sendForgotPassword(formState));
   };
 

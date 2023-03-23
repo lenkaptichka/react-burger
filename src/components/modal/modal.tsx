@@ -26,7 +26,7 @@ const Modal: FC<IModalProps> = ({title, children, closeModal}) => {
   return createPortal(
     <>
       <ModalOverlay closeModal={closeModal} />
-      <div className={`${styles.modal} pt-10 pl-10 pr-10`}>
+      <div className={`${styles.modal} p-10`}>
         <div className={styles.header}>
           {title && <h5 className={`${styles.title} text text_type_main-large`}>{title}</h5>}
           <CloseIcon type='primary' onClick={closeModal} />

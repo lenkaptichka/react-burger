@@ -2,26 +2,19 @@ import AdditionalAction from '../components/additional-action/additional-action'
 import Form from '../components/form/form'
 import { Input } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useState, useRef, ChangeEvent, FormEvent } from 'react';
-import { sendRegisterData } from '../services/actions/user';
-import { useDispatch, useSelector } from 'react-redux';
+import { sendRegisterData } from '../services/actions/register';
+import { useDispatch, useSelector } from '../hooks/hooks';
 import styles from './pages.module.css';
 import { Redirect } from 'react-router-dom';
 import { getCookie } from '../utils/cookie';
 import { REGISTER_INITIAL_STATE } from '../constants/constants';
-
-interface IFormState {
-  email: string;
-  password: string;
-  name: string;
-}
+import { IRegisterFormState } from '../utils/types';
 
 const Register = () => {
-  const [formState, setFormState] = useState<IFormState>(REGISTER_INITIAL_STATE);
+  const [formState, setFormState] = useState<IRegisterFormState>(REGISTER_INITIAL_STATE);
   const [passwordIsShown, setPasswordIsShown] = useState<boolean>(false);
   
-  // TODO Временное решение пока не типизирован store
-  // @ts-expect-error
-  const userIsAuthorized = useSelector(state => state.userInformation.userIsAuthorized) as boolean;
+  const userIsAuthorized = useSelector(state => state.userInformation.userIsAuthorized);
 
   const dispatch = useDispatch();
 
@@ -31,8 +24,6 @@ const Register = () => {
 
   const sendRegister = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // TODO Временное решение пока не типизирован store
-    // @ts-expect-error
     dispatch(sendRegisterData(formState));
   }
 

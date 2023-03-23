@@ -2,8 +2,9 @@ import { Input } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useState, useRef, FC, ChangeEvent, FormEvent } from 'react';
 import AdditionalAction from '../components/additional-action/additional-action';
 import Form from '../components/form/form';
-import { useDispatch, useSelector } from 'react-redux';
-import { sendLoginData, SET_PASSWORD } from '../services/actions/user';
+import { useDispatch, useSelector } from '../hooks/hooks';
+import { SET_PASSWORD } from '../services/actions/user';
+import { sendLoginData } from '../services/actions/login';
 import { Redirect, useLocation } from 'react-router-dom';
 import styles from './pages.module.css';
 import { getCookie } from '../utils/cookie';
@@ -18,11 +19,8 @@ const Login: FC = () => {
   const [formState, setFormState] = useState<IFormState>(LOGIN_INITIAL_STATE)
   const [passwordIsShown, setPasswordIsShown] = useState<boolean>(false);
 
-  // TODO Исправить в следующем спринте
-  // @ts-expect-error
-  const userIsAuthorized = useSelector(state => state.userInformation.userIsAuthorized) as boolean;
-  // @ts-expect-error
-  const loginFailed = useSelector(state => state.userInformation.loginFailed) as string | null;
+  const userIsAuthorized = useSelector(state => state.userInformation.userIsAuthorized);
+  const loginFailed = useSelector(state => state.login.loginFailed);
 
   const dispatch = useDispatch();
   const location = useLocation<{from: string}>();
@@ -40,8 +38,6 @@ const Login: FC = () => {
       type: SET_PASSWORD,
       password: formState.password
     });
-    // TODO Исправить в следующем спринте
-    // @ts-expect-error
     dispatch(sendLoginData(formState))
   };
 

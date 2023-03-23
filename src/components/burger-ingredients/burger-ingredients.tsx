@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, useMemo, FC } from 'react';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useInView } from 'react-intersection-observer';
 import styles from './burger-ingredients.module.css';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from '../../hooks/hooks';
 import { addIngredientDetails } from '../../services/actions/ingredient-details';
 import { Ingredient } from '../ingredient/ingredient';
 import { IIngredient } from '../../utils/types';
@@ -14,9 +14,7 @@ const BurgerIngredients: FC = () => {
   const {ref: saucesSectionArea, inView: saucesSectionView} = useInView({threshold: 0});
   const {ref: mainsSectionArea, inView: mainsSectionView} = useInView({threshold: 0});
 
-  // TODO Исправить в следующем спринте
-  // @ts-expect-error
-  const allIngredients = useSelector(state => state.ingredients.allIngredients) as Array<IIngredient>;
+  const allIngredients = useSelector(state => state.ingredients.allIngredients);
 
   const dispatch = useDispatch();
 
