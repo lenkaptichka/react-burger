@@ -7,7 +7,6 @@ import {
   TOrderFeedActions
 } from '../actions/order-feed';
 
-
 interface IOrderFeedState {
   orders: Array<IOrder>,
   total: number,
@@ -15,7 +14,6 @@ interface IOrderFeedState {
   wsConnected: boolean,
   error: null | string
 };
-
 
 const initialState = {
   orders: [],

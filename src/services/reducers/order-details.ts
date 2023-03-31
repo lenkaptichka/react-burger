@@ -6,7 +6,6 @@ import {
   TOrderDetailsActions
 } from '../actions/order-details';
 
-
 interface IOrderDetailsState {
   details: null | IOrderDetails;
   orderDetailsRequest: boolean;

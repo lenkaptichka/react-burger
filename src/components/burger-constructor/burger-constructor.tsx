@@ -31,7 +31,7 @@ const BurgerConstructor: FC = () => {
   const [{isHover}, dropTarget] = useDrop({
     accept: 'ingredient',
     drop(ingredient: IIngredient) {
-      dispatch(addIngredient(ingredient));
+      dispatch(addIngredient(ingredient, crypto.randomUUID()));
     },
     collect: monitor => ({
       isHover: monitor.isOver(),
