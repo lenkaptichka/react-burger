@@ -29,7 +29,7 @@ interface IUserState {
   isAuthChecked: boolean;
 }
 
-const initialState = {
+export const initialState = {
   userRequest: false,
   userSuccess: false,
   userFailed: null,

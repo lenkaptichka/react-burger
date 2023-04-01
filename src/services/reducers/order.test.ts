@@ -4,13 +4,8 @@ import {
   GET_ORDER_SUCCESS,
   GET_ORDER_FAILED 
 } from '../actions/order';
-import { orderInformationReducer } from './order';
+import { initialState, orderInformationReducer } from './order';
 
-export const initialState = {
-  orderNumber: null,
-  orderRequest: false,
-  orderFailed: null
-};
 const error = 'Error message';
 const orderNumber = 9999;
 

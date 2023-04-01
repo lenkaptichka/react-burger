@@ -4,13 +4,8 @@ import {
   GET_REGISTER_SUCCESS,
   GET_REGISTER_FAILED
 } from '../actions/register';
-import { registerReducer } from './register';
+import { initialState, registerReducer } from './register';
 
-const initialState = {
-  registerRequest: false,
-  registerSuccess: false,
-  registerFailed: null,
-};
 const error = 'Error message';
 
 describe('register reducer', () => {

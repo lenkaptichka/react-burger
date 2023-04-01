@@ -4,13 +4,8 @@ import {
   GET_INGREDIENTS_SUCCESS,
   GET_INGREDIENTS_FAILED
 } from '../actions/burger-ingredients';
-import { ingredientsReducer } from './burger-ingredients';
+import { initialState, ingredientsReducer } from './burger-ingredients';
 
-const initialState = {
-  allIngredients: [],
-  ingredientsRequest: false,
-  ingredientsFailed: null
-};
 const ingredients = [
   {
     _id: '60d3b41abdacab0026a733c6',

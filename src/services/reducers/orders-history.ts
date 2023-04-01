@@ -15,7 +15,7 @@ interface IOrdersHistoryState {
   error: null | string
 };
 
-const initialState = {
+export const initialState = {
   orders: [],
   total: 0,
   totalToday: 0,

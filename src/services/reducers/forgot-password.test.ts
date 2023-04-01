@@ -4,13 +4,8 @@ import {
   GET_FORGOT_PASSWORD_SUCCESS,
   GET_FORGOT_PASSWORD_FAILED
 } from '../actions/forgot-password';
-import { forgotPasswordReducer } from './forgot-password';
+import { initialState, forgotPasswordReducer } from './forgot-password';
 
-const initialState = {
-  forgotPasswordRequest: false,
-  forgotPasswordSuccess: false,
-  forgotPasswordFailed: null 
-};
 const error = 'Error message';
 
 describe('forgot password reducer', () => {

@@ -1,3 +1,5 @@
+const testUrl = 'http://localhost:3000';
+
 const bunName = 'Флюоресцентная булка R2-D3';
 const newBunName = 'Краторная булка N-200i';
 const sauceName = 'Соус с шипами Антарианского плоскоходца';
@@ -10,14 +12,27 @@ const name = 'Пирожок';
 const amount = '3022';
 const orderNumber = '1000';
 
+const ingredientSelector = '[class^="ingredient_ingredient"]';
+const ingredientsSelector = '[class^="burger-ingredients_ingredients"]';
+const headerTabSelector = '[class^="app-header_navigation-list-item"] > a > p';
+const primaryColorStyle = 'text_color_primary';
+const modalSelector = '[class^="modal_modal"]';
+const counterSelector = '[class^="counter__num"]';
+const constructorSelector = '[class^="constructor-element"]';
+const currentTubStyle = 'tab_type_current';
+const ingredientsTypeSelector = '[class^="burger-ingredients_type-name"]';
+const burgerConstructorSelector = '[class^="burger-constructor_burger-constructor"]';
+const ingredientNameSelector = '[class^="ingredient_name"]';
+const closeIconSelector = '[data-cy=modal-close-icon]';
+const tabSelector = '[class^="tab"]';
+
 describe('first app opening', () => {
   before(() => {
-    cy.visit('http://localhost:3000');
+    cy.visit(testUrl);
     cy.intercept('GET', 'ingredients', {fixture: 'ingredients.json'});
     cy.intercept('POST', 'login', {fixture: 'login.json'});
     cy.clearCookie('refreshToken');
     cy.clearCookie('accessToken');
-
   });
 
   it('should open main page with burger constructor by default', () => {
@@ -32,22 +47,21 @@ describe('first app opening', () => {
   });
 
   it('the burger constructor tab should be active and others inactive by default', () => {
-    cy.get('[class^="app-header_navigation-list-item"] > a > p')
+    cy.get(headerTabSelector)
       .contains('Конструктор')
-      .should('have.class', 'text_color_primary');
+      .should('have.class', primaryColorStyle);
 
-    cy.get('[class^="app-header_navigation-list-item"] > a > p')
+    cy.get(headerTabSelector)
       .contains('Лента заказов')
-      .not('text_color_primary')
+      .not(primaryColorStyle)
 
-    cy.get('[class^="app-header_navigation-list-item"] > a > p')
+    cy.get(headerTabSelector)
       .contains('Личный кабинет')
-      .not('text_color_primary')
+      .not(primaryColorStyle)
   });
 
   it('default ingredients should not be selected', () => {
-    cy.get('[class^="constructor-element"]')
-      .should('not.exist')
+    cy.get(constructorSelector).should('not.exist')
   });
 
   it('by default order amount should be 0', () => {
@@ -67,7 +81,7 @@ describe('the user should be able to log in', () => {
   });
 
   it('should work routing to the login page', () => {
-    cy.get('[class^="app-header_navigation-list-item"]')
+    cy.get(headerTabSelector)
       .contains('Личный кабинет')
       .click();
     
@@ -95,7 +109,7 @@ describe('the user should be able to log in', () => {
   });
 
   after(() => {
-    cy.get('[class^="app-header_navigation-list-item"]')
+    cy.get(headerTabSelector)
       .contains('Конструктор')
       .click();
   })
@@ -107,18 +121,15 @@ describe('checking the opening and closing of the modal window with ingredient d
       .first()
       .click()
 
-    cy.get('[class^="modal_modal"]')
-      .as('modal')
-      .should('exist')
+    cy.get(modalSelector).should('exist')
 
-    cy.get('@modal').contains('Детали ингредиента')
-    cy.get('@modal').contains('Калории,ккал')
-    cy.get('@modal').contains('Белки, г')
-    cy.get('@modal').contains('Жиры, г')
-    cy.get('@modal').contains('Углеводы, г')
+    cy.get(modalSelector).contains('Детали ингредиента')
+    cy.get(modalSelector).contains('Калории,ккал')
+    cy.get(modalSelector).contains('Белки, г')
+    cy.get(modalSelector).contains('Жиры, г')
+    cy.get(modalSelector).contains('Углеводы, г')
 
-    cy.get('[data-cy=modal-close-icon]')
-      .should('exist')
+    cy.get(closeIconSelector).should('exist')
 
     cy.get('[class^="ingredient-details_value"]')
       .each(element => {
@@ -130,178 +141,158 @@ describe('checking the opening and closing of the modal window with ingredient d
   });
 
   it('should close the modal window with ingredient details by clicking on the cross', () => {
-    cy.get('[data-cy=modal-close-icon]')
-      .click();
+    cy.get(closeIconSelector).click();
     
-    cy.get('[class^="modal_modal"]')
-      .should('not.exist')
+    cy.get(modalSelector).should('not.exist')
   });
 })
 
 describe('should switch tabs on click and scroll the list of ingredients', () => {
   it('should switch the main tab', () => {
-    cy.get('[class^="tab"]')
+    cy.get(tabSelector)
       .last()
       .as('mainTab')
       .click();
 
-    cy.get('[class^="burger-ingredients_type-name"]')
+    cy.get(ingredientsTypeSelector)
       .contains('Начинки')
       .should('be.visible');
 
-    cy.get('@mainTab').should('have.class', 'tab_type_current');
+    cy.get('@mainTab').should('have.class', currentTubStyle);
   })
 
   it('should switch the sauce tab', () => {
-    cy.get('[class^="tab"]')
+    cy.get(tabSelector)
       .eq(1)
       .as('sauceTab')
       .click();
 
-    cy.get('[class^="burger-ingredients_type-name"]')
+    cy.get(ingredientsTypeSelector)
       .contains('Соусы')
       .should('be.visible');
 
-    cy.get('@sauceTab').should('have.class', 'tab_type_current');
+    cy.get('@sauceTab').should('have.class', currentTubStyle);
   })
 
   it('should switch the bun tab', () => {
-    cy.get('[class^="tab"]')
+    cy.get(tabSelector)
       .first()
       .as('bunTab')
       .click();
 
-    cy.get('[class^="burger-ingredients_type-name"]')
+    cy.get(ingredientsTypeSelector)
       .contains('Булки')
       .should('be.visible');
 
-    cy.get('@bunTab').should('have.class', 'tab_type_current');
+    cy.get('@bunTab').should('have.class', currentTubStyle);
   })
 });
 
 describe('drag and drop selectable ingredients', () => {
   it('drag and drop should work correctly', () => {
-    cy.get('[class^="burger-ingredients_ingredients"]')
-      .as('ingredients')
+    cy.get(ingredientsSelector)
       .contains(bunName)
       .trigger('dragstart');
 
-    cy.get('[class^="burger-constructor_burger-constructor"]')
-      .as('constructor')
-      .trigger('drop');
+    cy.get(burgerConstructorSelector).trigger('drop');
 
-    cy.get('@ingredients')
+    cy.get(ingredientsSelector)
       .contains(sauceName)
       .trigger('dragstart');
 
-    cy.get('@constructor').trigger('drop');
+    cy.get(burgerConstructorSelector).trigger('drop');
 
-    cy.get('@ingredients')
+    cy.get(ingredientsSelector)
       .contains(mainName)
       .trigger('dragstart');
 
-    cy.get('@constructor').trigger('drop');
+    cy.get(burgerConstructorSelector).trigger('drop');
   });
 
   it('ingredients should be in the constructor', () => {
-    cy.get('[class^="constructor-element"]')
-      .as('ingredient')
-      .contains(`${bunName} ${topPosition}`);
+    cy.get(constructorSelector).contains(`${bunName} ${topPosition}`);
 
-    cy.get('@ingredient').contains(`${bunName} ${bottomPosition}`);
-    cy.get('@ingredient').contains(sauceName);  
-    cy.get('@ingredient').contains(mainName);  
+    cy.get(constructorSelector).contains(`${bunName} ${bottomPosition}`);
+    cy.get(constructorSelector).contains(sauceName);  
+    cy.get(constructorSelector).contains(mainName);  
   });
 });
 
 describe('checking the quantity of selected ingredients', () => {
   it('should be the correct value of the selected ingredients', () => {
-    cy.get('[class^="ingredient_name"]')
-      .as('ingredientName')
-
-    cy.get('@ingredientName')
+    cy.get(ingredientNameSelector)
       .contains(bunName)
-      .parents('[class^="ingredient_ingredient"]')
-      .find('[class^="counter__num"]')
+      .parents(ingredientSelector)
+      .find(counterSelector)
       .should('contain', 2);
 
-    cy.get('@ingredientName')
+    cy.get(ingredientNameSelector)
       .contains(sauceName)
-      .parents('[class^="ingredient_ingredient"]')
-      .find('[class^="counter__num"]')
+      .parents(ingredientSelector)
+      .find(counterSelector)
       .should('contain', 1);
 
-    cy.get('@ingredientName')
+    cy.get(ingredientNameSelector)
       .contains(mainName)
-      .parents('[class^="ingredient_ingredient"]')
-      .find('[class^="counter__num"]')
+      .parents(ingredientSelector)
+      .find(counterSelector)
       .should('contain', 1);
   })
 });
 
 describe('checking the removal of selected ingredients', () => {
   it('should  delete sauce or main', () => {
-    cy.get('[class^="constructor-element"]')
-      .as('constructor')
+    cy.get(constructorSelector)
       .contains(sauceName)
       .parent()
       .find('[class^="constructor-element__action"]')
       .click();
 
-    cy.get('[class^="ingredient_ingredient"]')
-      .as('ingredient')
-      .contains('[class^="ingredient_name"]', sauceName)
+    cy.get(ingredientSelector)
+      .contains(ingredientNameSelector, sauceName)
       .parent()
-      .find('[class^="counter__num"]')
+      .find(counterSelector)
       .should('not.exist');
 
-    cy.get('@constructor')
+    cy.get(constructorSelector)
       .contains(sauceName)
       .should('not.exist');
 
-    cy.get('[class^="burger-ingredients_ingredients"]')
+    cy.get(ingredientsSelector)
       .contains(sauceName)
       .trigger('dragstart');
 
-    cy.get('[class^="burger-constructor_burger-constructor"]')
-      .trigger('drop');
+    cy.get(burgerConstructorSelector).trigger('drop');
   });
 });
 
 describe('bun replacement', () => {
   it('the selected bun should be replaced by dragging another one', () => {
-    cy.get('[class^="ingredient_name"]')
-      .as('ingredientName');
-    cy.get('[class^="constructor-element"]')
-      .as('constructorElement')
-
     cy.get('[class^="burger-constructor_ingredients"]')
       .contains(bunName);
 
-    cy.get('[class^="burger-ingredients_ingredients"]')
+    cy.get(ingredientsSelector)
       .contains(newBunName)
       .trigger('dragstart');
-    cy.get('[class^="burger-constructor_burger-constructor"]')
-      .trigger('drop');
+    cy.get(burgerConstructorSelector).trigger('drop');
 
-    cy.get('@ingredientName')
+    cy.get(ingredientNameSelector)
       .contains(newBunName)
-      .parents('[class^="ingredient_ingredient"]')
-      .find('[class^="counter__num"]')
+      .parents(ingredientSelector)
+      .find(counterSelector)
       .should('contain', 2);
 
-    cy.get('@ingredientName')
+    cy.get(ingredientNameSelector)
       .contains(bunName)
-      .parents('[class^="ingredient_ingredient"]')
-      .find('[class^="counter__num"]')
+      .parents(ingredientSelector)
+      .find(counterSelector)
       .should('not.exist');
 
-    cy.get('@constructorElement')
+    cy.get(constructorSelector)
       .contains(bunName)
       .should('not.exist');
 
-    cy.get('@constructorElement')
-      .contains(newBunName)
+    cy.get(constructorSelector).contains(newBunName)
   })
 })
 
@@ -322,20 +313,15 @@ describe('ordering', () => {
       .contains('Оформить заказ')
       .click();
 
-    cy.get('[class^="modal_modal"]')
-      .as('modal')
-      .should('exist')
-
-    cy.get('@modal').contains('идентификатор заказа');
-    cy.get('@modal').contains(orderNumber);
-    cy.get('@modal').contains('Ваш заказ начали готовить');
+    cy.get(modalSelector).should('exist')
+    cy.get(modalSelector).contains('идентификатор заказа');
+    cy.get(modalSelector).contains(orderNumber);
+    cy.get(modalSelector).contains('Ваш заказ начали готовить');
   })
 
   it('should close the modal window with order number by clicking on the cross', () => {
-    cy.get('[data-cy=modal-close-icon]')
-      .click();
+    cy.get(closeIconSelector).click();
     
-    cy.get('[class^="modal_modal"]')
-      .should('not.exist')
+    cy.get(modalSelector).should('not.exist')
   });
 });

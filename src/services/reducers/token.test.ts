@@ -4,13 +4,8 @@ import {
   GET_REFRESH_TOKEN_SUCCESS,
   GET_REFRESH_TOKEN_FAILED,
 } from '../actions/token';
-import { tokenReducer } from './token';
+import { initialState, tokenReducer } from './token';
 
-const initialState = {
-  refreshTokenRequest: false,
-  refreshTokenSuccess: false,
-  refreshTokenFailed: null,
-};
 const error = 'Error message';
 
 describe('token reducer', () => {

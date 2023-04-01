@@ -11,7 +11,7 @@ interface IForgotPasswordrState {
   forgotPasswordFailed: null | string;
 };
 
-const initialState: IForgotPasswordrState = {
+export const initialState: IForgotPasswordrState = {
   forgotPasswordRequest: false,
   forgotPasswordSuccess: false,
   forgotPasswordFailed: null 

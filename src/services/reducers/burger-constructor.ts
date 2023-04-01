@@ -15,7 +15,7 @@ interface IBurgerConstructorState {
   otherItems: Array<IOtherItems>
 }
 
-const initialState: IBurgerConstructorState = {
+export const initialState: IBurgerConstructorState = {
   bun: [],
   otherItems: []
 };

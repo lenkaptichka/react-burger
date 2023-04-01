@@ -5,15 +5,8 @@ import {
   ORDER_FEED_CONNECTION_CLOSED,
   ORDER_FEED_GET_MESSAGE
 } from '../actions/order-feed';
-import { wsOrderFeedReducer} from './order-feed';
+import { initialState, wsOrderFeedReducer} from './order-feed';
 
-const initialState = {
-  orders: [],
-  total: 0,
-  totalToday: 0,
-  wsConnected: false,
-  error: null
-};
 const error = 'Error message';
 const historyMessage = {
   orders: [

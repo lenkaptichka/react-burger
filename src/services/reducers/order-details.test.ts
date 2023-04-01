@@ -4,13 +4,8 @@ import {
   GET_ORDER_DETAILS_SUCCESS,
   GET_ORDER_DETAILS_FAILED
 } from '../actions/order-details';
-import { orderDetailsReducer } from './order-details';
+import { initialState, orderDetailsReducer } from './order-details';
 
-const initialState = {
-  details: null,
-  orderDetailsRequest: false,
-  orderDetailsFailed: null
-};
 const orderDetails = {
   _id: '641f05e4936b17001be73661',
   owner: '63a9b84799a25c001cd6ddca',

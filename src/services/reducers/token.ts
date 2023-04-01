@@ -11,7 +11,7 @@ interface ITokenState {
   refreshTokenFailed: null | string;
 };
 
-const initialState: ITokenState = {
+export const initialState: ITokenState = {
   refreshTokenRequest: false,
   refreshTokenSuccess: false,
   refreshTokenFailed: null,

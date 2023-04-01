@@ -3,11 +3,8 @@ import {
   ADD_INGREDIENT_DETAILS,
   DELETE_INGREDIENT_DETAILS
 } from '../actions/ingredient-details';
-import { ingredientDetailsReducer } from './ingredient-details';
+import { initialState, ingredientDetailsReducer } from './ingredient-details';
 
-const initialState = {
-  ingredient: null
-};
 const ingredient = {
   _id: '60d3b41abdacab0026a733c6',
   name: 'Краторная булка N-200i',

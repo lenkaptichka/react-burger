@@ -4,13 +4,8 @@ import {
   GET_LOGIN_SUCCESS,
   GET_LOGIN_FAILED
 } from '../actions/login';
-import { loginReducer } from './login';
+import { initialState, loginReducer } from './login';
 
-const initialState = {
-  loginRequest: false,
-  loginSuccess: false,
-  loginFailed: null
-};
 const error = 'Error message';
 
 describe('login reducer', () => {

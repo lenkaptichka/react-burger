@@ -5,15 +5,8 @@ import {
   ORDERS_HISTORY_CONNECTION_CLOSED,
   ORDERS_HISTORY_GET_MESSAGE
 } from '../actions/orders-history';
-import { wsOrdersHistoryReducer } from './orders-history';
+import { initialState, wsOrdersHistoryReducer } from './orders-history';
 
-const initialState = {
-  orders: [],
-  total: 0,
-  totalToday: 0,
-  wsConnected: false,
-  error: null
-};
 const error = 'Error message';
 const historyMessage = {
   orders: [

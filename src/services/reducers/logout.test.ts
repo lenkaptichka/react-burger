@@ -4,13 +4,8 @@ import {
   GET_LOGOUT_SUCCESS,
   GET_LOGOUT_FAILED
 } from '../actions/logout';
-import { logoutReducer } from './logout';
+import { initialState, logoutReducer } from './logout';
 
-const initialState = {
-  logoutRequest: false,
-  logoutSuccess: false,
-  logoutFailed: null
-};
 const error = 'Error message';
 
 describe('logout reducer', () => {

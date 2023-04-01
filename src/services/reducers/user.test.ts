@@ -12,22 +12,8 @@ import {
   SET_PASSWORD,
   AUTH_CHECKED
 } from '../actions/user';
-import { userReducer } from './user';
+import { initialState, userReducer } from './user';
 
-const initialState = {
-  userRequest: false,
-  userSuccess: false,
-  userFailed: null,
-
-  userUpdateRequest: false,
-  userUpdateSuccess: false,
-  userUpdateFailed: null,
-
-  userIsAuthorized: false,
-  userData: null,
-  userPassword: null,
-  isAuthChecked: false
-};
 const error = 'Error message';
 const userData = {
   email: 'user@email.ru',

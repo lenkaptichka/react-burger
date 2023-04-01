@@ -12,7 +12,7 @@ interface IOrderDetailsState {
   orderDetailsFailed: null | string;
 }
 
-const initialState: IOrderDetailsState = {
+export const initialState: IOrderDetailsState = {
   details: null,
   orderDetailsRequest: false,
   orderDetailsFailed: null

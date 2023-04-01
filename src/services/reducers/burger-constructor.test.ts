@@ -4,12 +4,8 @@ import {
   DELETE_INGREDIENT,
   MOVE_INGREDIENT
 } from '../actions/burger-constructor';
-import { selectedIngredientsReducer } from './burger-constructor';
+import { initialState, selectedIngredientsReducer } from './burger-constructor';
 
-const initialState = {
-  bun: [],
-  otherItems: []
-};
 const bunIngredient = {
   _id: '60d3b41abdacab0026a733c6',
   name: 'Краторная булка N-200i',

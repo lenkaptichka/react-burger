@@ -4,13 +4,8 @@ import {
   GET_RESET_PASSWORD_SUCCESS,
   GET_RESET_PASSWORD_FAILED
 } from '../actions/reset-password';
-import { resetPasswordReducer } from './reset-password';
+import { initialState, resetPasswordReducer } from './reset-password';
 
-const initialState = {
-  resetPasswordRequest: false,
-  resetPasswordSuccess: false,
-  resetPasswordFailed: null
-};
 const error = 'Error message';
 
 describe('reset password reducer', () => {
