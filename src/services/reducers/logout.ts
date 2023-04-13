@@ -11,7 +11,7 @@ interface ILogoutState {
   logoutFailed: null | string;
 };
 
-const initialState: ILogoutState = {
+export const initialState: ILogoutState = {
   logoutRequest: false,
   logoutSuccess: false,
   logoutFailed: null

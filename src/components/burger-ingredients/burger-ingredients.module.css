@@ -38,3 +38,8 @@
     row-gap: 32px;
     box-sizing: border-box;
 }
+
+
+.type-name {
+    display: block;
+}

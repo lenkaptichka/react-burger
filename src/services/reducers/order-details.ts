@@ -6,14 +6,13 @@ import {
   TOrderDetailsActions
 } from '../actions/order-details';
 
-
 interface IOrderDetailsState {
   details: null | IOrderDetails;
   orderDetailsRequest: boolean;
   orderDetailsFailed: null | string;
 }
 
-const initialState: IOrderDetailsState = {
+export const initialState: IOrderDetailsState = {
   details: null,
   orderDetailsRequest: false,
   orderDetailsFailed: null

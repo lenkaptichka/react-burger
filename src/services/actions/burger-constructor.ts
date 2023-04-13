@@ -7,6 +7,7 @@ export const MOVE_INGREDIENT: 'MOVE_INGREDIENT' = 'MOVE_INGREDIENT';
 export interface IAddIngredientAction {
   readonly type: typeof ADD_INGREDIENT;
   readonly ingredient: IIngredient;
+  readonly key: string;
 }
 
 export interface IDeleteIngredientAction {
@@ -26,10 +27,11 @@ export type TBurgerConstructorActions =
   IMoveIngredientAction;
 
 
-export const addIngredient = (ingredient: IIngredient): IAddIngredientAction => {
+export const addIngredient = (ingredient: IIngredient, key: string): IAddIngredientAction => {
   return {
     type: ADD_INGREDIENT,
-    ingredient
+    ingredient,
+    key
   }
 }
 

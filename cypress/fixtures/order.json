@@ -1,0 +1,72 @@
+{
+  "success": true,
+  "name": "Био-марсианский краторный антарианский бургер",
+  "order": {
+      "ingredients": [{
+          "_id": "60d3b41abdacab0026a733c6",
+          "name": "Краторная булка N-200i",
+          "type": "bun",
+          "proteins": 80,
+          "fat": 24,
+          "carbohydrates": 53,
+          "calories": 420,
+          "price": 1255,
+          "image": "https://code.s3.yandex.net/react/code/bun-02.png",
+          "image_mobile": "https://code.s3.yandex.net/react/code/bun-02-mobile.png",
+          "image_large": "https://code.s3.yandex.net/react/code/bun-02-large.png",
+          "__v": 0
+      }, {
+          "_id": "60d3b41abdacab0026a733cb",
+          "name": "Биокотлета из марсианской Магнолии",
+          "type": "main",
+          "proteins": 420,
+          "fat": 142,
+          "carbohydrates": 242,
+          "calories": 4242,
+          "price": 424,
+          "image": "https://code.s3.yandex.net/react/code/meat-01.png",
+          "image_mobile": "https://code.s3.yandex.net/react/code/meat-01-mobile.png",
+          "image_large": "https://code.s3.yandex.net/react/code/meat-01-large.png",
+          "__v": 0
+      }, {
+          "_id": "60d3b41abdacab0026a733cf",
+          "name": "Соус с шипами Антарианского плоскоходца",
+          "type": "sauce",
+          "proteins": 101,
+          "fat": 99,
+          "carbohydrates": 100,
+          "calories": 100,
+          "price": 88,
+          "image": "https://code.s3.yandex.net/react/code/sauce-01.png",
+          "image_mobile": "https://code.s3.yandex.net/react/code/sauce-01-mobile.png",
+          "image_large": "https://code.s3.yandex.net/react/code/sauce-01-large.png",
+          "__v": 0
+      }, {
+          "_id": "60d3b41abdacab0026a733c6",
+          "name": "Краторная булка N-200i",
+          "type": "bun",
+          "proteins": 80,
+          "fat": 24,
+          "carbohydrates": 53,
+          "calories": 420,
+          "price": 1255,
+          "image": "https://code.s3.yandex.net/react/code/bun-02.png",
+          "image_mobile": "https://code.s3.yandex.net/react/code/bun-02-mobile.png",
+          "image_large": "https://code.s3.yandex.net/react/code/bun-02-large.png",
+          "__v": 0
+      }],
+      "_id": "6424a9d90905fd001b6249a8",
+      "owner": {
+          "name": "Лена",
+          "email": "efanova-lena@yandex.ru",
+          "createdAt": "2022-12-26T15:05:43.333Z",
+          "updatedAt": "2023-03-12T15:30:47.920Z"
+      },
+      "status": "done",
+      "name": "Био-марсианский краторный антарианский бургер",
+      "createdAt": "2023-03-29T21:12:57.950Z",
+      "updatedAt": "2023-03-29T21:12:58.436Z",
+      "number": 1000,
+      "price": 3022
+  }
+}

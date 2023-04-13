@@ -11,7 +11,7 @@ interface IRegisterState {
   registerFailed: null | string;
 };
 
-const initialState: IRegisterState = {
+export const initialState: IRegisterState = {
   registerRequest: false,
   registerSuccess: false,
   registerFailed: null,

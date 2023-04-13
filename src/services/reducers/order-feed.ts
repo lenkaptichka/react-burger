@@ -7,7 +7,6 @@ import {
   TOrderFeedActions
 } from '../actions/order-feed';
 
-
 interface IOrderFeedState {
   orders: Array<IOrder>,
   total: number,
@@ -16,8 +15,7 @@ interface IOrderFeedState {
   error: null | string
 };
 
-
-const initialState = {
+export const initialState = {
   orders: [],
   total: 0,
   totalToday: 0,

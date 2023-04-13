@@ -15,7 +15,7 @@ interface IBurgerConstructorState {
   otherItems: Array<IOtherItems>
 }
 
-const initialState: IBurgerConstructorState = {
+export const initialState: IBurgerConstructorState = {
   bun: [],
   otherItems: []
 };
@@ -31,7 +31,7 @@ export const selectedIngredientsReducer = (state: IBurgerConstructorState = init
           otherItems: [...state.otherItems,
             {
               _id: action.ingredient._id,
-              key: crypto.randomUUID()
+              key: action.key
             }
           ]
         }

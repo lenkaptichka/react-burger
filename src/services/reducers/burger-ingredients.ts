@@ -13,7 +13,7 @@ interface IBurgerIngredientsState {
   ingredientsFailed: null | string;
 }
 
-const initialState: IBurgerIngredientsState = {
+export const initialState: IBurgerIngredientsState = {
   allIngredients: [],
   ingredientsRequest: false,
   ingredientsFailed: null

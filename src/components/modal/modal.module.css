@@ -36,3 +36,7 @@
 .title {
     margin-right: auto;
 }
+
+.close-icon:hover {
+    cursor: pointer;
+}

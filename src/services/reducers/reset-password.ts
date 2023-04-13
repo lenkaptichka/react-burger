@@ -11,7 +11,7 @@ interface IResetPasswordrState {
   resetPasswordFailed: null | string;
 };
 
-const initialState: IResetPasswordrState = {
+export const initialState: IResetPasswordrState = {
   resetPasswordRequest: false,
   resetPasswordSuccess: false,
   resetPasswordFailed: null

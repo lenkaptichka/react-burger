@@ -1,0 +1,9 @@
+{
+  "success": true,
+  "accessToken": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzYTliODQ3OTlhMjVjMDAxY2Q2ZGRjYSIsImlhdCI6MTY4MDEyMjM4NCwiZXhwIjoxNjgwMTIzNTg0fQ.aezBQ7ArxxRAD2nZwmZ-1e-hSRuus0ql3IMM1TJPwbc",
+  "refreshToken": "0341346c4dfc63c392b6605bc5047a7a15b8f2526e50596d8b17679b11fd2e6a85259db6fcbd4902",
+  "user": {
+    "email": "ponchik@email.ru",
+    "name": "Пирожок"
+  }
+}

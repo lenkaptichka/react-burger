@@ -26,6 +26,11 @@
     border: none;
 }
 
+.ingredients {
+    display: block;
+
+}
+
 .ingredient {
     max-width: calc(100% - 16px);
     position: relative;
