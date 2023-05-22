@@ -1,4 +1,4 @@
-# Stellar-burger :rocket: :hamburger:
+# StellarBurger :rocket: :hamburger:
 
 [Ссылка на итоговый проект](https://lenkaptichka.github.io/react-burger/)
 
